@@ -85,6 +85,7 @@
             font-weight: 600;
             color: #0d47a1;
             margin-bottom: 25px;
+            margin-top: 30px;
             padding-bottom: 12px;
             border-bottom: 2px solid #e3f2fd;
             text-transform: uppercase;
@@ -114,6 +115,29 @@
             justify-content: center;
             margin-right: 12px;
             font-size: 18px;
+        }
+
+        .text-input, .textarea-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 2px solid #c5cae9;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            color: #1a237e;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .textarea-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .text-input:focus, .textarea-input:focus {
+            border-color: #5e7ce2;
+            background: #ffffff;
         }
 
         .file-input-wrapper {
@@ -320,38 +344,27 @@
         </div>
 
         <div class="form-content">
-            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook-test/formulario-visita" method="POST" enctype="multipart/form-data">
-
-                <div class="upload-section">
-    <div class="upload-label">
-        <span class="icon">🏬</span>
-        <span>Identificação da Loja</span>
-    </div>
-    <input 
-        type="text" 
-        id="loja" 
-        name="LOJA" 
-        placeholder="Ex: Loja 05 - Djalma Batista" 
-        required 
-        style="
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 15px;
-            border: 2px solid #c5cae9;
-            border-radius: 10px;
-            outline: none;
-            transition: all 0.3s ease;
-            background: #fafbfc;
-            color: #1a237e;
-        "
-        onfocus="this.style.borderColor='#5e7ce2';"
-        onblur="this.style.borderColor='#c5cae9';"
-    >
-</div>
-
+            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
                 
+                <!-- IDENTIFICAÇÃO DA LOJA -->
+                <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">🏬</span>
+                        <span>Identificação da Loja</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="loja" 
+                        name="LOJA" 
+                        class="text-input"
+                        placeholder="Ex: Loja 05 - Djalma Batista" 
+                        required 
+                    >
+                </div>
+
                 <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
+                <!-- PINTURA -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🎨</span>
@@ -367,31 +380,22 @@
                     </div>
                     <div class="file-preview" id="preview-pintar"></div>
                 </div>
-  <div class="upload-label">
-      <span class="icon">🗒️</span>
-      <span>Observações Adicionais</span>
-  </div>
-  <textarea 
-      id="observacoes" 
-      name="OBSERVACOES" 
-      placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
-      rows="4" 
-      style="
-          width: 100%;
-          padding: 14px 16px;
-          font-size: 15px;
-          border: 2px solid #c5cae9;
-          border-radius: 10px;
-          outline: none;
-          transition: all 0.3s ease;
-          background: #fafbfc;
-          color: #1a237e;
-          resize: vertical;
-      "
-      onfocus="this.style.borderColor='#5e7ce2';"
-      onblur="this.style.borderColor='#c5cae9';"
-  ></textarea>
-</div>
+
+                <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">🗒️</span>
+                        <span>Observações - Pintura</span>
+                    </div>
+                    <textarea 
+                        id="obs-pintar" 
+                        name="OBS_PINTAR" 
+                        class="textarea-input"
+                        placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <!-- REPARO -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🔧</span>
@@ -407,37 +411,27 @@
                     </div>
                     <div class="file-preview" id="preview-reparar"></div>
                 </div>
-  <div class="upload-label">
-      <span class="icon">🗒️</span>
-      <span>Observações Adicionais</span>
-  </div>
-  <textarea 
-      id="observacoes" 
-      name="OBSERVACOES" 
-      placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
-      rows="4" 
-      style="
-          width: 100%;
-          padding: 14px 16px;
-          font-size: 15px;
-          border: 2px solid #c5cae9;
-          border-radius: 10px;
-          outline: none;
-          transition: all 0.3s ease;
-          background: #fafbfc;
-          color: #1a237e;
-          resize: vertical;
-      "
-      onfocus="this.style.borderColor='#5e7ce2';"
-      onblur="this.style.borderColor='#c5cae9';"
-  ></textarea>
-</div>
+
+                <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">🗒️</span>
+                        <span>Observações - Reparo</span>
+                    </div>
+                    <textarea 
+                        id="obs-reparar" 
+                        name="OBS_REPARAR" 
+                        class="textarea-input"
+                        placeholder="Ex: Porta de entrada danificada, necessita troca de dobradiças." 
+                        rows="4"
+                    ></textarea>
+                </div>
+
+                <!-- SUBSTITUIÇÃO -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🔄</span>
                         <span>Serviços de Substituição</span>
                     </div>
-
                     <div class="file-input-wrapper">
                         <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
                         <label for="trocar" class="file-input-label" id="label-trocar">
@@ -448,32 +442,21 @@
                     </div>
                     <div class="file-preview" id="preview-trocar"></div>
                 </div>
-                  <div class="upload-section">
-  <div class="upload-label">
-      <span class="icon">🗒️</span>
-      <span>Observações Adicionais</span>
-  </div>
-  <textarea 
-      id="observacoes" 
-      name="OBSERVACOES" 
-      placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
-      rows="4" 
-      style="
-          width: 100%;
-          padding: 14px 16px;
-          font-size: 15px;
-          border: 2px solid #c5cae9;
-          border-radius: 10px;
-          outline: none;
-          transition: all 0.3s ease;
-          background: #fafbfc;
-          color: #1a237e;
-          resize: vertical;
-      "
-      onfocus="this.style.borderColor='#5e7ce2';"
-      onblur="this.style.borderColor='#c5cae9';"
-  ></textarea>
-</div>
+
+                <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">🗒️</span>
+                        <span>Observações - Substituição</span>
+                    </div>
+                    <textarea 
+                        id="obs-trocar" 
+                        name="OBS_TROCAR" 
+                        class="textarea-input"
+                        placeholder="Ex: Lâmpadas queimadas na seção de eletrônicos, substituídas por LED." 
+                        rows="4"
+                    ></textarea>
+                </div>
+                
                 <button type="submit" class="submit-btn" id="submitBtn">
                     <span class="btn-icon">📤</span>
                     Enviar Relatório
@@ -485,7 +468,7 @@
                 </div>
 
                 <div class="success-message" id="successMessage">
-                    ✅ Imagens enviadas com sucesso!
+                    ✅ Relatório enviado com sucesso!
                 </div>
             
             </form>
@@ -523,9 +506,15 @@
         document.getElementById('uploadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            const loja = document.getElementById('loja').value.trim();
             const pintar = document.getElementById('pintar').files.length;
             const reparar = document.getElementById('reparar').files.length;
             const trocar = document.getElementById('trocar').files.length;
+
+            if (!loja) {
+                alert('⚠️ Por favor, identifique a loja.');
+                return;
+            }
 
             if (pintar === 0 && reparar === 0 && trocar === 0) {
                 alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
@@ -569,7 +558,3 @@
 
 </body>
 </html>
-
-
-
-
