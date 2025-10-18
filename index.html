@@ -390,7 +390,17 @@
                         <span>Serviços de Substituição</span>
                     </div>
 
-                    <div class="upload-section">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
+                        <label for="trocar" class="file-input-label" id="label-trocar">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">Clique para selecionar imagens</div>
+                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
+                        </label>
+                    </div>
+                    <div class="file-preview" id="preview-trocar"></div>
+                </div>
+                  <div class="upload-section">
   <div class="upload-label">
       <span class="icon">🗒️</span>
       <span>Observações Adicionais</span>
@@ -416,18 +426,6 @@
       onblur="this.style.borderColor='#c5cae9';"
   ></textarea>
 </div>
-
-                    <div class="file-input-wrapper">
-                        <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
-                        <label for="trocar" class="file-input-label" id="label-trocar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-trocar"></div>
-                </div>
-                
                 <button type="submit" class="submit-btn" id="submitBtn">
                     <span class="btn-icon">📤</span>
                     Enviar Relatório
@@ -523,5 +521,6 @@
 
 </body>
 </html>
+
 
 
