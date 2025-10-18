@@ -389,6 +389,34 @@
                         <span class="icon">🔄</span>
                         <span>Serviços de Substituição</span>
                     </div>
+
+                    <div class="upload-section">
+  <div class="upload-label">
+      <span class="icon">🗒️</span>
+      <span>Observações Adicionais</span>
+  </div>
+  <textarea 
+      id="observacoes" 
+      name="OBSERVACOES" 
+      placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
+      rows="4" 
+      style="
+          width: 100%;
+          padding: 14px 16px;
+          font-size: 15px;
+          border: 2px solid #c5cae9;
+          border-radius: 10px;
+          outline: none;
+          transition: all 0.3s ease;
+          background: #fafbfc;
+          color: #1a237e;
+          resize: vertical;
+      "
+      onfocus="this.style.borderColor='#5e7ce2';"
+      onblur="this.style.borderColor='#c5cae9';"
+  ></textarea>
+</div>
+
                     <div class="file-input-wrapper">
                         <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
                         <label for="trocar" class="file-input-label" id="label-trocar">
@@ -495,4 +523,5 @@
 
 </body>
 </html>
+
 
