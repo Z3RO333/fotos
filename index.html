@@ -456,82 +456,84 @@
 </div>
 
 <script>
-    function setupFileInput(inputId, labelId, previewId) {
-        const input = document.getElementById(inputId);
-        const label = document.getElementById(labelId);
-        const preview = document.getElementById(previewId);
+function setupFileInput(inputId, labelId, previewId) {
+    const input = document.getElementById(inputId);
+    const label = document.getElementById(labelId);
+    const preview = document.getElementById(previewId);
 
-        input.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (files.length > 0) {
-                label.classList.add('has-file');
-                preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
-                preview.classList.add('show');
-            } else {
-                label.classList.remove('has-file');
-                preview.classList.remove('show');
-            }
-        });
+    input.addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files.length > 0) {
+            label.classList.add('has-file');
+            preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
+            preview.classList.add('show');
+        } else {
+            label.classList.remove('has-file');
+            preview.classList.remove('show');
+        }
+    });
+}
+
+// Inicializa os inputs de arquivo
+setupFileInput('pintar', 'label-pintar', 'preview-pintar');
+setupFileInput('reparar', 'label-reparar', 'preview-reparar');
+setupFileInput('trocar', 'label-trocar', 'preview-trocar');
+
+// Evento de envio do formulário
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const loja = document.getElementById('loja').value.trim();
+    const pintar = document.getElementById('pintar').files.length;
+    const reparar = document.getElementById('reparar').files.length;
+    const trocar = document.getElementById('trocar').files.length;
+
+    if (!loja) {
+        alert('⚠️ Por favor, identifique a loja.');
+        return;
     }
 
-    setupFileInput('pintar', 'label-pintar', 'preview-pintar');
-    setupFileInput('reparar', 'label-reparar', 'preview-reparar');
-    setupFileInput('trocar', 'label-trocar', 'preview-trocar');
+    if (pintar === 0 && reparar === 0 && trocar === 0) {
+        alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
+        return;
+    }
 
-    document.getElementById('uploadForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const loja = document.getElementById('loja').value.trim();
-        const pintar = document.getElementById('pintar').files.length;
-        const reparar = document.getElementById('reparar').files.length;
-        const trocar = document.getElementById('trocar').files.length;
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('submitBtn').disabled = true;
 
-        if (!loja) {
-            alert('⚠️ Por favor, identifique a loja.');
-            return;
-        }
+    const formData = new FormData(this);
+    const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita"; // envio direto
 
-        if (pintar === 0 && reparar === 0 && trocar === 0) {
-            alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
-            return;
-        }
+    fetch(webhookUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        document.getElementById('loading').classList.remove('show');
 
-        document.getElementById('loading').classList.add('show');
-        document.getElementById('submitBtn').disabled = true;
+        if (response.ok) {
+            document.getElementById('successMessage').classList.add('show');
+            this.reset();
+            document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+            document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
 
-        const formData = new FormData(this);
-        const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
-        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
-
-        fetch(proxyUrl, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            document.getElementById('loading').classList.remove('show');
-
-            if (response.ok) {
-                document.getElementById('successMessage').classList.add('show');
-                this.reset();
-                document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
-                document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
-                
-                setTimeout(() => {
-                    document.getElementById('successMessage').classList.remove('show');
-                    document.getElementById('submitBtn').disabled = false;
-                }, 3000);
-            } else {
-                alert('❌ Erro ao enviar. Tente novamente.');
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
                 document.getElementById('submitBtn').disabled = false;
-            }
-        })
-        .catch(error => {
-            document.getElementById('loading').classList.remove('show');
-            alert('❌ Erro de conexão ou CORS. Tente novamente.');
+            }, 3000);
+        } else {
+            alert('❌ Erro ao enviar. Tente novamente.');
             document.getElementById('submitBtn').disabled = false;
-        });
+        }
+    })
+    .catch(error => {
+        document.getElementById('loading').classList.remove('show');
+        alert('❌ Erro de conexão. Tente novamente.');
+        document.getElementById('submitBtn').disabled = false;
     });
+});
 </script>
 </body>
 </html>
+
 
