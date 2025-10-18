@@ -526,35 +526,40 @@
 
             const formData = new FormData(this);
 
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                document.getElementById('loading').classList.remove('show');
-                
-                if (response.ok) {
-                    document.getElementById('successMessage').classList.add('show');
-                    this.reset();
-                    document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
-                    document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
-                    
-                    setTimeout(() => {
-                        document.getElementById('successMessage').classList.remove('show');
-                        document.getElementById('submitBtn').disabled = false;
-                    }, 3000);
-                } else {
-                    alert('❌ Erro ao enviar. Tente novamente.');
-                    document.getElementById('submitBtn').disabled = false;
-                }
-            })
-            .catch(error => {
-                document.getElementById('loading').classList.remove('show');
-                alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
-                document.getElementById('submitBtn').disabled = false;
-            });
-        });
+             const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
+const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
+
+fetch(proxyUrl, {
+    method: 'POST',
+    body: formData
+})
+.then(response => {
+    document.getElementById('loading').classList.remove('show');
+
+    if (response.ok) {
+        document.getElementById('successMessage').classList.add('show');
+        this.reset();
+        document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+        document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+        
+        setTimeout(() => {
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('submitBtn').disabled = false;
+        }, 3000);
+    } else {
+        alert('❌ Erro ao enviar. Tente novamente.');
+        document.getElementById('submitBtn').disabled = false;
+    }
+})
+.catch(error => {
+    document.getElementById('loading').classList.remove('show');
+    alert('❌ Erro de conexão ou CORS. Tente novamente.');
+    document.getElementById('submitBtn').disabled = false;
+});
+
     </script>
 
 </body>
 </html>
+
+
