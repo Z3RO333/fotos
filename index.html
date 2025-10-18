@@ -52,14 +52,18 @@
             justify-content: center;
             margin: 0 auto;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            font-size: 48px;
+            font-weight: bold;
+            color: #0d47a1;
             border: 4px solid rgba(255, 255, 255, 0.3);
-            overflow: hidden;
         }
 
+        /* Se você tiver uma imagem de logo, use isso: */
         .logo img {
-            width: 90%;
-            height: 90%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            border-radius: 50%;
         }
 
         h1 {
@@ -283,6 +287,7 @@
             .logo {
                 width: 100px;
                 height: 100px;
+                font-size: 40px;
             }
 
             .header {
@@ -294,21 +299,27 @@
 <body>
 
     <div class="container">
+        <!-- HEADER -->
         <div class="header">
             <div class="logo-container">
-                <div class="logo">
-                    <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo Bemol">
+                <div class="">
+                    <!-- OPÇÃO 1: Usar iniciais (remova este comentário e o texto "LOGO" se usar imagem) -->
+                    LOGO
+                    
+                    <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo">
                 </div>
             </div>
             <h1>Relatório de Visita Técnica</h1>
             <p class="header-subtitle">Documentação de Serviços Realizados</p>
         </div>
 
+        <!-- FORMULÁRIO -->
         <div class="form-content">
             <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook-test/cdeeda0e-45de-4f68-bda4-98a2145e438a" method="POST" enctype="multipart/form-data">
                 
                 <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
+                <!-- PINTAR -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🎨</span>
@@ -325,98 +336,11 @@
                     <div class="file-preview" id="preview-pintar"></div>
                 </div>
 
+                <!-- REPARAR -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🔧</span>
                         <span>Serviços de Reparo</span>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="reparar" name="REPARAR" accept="image/*" multiple>
-                        <label for="reparar" class="file-input-label" id="label-reparar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-reparar"></div>
-                </div>
-
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🔄</span>
-                        <span>Serviços de Substituição</span>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
-                        <label for="trocar" class="file-input-label" id="label-trocar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-trocar"></div>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span class="btn-icon">📤</span>
-                    Enviar Relatório
-                </button>
-
-                <div class="loading" id="loading">
-                    <span class="loading-spinner"></span>
-                    Processando imagens...
-                </div>
-            
-            </form>
-        </div>
-
-        <div class="footer">
-            <div class="footer-company">Sistema Bemol - Gestão de Visitas</div>
-            <div>© 2025 Todos os direitos reservados</div>
-        </div>
-    </div>
-
-    <script>
-        function setupFileInput(inputId, labelId, previewId) {
-            const input = document.getElementById(inputId);
-            const label = document.getElementById(labelId);
-            const preview = document.getElementById(previewId);
-
-            input.addEventListener('change', function(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    label.classList.add('has-file');
-                    preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
-                    preview.classList.add('show');
-                } else {
-                    label.classList.remove('has-file');
-                    preview.classList.remove('show');
-                }
-            });
-        }
-
-        setupFileInput('pintar', 'label-pintar', 'preview-pintar');
-        setupFileInput('reparar', 'label-reparar', 'preview-reparar');
-        setupFileInput('trocar', 'label-trocar', 'preview-trocar');
-
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
-            const pintar = document.getElementById('pintar').files.length;
-            const reparar = document.getElementById('reparar').files.length;
-            const trocar = document.getElementById('trocar').files.length;
-
-            if (pintar === 0 && reparar === 0 && trocar === 0) {
-                e.preventDefault();
-                alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
-                return;
-            }
-
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('submitBtn').disabled = true;
-        });
-    </script>
-
-</body>
-</html>                        <span>Serviços de Reparo</span>
                     </div>
                     <div class="file-input-wrapper">
                         <input type="file" id="reparar" name="REPARAR" accept="image/*" multiple>
@@ -511,5 +435,3 @@
 
 </body>
 </html>
-
-
