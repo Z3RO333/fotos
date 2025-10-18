@@ -267,6 +267,21 @@
             margin-right: 10px;
         }
 
+        .success-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -294,7 +309,6 @@
 <body>
 
     <div class="container">
-        <!-- HEADER -->
         <div class="header">
             <div class="logo-container">
                 <div class="logo">
@@ -305,13 +319,11 @@
             <p class="header-subtitle">Documentação de Serviços Realizados</p>
         </div>
 
-        <!-- FORMULÁRIO -->
         <div class="form-content">
-            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook-test/formulario-visitahttps" method="POST">
+            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook-test/formulario-visita" method="POST" enctype="multipart/form-data">
                 
                 <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
-                <!-- PINTAR -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🎨</span>
@@ -328,7 +340,6 @@
                     <div class="file-preview" id="preview-pintar"></div>
                 </div>
 
-                <!-- REPARAR -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🔧</span>
@@ -345,7 +356,6 @@
                     <div class="file-preview" id="preview-reparar"></div>
                 </div>
 
-                <!-- TROCAR -->
                 <div class="upload-section">
                     <div class="upload-label">
                         <span class="icon">🔄</span>
@@ -371,11 +381,14 @@
                     <span class="loading-spinner"></span>
                     Processando imagens...
                 </div>
+
+                <div class="success-message" id="successMessage">
+                    ✅ Imagens enviadas com sucesso!
+                </div>
             
             </form>
         </div>
 
-        <!-- FOOTER -->
         <div class="footer">
             <div class="footer-company">Sistema Bemol - Gestão de Visitas</div>
             <div>© 2025 Todos os direitos reservados</div>
@@ -383,7 +396,6 @@
     </div>
 
     <script>
-        // Função para atualizar preview dos arquivos
         function setupFileInput(inputId, labelId, previewId) {
             const input = document.getElementById(inputId);
             const label = document.getElementById(labelId);
@@ -402,33 +414,56 @@
             });
         }
 
-        // Configurar todos os inputs
         setupFileInput('pintar', 'label-pintar', 'preview-pintar');
         setupFileInput('reparar', 'label-reparar', 'preview-reparar');
         setupFileInput('trocar', 'label-trocar', 'preview-trocar');
 
-        // Validação e envio do formulário
         document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const pintar = document.getElementById('pintar').files.length;
             const reparar = document.getElementById('reparar').files.length;
             const trocar = document.getElementById('trocar').files.length;
 
             if (pintar === 0 && reparar === 0 && trocar === 0) {
-                e.preventDefault();
                 alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
                 return;
             }
 
-            // Mostrar loading
             document.getElementById('loading').classList.add('show');
             document.getElementById('submitBtn').disabled = true;
+
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                document.getElementById('loading').classList.remove('show');
+                
+                if (response.ok) {
+                    document.getElementById('successMessage').classList.add('show');
+                    this.reset();
+                    document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+                    document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+                    
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.remove('show');
+                        document.getElementById('submitBtn').disabled = false;
+                    }, 3000);
+                } else {
+                    alert('❌ Erro ao enviar. Tente novamente.');
+                    document.getElementById('submitBtn').disabled = false;
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').classList.remove('show');
+                alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
+                document.getElementById('submitBtn').disabled = false;
+            });
         });
     </script>
 
 </body>
 </html>
-
-
-
-
-
