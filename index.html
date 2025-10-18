@@ -332,234 +332,206 @@
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <div class="logo-container">
-                <div class="logo">
-                    <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo Bemol">
-                </div>
+<div class="container">
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo Bemol">
             </div>
-            <h1>Relatório de Visita Técnica</h1>
-            <p class="header-subtitle">Documentação de Serviços Realizados</p>
         </div>
-
-        <div class="form-content">
-            <form id="uploadForm" action= "https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
-                
-                <!-- IDENTIFICAÇÃO DA LOJA -->
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🏬</span>
-                        <span>Identificação da Loja</span>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="loja" 
-                        name="LOJA" 
-                        class="text-input"
-                        placeholder="Ex: Loja 05 - Djalma Batista" 
-                        required 
-                    >
-                </div>
-
-                <div class="section-title">📋 Anexar Evidências Fotográficas</div>
-
-                <!-- PINTURA -->
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🎨</span>
-                        <span>Serviços de Pintura</span>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="pintar" name="PINTAR" accept="image/*" multiple>
-                        <label for="pintar" class="file-input-label" id="label-pintar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-pintar"></div>
-                </div>
-
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🗒️</span>
-                        <span>Observações - Pintura</span>
-                    </div>
-                    <textarea 
-                        id="obs-pintar" 
-                        name="OBS_PINTAR" 
-                        class="textarea-input"
-                        placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." 
-                        rows="4"
-                    ></textarea>
-                </div>
-
-                <!-- REPARO -->
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🔧</span>
-                        <span>Serviços de Reparo</span>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="reparar" name="REPARAR" accept="image/*" multiple>
-                        <label for="reparar" class="file-input-label" id="label-reparar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-reparar"></div>
-                </div>
-
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🗒️</span>
-                        <span>Observações - Reparo</span>
-                    </div>
-                    <textarea 
-                        id="obs-reparar" 
-                        name="OBS_REPARAR" 
-                        class="textarea-input"
-                        placeholder="Ex: Porta de entrada danificada, necessita troca de dobradiças." 
-                        rows="4"
-                    ></textarea>
-                </div>
-
-                <!-- SUBSTITUIÇÃO -->
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🔄</span>
-                        <span>Serviços de Substituição</span>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
-                        <label for="trocar" class="file-input-label" id="label-trocar">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Clique para selecionar imagens</div>
-                            <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
-                        </label>
-                    </div>
-                    <div class="file-preview" id="preview-trocar"></div>
-                </div>
-
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">🗒️</span>
-                        <span>Observações - Substituição</span>
-                    </div>
-                    <textarea 
-                        id="obs-trocar" 
-                        name="OBS_TROCAR" 
-                        class="textarea-input"
-                        placeholder="Ex: Lâmpadas queimadas na seção de eletrônicos, substituídas por LED." 
-                        rows="4"
-                    ></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    <span class="btn-icon">📤</span>
-                    Enviar Relatório
-                </button>
-
-                <div class="loading" id="loading">
-                    <span class="loading-spinner"></span>
-                    Processando imagens...
-                </div>
-
-                <div class="success-message" id="successMessage">
-                    ✅ Relatório enviado com sucesso!
-                </div>
-            
-            </form>
-        </div>
-
-        <div class="footer">
-            <div class="footer-company">Sistema Bemol - Gestão de Visitas</div>
-            <div>© 2025 Todos os direitos reservados</div>
-        </div>
+        <h1>Relatório de Visita Técnica</h1>
+        <p class="header-subtitle">Documentação de Serviços Realizados</p>
     </div>
 
-    <script>
-        function setupFileInput(inputId, labelId, previewId) {
-            const input = document.getElementById(inputId);
-            const label = document.getElementById(labelId);
-            const preview = document.getElementById(previewId);
+    <div class="form-content">
+        <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
+            
+            <!-- IDENTIFICAÇÃO DA LOJA -->
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🏬</span>
+                    <span>Identificação da Loja</span>
+                </div>
+                <input type="text" id="loja" name="LOJA" class="text-input" placeholder="Ex: Loja 05 - Djalma Batista" required>
+            </div>
 
-            input.addEventListener('change', function(e) {
-                const files = e.target.files;
-                if (files.length > 0) {
-                    label.classList.add('has-file');
-                    preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
-                    preview.classList.add('show');
-                } else {
-                    label.classList.remove('has-file');
-                    preview.classList.remove('show');
-                }
-            });
+            <div class="section-title">📋 Anexar Evidências Fotográficas</div>
+
+            <!-- PINTURA -->
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🎨</span>
+                    <span>Serviços de Pintura</span>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="pintar" name="PINTAR" accept="image/*" multiple>
+                    <label for="pintar" class="file-input-label" id="label-pintar">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Clique para selecionar imagens</div>
+                        <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
+                    </label>
+                </div>
+                <div class="file-preview" id="preview-pintar"></div>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🗒️</span>
+                    <span>Observações - Pintura</span>
+                </div>
+                <textarea id="obs-pintar" name="OBS_PINTAR" class="textarea-input" placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." rows="4"></textarea>
+            </div>
+
+            <!-- REPARO -->
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🔧</span>
+                    <span>Serviços de Reparo</span>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="reparar" name="REPARAR" accept="image/*" multiple>
+                    <label for="reparar" class="file-input-label" id="label-reparar">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Clique para selecionar imagens</div>
+                        <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
+                    </label>
+                </div>
+                <div class="file-preview" id="preview-reparar"></div>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🗒️</span>
+                    <span>Observações - Reparo</span>
+                </div>
+                <textarea id="obs-reparar" name="OBS_REPARAR" class="textarea-input" placeholder="Ex: Porta de entrada danificada, necessita troca de dobradiças." rows="4"></textarea>
+            </div>
+
+            <!-- SUBSTITUIÇÃO -->
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🔄</span>
+                    <span>Serviços de Substituição</span>
+                </div>
+                <div class="file-input-wrapper">
+                    <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
+                    <label for="trocar" class="file-input-label" id="label-trocar">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Clique para selecionar imagens</div>
+                        <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
+                    </label>
+                </div>
+                <div class="file-preview" id="preview-trocar"></div>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-label">
+                    <span class="icon">🗒️</span>
+                    <span>Observações - Substituição</span>
+                </div>
+                <textarea id="obs-trocar" name="OBS_TROCAR" class="textarea-input" placeholder="Ex: Lâmpadas queimadas na seção de eletrônicos, substituídas por LED." rows="4"></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="btn-icon">📤</span>
+                Enviar Relatório
+            </button>
+
+            <div class="loading" id="loading">
+                <span class="loading-spinner"></span>
+                Processando imagens...
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ Relatório enviado com sucesso!
+            </div>
+        
+        </form>
+    </div>
+
+    <div class="footer">
+        <div class="footer-company">Sistema Bemol - Gestão de Visitas</div>
+        <div>© 2025 Todos os direitos reservados</div>
+    </div>
+</div>
+
+<script>
+    function setupFileInput(inputId, labelId, previewId) {
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(labelId);
+        const preview = document.getElementById(previewId);
+
+        input.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                label.classList.add('has-file');
+                preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
+                preview.classList.add('show');
+            } else {
+                label.classList.remove('has-file');
+                preview.classList.remove('show');
+            }
+        });
+    }
+
+    setupFileInput('pintar', 'label-pintar', 'preview-pintar');
+    setupFileInput('reparar', 'label-reparar', 'preview-reparar');
+    setupFileInput('trocar', 'label-trocar', 'preview-trocar');
+
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const loja = document.getElementById('loja').value.trim();
+        const pintar = document.getElementById('pintar').files.length;
+        const reparar = document.getElementById('reparar').files.length;
+        const trocar = document.getElementById('trocar').files.length;
+
+        if (!loja) {
+            alert('⚠️ Por favor, identifique a loja.');
+            return;
         }
 
-        setupFileInput('pintar', 'label-pintar', 'preview-pintar');
-        setupFileInput('reparar', 'label-reparar', 'preview-reparar');
-        setupFileInput('trocar', 'label-trocar', 'preview-trocar');
+        if (pintar === 0 && reparar === 0 && trocar === 0) {
+            alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
+            return;
+        }
 
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const loja = document.getElementById('loja').value.trim();
-            const pintar = document.getElementById('pintar').files.length;
-            const reparar = document.getElementById('reparar').files.length;
-            const trocar = document.getElementById('trocar').files.length;
+        document.getElementById('loading').classList.add('show');
+        document.getElementById('submitBtn').disabled = true;
 
-            if (!loja) {
-                alert('⚠️ Por favor, identifique a loja.');
-                return;
+        const formData = new FormData(this);
+        const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
+        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
+
+        fetch(proxyUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            document.getElementById('loading').classList.remove('show');
+
+            if (response.ok) {
+                document.getElementById('successMessage').classList.add('show');
+                this.reset();
+                document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+                document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+                
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('show');
+                    document.getElementById('submitBtn').disabled = false;
+                }, 3000);
+            } else {
+                alert('❌ Erro ao enviar. Tente novamente.');
+                document.getElementById('submitBtn').disabled = false;
             }
-
-            if (pintar === 0 && reparar === 0 && trocar === 0) {
-                alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
-                return;
-            }
-
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('submitBtn').disabled = true;
-
-            const formData = new FormData(this);
-
-             const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
-const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
-
-fetch(proxyUrl, {
-    method: 'POST',
-    body: formData
-})
-.then(response => {
-    document.getElementById('loading').classList.remove('show');
-
-    if (response.ok) {
-        document.getElementById('successMessage').classList.add('show');
-        this.reset();
-        document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
-        document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
-        
-        setTimeout(() => {
-            document.getElementById('successMessage').classList.remove('show');
+        })
+        .catch(error => {
+            document.getElementById('loading').classList.remove('show');
+            alert('❌ Erro de conexão ou CORS. Tente novamente.');
             document.getElementById('submitBtn').disabled = false;
-        }, 3000);
-    } else {
-        alert('❌ Erro ao enviar. Tente novamente.');
-        document.getElementById('submitBtn').disabled = false;
-    }
-})
-.catch(error => {
-    document.getElementById('loading').classList.remove('show');
-    alert('❌ Erro de conexão ou CORS. Tente novamente.');
-    document.getElementById('submitBtn').disabled = false;
-});
-
-    </script>
-
+        });
+    });
+</script>
 </body>
 </html>
-
 
