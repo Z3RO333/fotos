@@ -321,6 +321,34 @@
 
         <div class="form-content">
             <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook-test/formulario-visita" method="POST" enctype="multipart/form-data">
+
+                <div class="upload-section">
+    <div class="upload-label">
+        <span class="icon">🏬</span>
+        <span>Identificação da Loja</span>
+    </div>
+    <input 
+        type="text" 
+        id="loja" 
+        name="LOJA" 
+        placeholder="Ex: Loja 05 - Djalma Batista" 
+        required 
+        style="
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 2px solid #c5cae9;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            color: #1a237e;
+        "
+        onfocus="this.style.borderColor='#5e7ce2';"
+        onblur="this.style.borderColor='#c5cae9';"
+    >
+</div>
+
                 
                 <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
@@ -467,3 +495,4 @@
 
 </body>
 </html>
+
