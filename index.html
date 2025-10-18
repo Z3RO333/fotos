@@ -344,7 +344,7 @@
         </div>
 
         <div class="form-content">
-            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
+            <form id="uploadForm" action= "https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
                 
                 <!-- IDENTIFICAÇÃO DA LOJA -->
                 <div class="upload-section">
@@ -526,37 +526,59 @@
 
             const formData = new FormData(this);
 
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                document.getElementById('loading').classList.remove('show');
-                
-                if (response.ok) {
-                    document.getElementById('successMessage').classList.add('show');
-                    this.reset();
-                    document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
-                    document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
-                    
-                    setTimeout(() => {
-                        document.getElementById('successMessage').classList.remove('show');
-                        document.getElementById('submitBtn').disabled = false;
-                    }, 3000);
-                } else {
-                    alert('❌ Erro ao enviar. Tente novamente.');
-                    document.getElementById('submitBtn').disabled = false;
-                }
-            })
-            .catch(error => {
-                document.getElementById('loading').classList.remove('show');
-                alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
-                document.getElementById('submitBtn').disabled = false;
-            });
-        });
-    </script>
+            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-</body>
-</html>
+    const loja = document.getElementById('loja').value.trim();
+    const pintar = document.getElementById('pintar').files.length;
+    const reparar = document.getElementById('reparar').files.length;
+    const trocar = document.getElementById('trocar').files.length;
+
+    if (!loja) {
+        alert('⚠️ Por favor, identifique a loja.');
+        return;
+    }
+
+    if (pintar === 0 && reparar === 0 && trocar === 0) {
+        alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
+        return;
+    }
+
+    document.getElementById('loading').classList.add('show');
+    document.getElementById('submitBtn').disabled = true;
+
+    const formData = new FormData(this);
+    const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
+    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
+
+    fetch(proxyUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        document.getElementById('loading').classList.remove('show');
+
+        if (response.ok) {
+            document.getElementById('successMessage').classList.add('show');
+            this.reset();
+            document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+            document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+                document.getElementById('submitBtn').disabled = false;
+            }, 3000);
+        } else {
+            alert('❌ Erro ao enviar. Tente novamente.');
+            document.getElementById('submitBtn').disabled = false;
+        }
+    })
+    .catch(error => {
+        document.getElementById('loading').classList.remove('show');
+        alert('❌ Erro de conexão ou CORS. Tente novamente.');
+        document.getElementById('submitBtn').disabled = false;
+    });
+});
+
 
 
