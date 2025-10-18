@@ -344,7 +344,7 @@
         </div>
 
         <div class="form-content">
-            <form id="uploadForm" action= "https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
+            <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
                 
                 <!-- IDENTIFICAÇÃO DA LOJA -->
                 <div class="upload-section">
@@ -526,7 +526,11 @@
 
             const formData = new FormData(this);
 
-            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+           document.getElementById('uploadForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const loja = document.getElementById('loja').value.trim();
@@ -578,11 +582,9 @@
         alert('❌ Erro de conexão ou CORS. Tente novamente.');
         document.getElementById('submitBtn').disabled = false;
     });
-});
- </script>
+               
+    </script>
 
 </body>
 </html>
-
-
 
