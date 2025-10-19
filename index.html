@@ -5,391 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Visita Técnica</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background: #ffffff;
-            padding: 0;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        .logo-container {
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-        }
-
-        .logo img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-        }
-
-        h1 {
-            color: #ffffff;
-            margin: 15px 0 8px 0;
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .form-content {
-            padding: 40px 35px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0d47a1;
-            margin-bottom: 25px;
-            margin-top: 30px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e3f2fd;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .upload-section {
-            margin-bottom: 30px;
-        }
-
-        .upload-label {
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            color: #1a237e;
-            margin-bottom: 12px;
-            font-size: 15px;
-        }
-
-        .upload-label .icon {
-            width: 32px;
-            height: 32px;
-            background: #e3f2fd;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .text-input, .textarea-input {
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 15px;
-            border: 2px solid #c5cae9;
-            border-radius: 10px;
-            outline: none;
-            transition: all 0.3s ease;
-            background: #fafbfc;
-            color: #1a237e;
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-        }
-
-        .textarea-input {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .text-input:focus, .textarea-input:focus {
-            border-color: #5e7ce2;
-            background: #ffffff;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: block;
-            width: 100%;
-        }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .file-input-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 25px 20px;
-            background: #fafbfc;
-            border: 2px dashed #c5cae9;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .file-input-label .upload-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-            color: #5e7ce2;
-        }
-
-        .file-input-label .upload-text {
-            color: #546e7a;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .file-input-label .upload-hint {
-            color: #90a4ae;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .file-input-label:hover {
-            border-color: #5e7ce2;
-            background: #f0f4ff;
-        }
-
-        .file-input-label.has-file {
-            border-color: #43a047;
-            background: #f1f8f4;
-        }
-
-        .file-preview {
-            margin-top: 12px;
-            padding: 12px;
-            background: #e8f5e9;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #2e7d32;
-            display: none;
-            font-weight: 500;
-        }
-
-        .file-preview.show {
-            display: block;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
-            color: #fff;
-            border: none;
-            padding: 18px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 35px;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(13, 71, 161, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .submit-btn .btn-icon {
-            margin-right: 10px;
-            font-size: 20px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 71, 161, 0.6);
-            background: linear-gradient(135deg, #0a3d91 0%, #1565c0 100%);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .submit-btn:disabled {
-            background: #b0bec5;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .footer {
-            text-align: center;
-            padding: 25px;
-            background: #f5f7fa;
-            color: #78909c;
-            font-size: 13px;
-            border-top: 1px solid #eceff1;
-        }
-
-        .footer-company {
-            font-weight: 600;
-            color: #546e7a;
-            margin-bottom: 5px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-            padding: 15px;
-            background: #e3f2fd;
-            border-radius: 8px;
-            color: #0d47a1;
-            font-weight: 600;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(13, 71, 161, 0.3);
-            border-radius: 50%;
-            border-top-color: #0d47a1;
-            animation: spin 1s ease-in-out infinite;
-            margin-right: 10px;
-        }
-
-        .success-message {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-            padding: 20px;
-            background: #e8f5e9;
-            border-radius: 8px;
-            color: #2e7d32;
-            font-weight: 600;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 600px) {
-            .form-content {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .logo {
-                width: 100px;
-                height: 100px;
-            }
-
-            .header {
-                padding: 30px 20px;
-            }
-        }
+        /* Seu CSS completo vai aqui - não precisa mudar nada */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #ffffff; padding: 0; border-radius: 20px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%); padding: 40px 30px; text-align: center; position: relative; }
+        .logo { width: 120px; height: 120px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); border: 4px solid rgba(255, 255, 255, 0.3); overflow: hidden; }
+        .logo img { width: 90%; height: 90%; object-fit: contain; }
+        h1 { color: #ffffff; margin: 15px 0 8px 0; font-size: 28px; font-weight: 700; }
+        .header-subtitle { color: rgba(255, 255, 255, 0.9); font-size: 14px; }
+        .form-content { padding: 40px 35px; }
+        .section-title { font-size: 18px; font-weight: 600; color: #0d47a1; margin-bottom: 25px; margin-top: 30px; padding-bottom: 12px; border-bottom: 2px solid #e3f2fd; text-transform: uppercase; }
+        .upload-section { margin-bottom: 30px; }
+        .upload-label { display: flex; align-items: center; font-weight: 600; color: #1a237e; margin-bottom: 12px; font-size: 15px; }
+        .upload-label .icon { width: 32px; height: 32px; background: #e3f2fd; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 18px; }
+        .text-input, .textarea-input { width: 100%; padding: 14px 16px; font-size: 15px; border: 2px solid #c5cae9; border-radius: 10px; outline: none; transition: all 0.3s ease; background: #fafbfc; color: #1a237e; }
+        .textarea-input { resize: vertical; min-height: 100px; }
+        .text-input:focus, .textarea-input:focus { border-color: #5e7ce2; background: #ffffff; }
+        .file-input-wrapper input[type="file"] { position: absolute; left: -9999px; }
+        .file-input-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px 20px; background: #fafbfc; border: 2px dashed #c5cae9; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; }
+        .file-input-label .upload-icon { font-size: 36px; margin-bottom: 10px; color: #5e7ce2; }
+        .file-input-label .upload-text { color: #546e7a; font-size: 14px; }
+        .file-input-label .upload-hint { color: #90a4ae; font-size: 12px; margin-top: 5px; }
+        .file-input-label:hover { border-color: #5e7ce2; background: #f0f4ff; }
+        .file-input-label.has-file { border-color: #43a047; background: #f1f8f4; }
+        .file-preview { margin-top: 12px; padding: 12px; background: #e8f5e9; border-radius: 8px; font-size: 13px; color: #2e7d32; display: none; font-weight: 500; }
+        .file-preview.show { display: block; }
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%); color: #fff; border: none; padding: 18px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 35px; font-size: 16px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(13, 71, 161, 0.4); }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13, 71, 161, 0.6); }
+        .submit-btn:disabled { background: #b0bec5; cursor: not-allowed; box-shadow: none; }
+        .footer { text-align: center; padding: 25px; background: #f5f7fa; color: #78909c; font-size: 13px; border-top: 1px solid #eceff1; }
+        .loading, .success-message { display: none; text-align: center; margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: 600; }
+        .loading.show, .success-message.show { display: block; }
+        .loading { background: #e3f2fd; color: #0d47a1; }
+        .success-message { background: #e8f5e9; color: #2e7d32; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <div class="logo-container">
-            <div class="logo">
-                <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo Bemol">
-            </div>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo Bemol">
         </div>
         <h1>Relatório de Visita Técnica</h1>
         <p class="header-subtitle">Documentação de Serviços Realizados</p>
     </div>
 
     <div class="form-content">
-        <form id="uploadForm" action="https://bemol.app.n8n.cloud/webhook/visita" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm">
             
-            <!-- IDENTIFICAÇÃO DA LOJA -->
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🏬</span>
-                    <span>Identificação da Loja</span>
-                </div>
+                <div class="upload-label"><span class="icon">🏬</span><span>Identificação da Loja</span></div>
                 <input type="text" id="loja" name="LOJA" class="text-input" placeholder="Ex: Loja 05 - Djalma Batista" required>
             </div>
             <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">📅</span>
-                        <span>Data da Visita</span>
-                    </div>
-                    <input 
-                        type="date" 
-                        id="data_visita" 
-                        name="DATA_VISITA" 
-                        class="text-input"
-                        required 
-                    >
-                </div>
+                <div class="upload-label"><span class="icon">📅</span><span>Data da Visita</span></div>
+                <input type="date" id="data_visita" name="DATA_VISITA" class="text-input" required>
+            </div>
+            <div class="upload-section">
+                <div class="upload-label"><span class="icon">👤</span><span>Responsável pela Visita</span></div>
+                <input type="text" id="responsavel" name="RESPONSAVEL" class="text-input" placeholder="Digite o nome completo" required>
+            </div>
 
-                <div class="upload-section">
-                    <div class="upload-label">
-                        <span class="icon">👤</span>
-                        <span>Responsável pela Visita</span>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="responsavel" 
-                        name="RESPONSAVEL" 
-                        class="text-input"
-                        placeholder="Digite o nome completo" 
-                        required 
-                    >
-                </div>
             <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
-            <!-- PINTURA -->
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🎨</span>
-                    <span>Serviços de Pintura</span>
-                </div>
+                <div class="upload-label"><span class="icon">🎨</span><span>Serviços de Pintura</span></div>
                 <div class="file-input-wrapper">
                     <input type="file" id="pintar" name="PINTAR" accept="image/*" multiple>
                     <label for="pintar" class="file-input-label" id="label-pintar">
@@ -400,167 +82,133 @@
                 </div>
                 <div class="file-preview" id="preview-pintar"></div>
             </div>
-
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🗒️</span>
-                    <span>Observações - Pintura</span>
-                </div>
-                <textarea id="obs-pintar" name="OBS_PINTAR" class="textarea-input" placeholder="Ex: Área com infiltração próxima à vitrine principal. Recomendado repintar o setor B." rows="4"></textarea>
+                <div class="upload-label"><span class="icon">🗒️</span><span>Observações - Pintura</span></div>
+                <textarea name="OBS_PINTAR" class="textarea-input" placeholder="Ex: Área com infiltração..." rows="4"></textarea>
             </div>
 
-            <!-- REPARO -->
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🔧</span>
-                    <span>Serviços de Reparo</span>
-                </div>
+                <div class="upload-label"><span class="icon">🔧</span><span>Serviços de Reparo</span></div>
                 <div class="file-input-wrapper">
                     <input type="file" id="reparar" name="REPARAR" accept="image/*" multiple>
                     <label for="reparar" class="file-input-label" id="label-reparar">
                         <div class="upload-icon">📸</div>
                         <div class="upload-text">Clique para selecionar imagens</div>
-                        <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
                     </label>
                 </div>
                 <div class="file-preview" id="preview-reparar"></div>
             </div>
-
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🗒️</span>
-                    <span>Observações - Reparo</span>
-                </div>
-                <textarea id="obs-reparar" name="OBS_REPARAR" class="textarea-input" placeholder="Ex: Porta de entrada danificada, necessita troca de dobradiças." rows="4"></textarea>
+                <div class="upload-label"><span class="icon">🗒️</span><span>Observações - Reparo</span></div>
+                <textarea name="OBS_REPARAR" class="textarea-input" placeholder="Ex: Porta danificada..." rows="4"></textarea>
             </div>
 
-            <!-- SUBSTITUIÇÃO -->
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🔄</span>
-                    <span>Serviços de Substituição</span>
-                </div>
+                <div class="upload-label"><span class="icon">🔄</span><span>Serviços de Substituição</span></div>
                 <div class="file-input-wrapper">
                     <input type="file" id="trocar" name="TROCAR" accept="image/*" multiple>
                     <label for="trocar" class="file-input-label" id="label-trocar">
                         <div class="upload-icon">📸</div>
                         <div class="upload-text">Clique para selecionar imagens</div>
-                        <div class="upload-hint">Formatos aceitos: JPG, PNG</div>
                     </label>
                 </div>
                 <div class="file-preview" id="preview-trocar"></div>
             </div>
-
             <div class="upload-section">
-                <div class="upload-label">
-                    <span class="icon">🗒️</span>
-                    <span>Observações - Substituição</span>
-                </div>
-                <textarea id="obs-trocar" name="OBS_TROCAR" class="textarea-input" placeholder="Ex: Lâmpadas queimadas na seção de eletrônicos, substituídas por LED." rows="4"></textarea>
+                <div class="upload-label"><span class="icon">🗒️</span><span>Observações - Substituição</span></div>
+                <textarea name="OBS_TROCAR" class="textarea-input" placeholder="Ex: Lâmpadas queimadas..." rows="4"></textarea>
             </div>
             
-            <button type="submit" class="submit-btn" id="submitBtn">
-                <span class="btn-icon">📤</span>
-                Enviar Relatório
-            </button>
-
-            <div class="loading" id="loading">
-                <span class="loading-spinner"></span>
-                Processando imagens...
-            </div>
-
-            <div class="success-message" id="successMessage">
-                ✅ Relatório enviado com sucesso!
-            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">Enviar Relatório</button>
+            <div class="loading" id="loading">Processando imagens...</div>
+            <div class="success-message" id="successMessage">✅ Relatório enviado com sucesso!</div>
         
         </form>
     </div>
 
     <div class="footer">
-        <div class="footer-company">Sistema Bemol - Gestão de Visitas</div>
-        <div>© 2025 Todos os direitos reservados</div>
+        <div>Sistema Bemol - Gestão de Visitas</div>
     </div>
 </div>
 
 <script>
-function setupFileInput(inputId, labelId, previewId) {
-    const input = document.getElementById(inputId);
-    const label = document.getElementById(labelId);
-    const preview = document.getElementById(previewId);
+    // Função para atualizar a UI dos inputs de arquivo
+    function setupFileInput(inputId, labelId, previewId) {
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(labelId);
+        const preview = document.getElementById(previewId);
 
-    input.addEventListener('change', function(e) {
-        const files = e.target.files;
-        if (files.length > 0) {
-            label.classList.add('has-file');
-            preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
-            preview.classList.add('show');
-        } else {
-            label.classList.remove('has-file');
-            preview.classList.remove('show');
-        }
-    });
-}
-
-// Inicializa os inputs de arquivo
-setupFileInput('pintar', 'label-pintar', 'preview-pintar');
-setupFileInput('reparar', 'label-reparar', 'preview-reparar');
-setupFileInput('trocar', 'label-trocar', 'preview-trocar');
-
-// Evento de envio do formulário
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const loja = document.getElementById('loja').value.trim();
-    if (!loja) {
-        alert('⚠️ Por favor, identifique a loja.');
-        return;
+        input.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                label.classList.add('has-file');
+                preview.innerHTML = `<strong>✓ ${files.length} ${files.length === 1 ? 'arquivo selecionado' : 'arquivos selecionados'}</strong>`;
+                preview.classList.add('show');
+            } else {
+                label.classList.remove('has-file');
+                preview.classList.remove('show');
+            }
+        });
     }
 
-    document.getElementById('loading').classList.add('show');
-    document.getElementById('submitBtn').disabled = true;
+    // Inicializa todos os inputs de arquivo
+    setupFileInput('pintar', 'label-pintar', 'preview-pintar');
+    setupFileInput('reparar', 'label-reparar', 'preview-reparar');
+    setupFileInput('trocar', 'label-trocar', 'preview-trocar');
 
-    // Cria o objeto FormData a partir do formulário. Isso já inclui os arquivos.
-    const formData = new FormData(this);
-    const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
-    
-    // Usamos um proxy para evitar o bloqueio de CORS ao enviar arquivos
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
+    // Lida com o envio do formulário
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Impede o envio padrão do formulário
 
-    fetch(proxyUrl, {
-        method: 'POST',
-        body: formData
-        // IMPORTANTE: Não defina o cabeçalho 'Content-Type' aqui.
-        // O navegador fará isso automaticamente e da maneira correta.
-    })
-    .then(response => {
-        document.getElementById('loading').classList.remove('show');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
 
-        if (response.ok) {
-            document.getElementById('successMessage').classList.add('show');
-            this.reset();
-            document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
-            document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+        // Mostra o loading e desabilita o botão
+        loading.classList.add('show');
+        submitBtn.disabled = true;
 
-            setTimeout(() => {
-                document.getElementById('successMessage').classList.remove('show');
-                document.getElementById('submitBtn').disabled = false;
-            }, 3000);
-        } else {
-            alert(`❌ Erro ao enviar (${response.status}). Verifique o console para mais detalhes.`);
-            document.getElementById('submitBtn').disabled = false;
-        }
-    })
-    .catch(error => {
-        document.getElementById('loading').classList.remove('show');
-        alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
-        document.getElementById('submitBtn').disabled = false;
-        console.error('Fetch Error:', error);
+        // Cria o objeto FormData a partir do formulário. Isso já inclui os arquivos.
+        const formData = new FormData(this);
+        const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
+        
+        // Usa um proxy para evitar o bloqueio de CORS ao enviar arquivos
+        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
+
+        fetch(proxyUrl, {
+            method: 'POST',
+            body: formData
+            // IMPORTANTE: Não defina o cabeçalho 'Content-Type'.
+            // O navegador fará isso automaticamente e da maneira correta para arquivos.
+        })
+        .then(response => {
+            loading.classList.remove('show'); // Esconde o loading
+
+            if (response.ok) {
+                successMessage.classList.add('show'); // Mostra sucesso
+                this.reset(); // Limpa o formulário
+                // Limpa os previews dos arquivos
+                document.querySelectorAll('.file-preview').forEach(p => p.classList.remove('show'));
+                document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                    submitBtn.disabled = false;
+                }, 4000);
+            } else {
+                // Se der erro, mostra uma mensagem e reabilita o botão
+                alert(`❌ Erro ao enviar (${response.status}). Verifique o console para mais detalhes.`);
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            loading.classList.remove('show');
+            alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
+            submitBtn.disabled = false;
+            console.error('Fetch Error:', error);
+        });
     });
-});
 </script>
+
 </body>
 </html>
-
-
-
-
