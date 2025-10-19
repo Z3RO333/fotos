@@ -511,29 +511,26 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const loja = document.getElementById('loja').value.trim();
-    const pintar = document.getElementById('pintar').files.length;
-    const reparar = document.getElementById('reparar').files.length;
-    const trocar = document.getElementById('trocar').files.length;
-
     if (!loja) {
         alert('⚠️ Por favor, identifique a loja.');
-        return;
-    }
-
-    if (pintar === 0 && reparar === 0 && trocar === 0) {
-        alert('⚠️ Por favor, selecione pelo menos uma imagem em qualquer categoria.');
         return;
     }
 
     document.getElementById('loading').classList.add('show');
     document.getElementById('submitBtn').disabled = true;
 
+    // Cria o objeto FormData a partir do formulário. Isso já inclui os arquivos.
     const formData = new FormData(this);
-    const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita"; // envio direto
+    const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
+    
+    // Usamos um proxy para evitar o bloqueio de CORS ao enviar arquivos
+    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(webhookUrl);
 
-    fetch(webhookUrl, {
+    fetch(proxyUrl, {
         method: 'POST',
         body: formData
+        // IMPORTANTE: Não defina o cabeçalho 'Content-Type' aqui.
+        // O navegador fará isso automaticamente e da maneira correta.
     })
     .then(response => {
         document.getElementById('loading').classList.remove('show');
@@ -549,19 +546,21 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
                 document.getElementById('submitBtn').disabled = false;
             }, 3000);
         } else {
-            alert('❌ Erro ao enviar. Tente novamente.');
+            alert(`❌ Erro ao enviar (${response.status}). Verifique o console para mais detalhes.`);
             document.getElementById('submitBtn').disabled = false;
         }
     })
     .catch(error => {
         document.getElementById('loading').classList.remove('show');
-        alert('❌ Erro de conexão. Tente novamente.');
+        alert('❌ Erro de conexão. Verifique sua internet e tente novamente.');
         document.getElementById('submitBtn').disabled = false;
+        console.error('Fetch Error:', error);
     });
 });
 </script>
 </body>
 </html>
+
 
 
 
