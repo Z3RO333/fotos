@@ -354,7 +354,34 @@
                 </div>
                 <input type="text" id="loja" name="LOJA" class="text-input" placeholder="Ex: Loja 05 - Djalma Batista" required>
             </div>
+            <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">📅</span>
+                        <span>Data da Visita</span>
+                    </div>
+                    <input 
+                        type="date" 
+                        id="data_visita" 
+                        name="DATA_VISITA" 
+                        class="text-input"
+                        required 
+                    >
+                </div>
 
+                <div class="upload-section">
+                    <div class="upload-label">
+                        <span class="icon">👤</span>
+                        <span>Responsável pela Visita</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="responsavel" 
+                        name="RESPONSAVEL" 
+                        class="text-input"
+                        placeholder="Digite o nome completo" 
+                        required 
+                    >
+                </div>
             <div class="section-title">📋 Anexar Evidências Fotográficas</div>
 
             <!-- PINTURA -->
@@ -535,5 +562,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
 </script>
 </body>
 </html>
+
 
 
