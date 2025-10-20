@@ -57,41 +57,62 @@
             
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">🏬</span><span>Identificação da Loja</span></div>
-                <input type="text" id="loja" name="LOJA" class="text-input" placeholder="Ex: Loja 05 - Djalma Batista" required>
+                <input type="text" id="loja" class="text-input" placeholder="Ex: Loja 05 - Djalma Batista" required>
             </div>
             
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">📅</span><span>Data da Visita</span></div>
-                <input type="date" id="data_visita" name="DATA_VISITA" class="text-input" required>
+                <input type="date" id="data_visita" class="text-input" required>
             </div>
 
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">👤</span><span>Responsável pela Visita</span></div>
-                <input type="text" id="tecnico" name="TECNICO" class="text-input" placeholder="Seu nome completo" required>
+                <input type="text" id="tecnico" class="text-input" placeholder="Seu nome completo" required>
             </div>
 
-            <div class="upload-section">
-                <div class="upload-label"><span class="icon">📝</span><span>Observações</span></div>
-                <textarea id="observacoes" name="OBSERVACOES" class="textarea-input" placeholder="Descreva o serviço realizado, problemas encontrados, etc."></textarea>
-            </div>
+            <h2 class="section-title">ANEXAR EVIDÊNCIAS FOTOGRÁFICAS</h2>
 
             <div class="upload-section">
-                <div class="upload-label"><span class="icon">📷</span><span>Anexar Fotos</span></div>
+                <div class="upload-label"><span class="icon">🎨</span><span>Serviços de Pintura</span></div>
                 <div class="file-input-wrapper">
-                    <label for="fotos" class="file-input-label" id="file-label">
-                        <span class="upload-icon">📤</span>
-                        <span class="upload-text">Clique para selecionar os arquivos</span>
-                        <span class="upload-hint">Você pode selecionar várias imagens</span>
+                    <label for="fotos_pintura" class="file-input-label">
+                        <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
                     </label>
-                    <input type="file" id="fotos" name="FOTOS" multiple accept="image/*">
+                    <input type="file" id="fotos_pintura" multiple accept="image/*">
                 </div>
-                <div class="file-preview" id="file-preview-box"></div>
+                <div class="file-preview" id="file-preview-pintura"></div>
+                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Pintura</span></div>
+                <textarea id="obs_pintura" class="textarea-input" placeholder="Ex: Área com infiltração..."></textarea>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-label"><span class="icon">🔧</span><span>Serviços de Reparo</span></div>
+                <div class="file-input-wrapper">
+                    <label for="fotos_reparo" class="file-input-label">
+                        <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
+                    </label>
+                    <input type="file" id="fotos_reparo" multiple accept="image/*">
+                </div>
+                <div class="file-preview" id="file-preview-reparo"></div>
+                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Reparo</span></div>
+                <textarea id="obs_reparo" class="textarea-input" placeholder="Ex: Porta danificada..."></textarea>
+            </div>
+
+            <div class="upload-section">
+                <div class="upload-label"><span class="icon">💡</span><span>Serviços de Substituição</span></div>
+                <div class="file-input-wrapper">
+                    <label for="fotos_substituicao" class="file-input-label">
+                        <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
+                    </label>
+                    <input type="file" id="fotos_substituicao" multiple accept="image/*">
+                </div>
+                <div class="file-preview" id="file-preview-substituicao"></div>
+                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Substituição</span></div>
+                <textarea id="obs_substituicao" class="textarea-input" placeholder="Ex: Lâmpadas queimadas..."></textarea>
             </div>
 
             <button type="submit" class="submit-btn" id="submit-button">Enviar Relatório</button>
-            
             <div id="status-messages"></div>
-
         </form>
     </div>
 
@@ -101,16 +122,13 @@
 </div>
 
 <script>
-// Seleciona os elementos do formulário que vamos usar
-const form = document.getElementById("uploadForm");
-const submitButton = document.getElementById("submit-button");
-const fileInput = document.getElementById("fotos");
-const fileLabel = document.getElementById("file-label");
-const filePreviewBox = document.getElementById("file-preview-box");
-const statusMessages = document.getElementById("status-messages");
-
 // 🔗 COLE AQUI A URL GERADA PELO POWER AUTOMATE 🔗
 const webhookUrl = "SUA_URL_DO_POWER_AUTOMATE_VEM_AQUI";
+
+// --- Funções e Lógica do Formulário ---
+const form = document.getElementById("uploadForm");
+const submitButton = document.getElementById("submit-button");
+const statusMessages = document.getElementById("status-messages");
 
 // Função para converter um arquivo para o formato Base64
 function toBase64(file) {
@@ -122,81 +140,94 @@ function toBase64(file) {
     });
 }
 
-// Atualiza a interface para mostrar os arquivos selecionados
-fileInput.addEventListener("change", () => {
-    if (fileInput.files.length > 0) {
-        fileLabel.classList.add("has-file");
-        filePreviewBox.classList.add("show");
-        filePreviewBox.innerHTML = `<strong>${fileInput.files.length} arquivo(s) selecionado(s)</strong>`;
-    } else {
-        fileLabel.classList.remove("has-file");
-        filePreviewBox.classList.remove("show");
-        filePreviewBox.innerHTML = "";
+// Função auxiliar para processar um grupo de arquivos
+async function processFiles(fileInputId) {
+    const fileInput = document.getElementById(fileInputId);
+    const files = fileInput.files;
+    const base64Array = [];
+    for (const file of files) {
+        const base64String = await toBase64(file);
+        base64Array.push(base64String);
     }
-});
+    return base64Array;
+}
+
+// Função para configurar o feedback visual para cada input de arquivo
+function setupFileInput(inputId, labelSelector, previewId) {
+    const input = document.getElementById(inputId);
+    const label = input.previousElementSibling;
+    const previewBox = document.getElementById(previewId);
+
+    input.addEventListener("change", () => {
+        if (input.files.length > 0) {
+            label.classList.add("has-file");
+            previewBox.classList.add("show");
+            previewBox.innerHTML = `<strong>${input.files.length} arquivo(s) selecionado(s)</strong>`;
+        } else {
+            label.classList.remove("has-file");
+            previewBox.classList.remove("show");
+            previewBox.innerHTML = "";
+        }
+    });
+}
+
+// Configura os 3 campos de upload de arquivo
+setupFileInput('fotos_pintura', 'label[for="fotos_pintura"]', 'file-preview-pintura');
+setupFileInput('fotos_reparo', 'label[for="fotos_reparo"]', 'file-preview-reparo');
+setupFileInput('fotos_substituicao', 'label[for="fotos_substituicao"]', 'file-preview-substituicao');
 
 // Evento que dispara quando o formulário é enviado
 form.addEventListener("submit", async (event) => {
-    // Previne o comportamento padrão do formulário de recarregar a página
     event.preventDefault();
-
-    // Validação simples para a URL
-    if (webhookUrl === "https://defaultf10f91e5f90548aa8c4ca68d0ae5f6.ec.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6d7b92fba9f847a4b08fe4f4a1903e36/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xtJUec4Cq9RCQ6WMRa95XFY9BjqMd97A-NQaGoDyIrM") {
+    if (webhookUrl === "SUA_URL_DO_POWER_AUTOMATE_VEM_AQUI" || webhookUrl === "") {
         alert("🚨 ERRO: A URL do Power Automate não foi configurada no código JavaScript!");
         return;
     }
 
-    // Desabilita o botão e mostra mensagem de carregamento
     submitButton.disabled = true;
     statusMessages.innerHTML = `<div class="loading show">Enviando relatório, por favor aguarde...</div>`;
 
     try {
-        const files = fileInput.files;
-        const fotosBase64 = [];
-
-        // Converte todos os arquivos selecionados para Base64
-        for (const file of files) {
-            const base64String = await toBase64(file);
-            fotosBase64.push(base64String);
-        }
+        // Processa todos os arquivos de todas as seções em paralelo
+        const [fotosPintura, fotosReparo, fotosSubstituicao] = await Promise.all([
+            processFiles('fotos_pintura'),
+            processFiles('fotos_reparo'),
+            processFiles('fotos_substituicao')
+        ]);
 
         // Monta o objeto JSON com todos os dados do formulário
         const dataToSend = {
             LOJA: document.getElementById("loja").value,
             DATA_VISITA: document.getElementById("data_visita").value,
             TECNICO: document.getElementById("tecnico").value,
-            OBSERVACOES: document.getElementById("observacoes").value,
-            FOTOS: fotosBase64 // Array com as imagens em Base64
+            OBS_PINTURA: document.getElementById("obs_pintura").value,
+            FOTOS_PINTURA: fotosPintura,
+            OBS_REPARO: document.getElementById("obs_reparo").value,
+            FOTOS_REPARO: fotosReparo,
+            OBS_SUBSTITUICAO: document.getElementById("obs_substituicao").value,
+            FOTOS_SUBSTITUICAO: fotosSubstituicao
         };
 
-        // Envia os dados para o Power Automate
         const response = await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dataToSend)
         });
 
-        if (response.ok) {
-            // Se o envio foi bem-sucedido
-            statusMessages.innerHTML = `<div class="success-message show">✅ Relatório enviado com sucesso!</div>`;
-            form.reset(); // Limpa o formulário
-            fileLabel.classList.remove("has-file");
-            filePreviewBox.classList.remove("show");
-            filePreviewBox.innerHTML = "";
-        } else {
-            // Se o Power Automate retornou um erro
-            throw new Error(`Erro do servidor: ${response.status} ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error(`Erro do servidor: ${response.status}`);
+
+        statusMessages.innerHTML = `<div class="success-message show">✅ Relatório enviado com sucesso!</div>`;
+        form.reset();
+        // Limpa os previews dos arquivos
+        document.querySelectorAll('.file-preview').forEach(p => { p.innerHTML = ''; p.classList.remove('show'); });
+        document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
 
     } catch (error) {
-        // Se ocorreu um erro de rede ou na conversão
         console.error("Erro ao enviar o formulário:", error);
-        statusMessages.innerHTML = ""; // Limpa a mensagem de "carregando"
-        alert(`❌ Ocorreu um erro ao enviar o relatório. Verifique sua conexão com a internet ou contate o suporte.\n\nDetalhes: ${error.message}`);
+        statusMessages.innerHTML = "";
+        alert(`❌ Ocorreu um erro ao enviar o relatório. Verifique sua conexão.\n\nDetalhes: ${error.message}`);
     } finally {
-        // Reabilita o botão de envio, independente do resultado
         submitButton.disabled = false;
-        // Remove a mensagem de sucesso após 5 segundos
         setTimeout(() => {
             if (statusMessages.querySelector('.success-message')) {
                 statusMessages.innerHTML = '';
