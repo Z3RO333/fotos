@@ -5,40 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório de Visita Técnica</title>
     <style>
-        /* Seu CSS original - Nenhuma alteração feita aqui */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background: #ffffff; padding: 0; border-radius: 20px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%); padding: 40px 30px; text-align: center; position: relative; }
-        .logo { width: 120px; height: 120px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); border: 4px solid rgba(255, 255, 255, 0.3); overflow: hidden; }
-        .logo img { width: 90%; height: 90%; object-fit: contain; }
-        h1 { color: #ffffff; margin: 15px 0 8px 0; font-size: 28px; font-weight: 700; }
-        .header-subtitle { color: rgba(255, 255, 255, 0.9); font-size: 14px; }
-        .form-content { padding: 40px 35px; }
-        .section-title { font-size: 18px; font-weight: 600; color: #0d47a1; margin-bottom: 25px; margin-top: 30px; padding-bottom: 12px; border-bottom: 2px solid #e3f2fd; text-transform: uppercase; }
-        .upload-section { margin-bottom: 30px; }
-        .upload-label { display: flex; align-items: center; font-weight: 600; color: #1a237e; margin-bottom: 12px; font-size: 15px; }
-        .upload-label .icon { width: 32px; height: 32px; background: #e3f2fd; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 18px; }
-        .text-input, .textarea-input { width: 100%; padding: 14px 16px; font-size: 15px; border: 2px solid #c5cae9; border-radius: 10px; outline: none; transition: all 0.3s ease; background: #fafbfc; color: #1a237e; }
-        .textarea-input { resize: vertical; min-height: 100px; }
-        .text-input:focus, .textarea-input:focus { border-color: #5e7ce2; background: #ffffff; }
-        .file-input-wrapper input[type="file"] { position: absolute; left: -9999px; }
-        .file-input-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px 20px; background: #fafbfc; border: 2px dashed #c5cae9; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; text-align: center; }
-        .file-input-label .upload-icon { font-size: 36px; margin-bottom: 10px; color: #5e7ce2; }
-        .file-input-label .upload-text { color: #546e7a; font-size: 14px; }
-        .file-input-label .upload-hint { color: #90a4ae; font-size: 12px; margin-top: 5px; }
-        .file-input-label:hover { border-color: #5e7ce2; background: #f0f4ff; }
-        .file-input-label.has-file { border-color: #43a047; background: #f1f8f4; }
-        .file-preview { margin-top: 12px; padding: 12px; background: #e8f5e9; border-radius: 8px; font-size: 13px; color: #2e7d32; display: none; font-weight: 500; }
-        .file-preview.show { display: block; }
-        .submit-btn { width: 100%; background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%); color: #fff; border: none; padding: 18px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 35px; font-size: 16px; text-transform: uppercase; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(13, 71, 161, 0.4); }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13, 71, 161, 0.6); }
-        .submit-btn:disabled { background: #b0bec5; cursor: not-allowed; box-shadow: none; }
-        .footer { text-align: center; padding: 25px; background: #f5f7fa; color: #78909c; font-size: 13px; border-top: 1px solid #eceff1; }
-        .loading, .success-message { display: none; text-align: center; margin-top: 20px; padding: 15px; border-radius: 8px; font-weight: 600; }
-        .loading.show, .success-message.show { display: block; }
-        .loading { background: #e3f2fd; color: #0d47a1; }
-        .success-message { background: #e8f5e9; color: #2e7d32; }
+        /* CSS organizado: variáveis, agrupamento lógico e responsividade */
+        :root{
+            --bg-start: #0a1929;
+            --bg-end: #1e3a5f;
+            --primary-1: #0d47a1;
+            --primary-2: #1565c0;
+            --accent: #5e7ce2;
+            --muted: #90a4ae;
+            --card-bg: #ffffff;
+            --input-bg: #fafbfc;
+            --border: #c5cae9;
+            --success-bg: #e8f5e9;
+            --warning-bg: #fff3e0;
+            --text: #1a237e;
+            --shadow-lg: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Reset / Base */
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg,var(--bg-start) 0%,var(--bg-end) 100%);
+            display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;color:var(--text);
+        }
+
+        /* Layout principal */
+        .container{
+            width:100%;max-width:600px;background:var(--card-bg);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg)
+        }
+
+        /* Header */
+        .header{background:linear-gradient(135deg,var(--primary-1),var(--primary-2));padding:40px 30px;text-align:center}
+        .logo{width:120px;height:120px;border-radius:50%;background:#fff;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,0.2);border:4px solid rgba(255,255,255,0.3);overflow:hidden}
+        .logo img{width:90%;height:90%;object-fit:contain}
+        h1{color:#fff;margin:15px 0 8px;font-size:28px;font-weight:700}
+        .header-subtitle{color:rgba(255,255,255,0.9);font-size:14px}
+
+        /* Form content */
+        .form-content{padding:40px 35px}
+        .section-title{font-size:18px;font-weight:600;color:var(--primary-1);margin:30px 0 25px;padding-bottom:12px;border-bottom:2px solid #e3f2fd;text-transform:uppercase}
+        .upload-section{margin-bottom:30px}
+        .upload-label{display:flex;align-items:center;font-weight:600;color:var(--text);margin-bottom:12px;font-size:15px}
+        .upload-label .icon{width:32px;height:32px;background:#e3f2fd;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-size:18px}
+
+        /* Inputs */
+        .text-input,.textarea-input{width:100%;padding:14px 16px;font-size:15px;border:2px solid var(--border);border-radius:10px;background:var(--input-bg);color:var(--text);outline:none;transition:all .2s ease}
+        .textarea-input{min-height:100px;resize:vertical}
+        .text-input:focus,.textarea-input:focus{border-color:var(--accent);background:#fff}
+
+        /* File input (visual) */
+        .file-input-wrapper{position:relative}
+        .file-input-wrapper input[type="file"]{position:absolute;left:-9999px}
+        .file-input-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:25px 20px;background:var(--input-bg);border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all .2s ease;text-align:center}
+        .file-input-label:focus{outline:3px solid rgba(21,101,192,0.18);outline-offset:3px}
+        .file-input-label:hover{border-color:var(--accent);background:#f0f4ff}
+        .file-input-label.has-file{border-color:#43a047;background:#f1f8f4}
+        .file-input-label .upload-icon{font-size:36px;margin-bottom:10px;color:var(--accent)}
+        .file-input-label .upload-text{color:#546e7a;font-size:14px}
+        .file-input-label .upload-hint{color:var(--muted);font-size:12px;margin-top:5px}
+
+        /* File preview */
+        .file-preview{margin-top:12px;padding:12px;background:#f5f7fa;border-radius:8px;font-size:13px;color:#2e7d32;display:none;font-weight:500}
+        .file-preview.show{display:flex;flex-direction:column;gap:8px}
+        .file-preview .files-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+        .file-preview .thumb{width:96px;height:72px;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+        .file-preview .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+        .file-preview .file-info{font-size:13px;color:#37474f}
+
+        /* Buttons / messages / footer */
+        .submit-btn{width:100%;background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff;border:none;padding:18px;border-radius:12px;font-weight:600;cursor:pointer;margin-top:35px;font-size:16px;text-transform:uppercase;transition:all .3s ease;box-shadow:0 6px 20px rgba(13,71,161,0.4)}
+        .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(13,71,161,0.6)}
+        .submit-btn:disabled{background:#b0bec5;cursor:not-allowed;box-shadow:none}
+
+        .loading,.success-message{display:none;text-align:center;margin-top:20px;padding:15px;border-radius:8px;font-weight:600}
+        .loading.show,.success-message.show{display:block}
+        .loading{background:#e3f2fd;color:var(--primary-1)}
+        .success-message{background:var(--success-bg);color:#2e7d32}
+
+        .footer{text-align:center;padding:25px;background:#f5f7fa;color:#78909c;font-size:13px;border-top:1px solid #eceff1}
+
+        /* Responsividade */
+        @media (max-width:480px){
+            .form-content{padding:24px}
+            .file-preview .thumb{width:72px;height:54px}
+            h1{font-size:22px}
+        }
     </style>
 </head>
 <body>
@@ -75,7 +128,7 @@
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">🎨</span><span>Serviços de Pintura</span></div>
                 <div class="file-input-wrapper">
-                    <label for="fotos_pintura" class="file-input-label">
+                    <label for="fotos_pintura" class="file-input-label" tabindex="0" role="button" aria-controls="file-preview-pintura">
                         <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
                     </label>
                     <input type="file" id="fotos_pintura" multiple accept="image/*">
@@ -88,7 +141,7 @@
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">🔧</span><span>Serviços de Reparo</span></div>
                 <div class="file-input-wrapper">
-                    <label for="fotos_reparo" class="file-input-label">
+                    <label for="fotos_reparo" class="file-input-label" tabindex="0" role="button" aria-controls="file-preview-reparo">
                         <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
                     </label>
                     <input type="file" id="fotos_reparo" multiple accept="image/*">
@@ -101,7 +154,7 @@
             <div class="upload-section">
                 <div class="upload-label"><span class="icon">💡</span><span>Serviços de Substituição</span></div>
                 <div class="file-input-wrapper">
-                    <label for="fotos_substituicao" class="file-input-label">
+                    <label for="fotos_substituicao" class="file-input-label" tabindex="0" role="button" aria-controls="file-preview-substituicao">
                         <span class="upload-icon">📷</span><span class="upload-text">Clique para selecionar imagens</span>
                     </label>
                     <input type="file" id="fotos_substituicao" multiple accept="image/*">
@@ -122,13 +175,15 @@
 </div>
 
 <script>
-//URL GERADA PELO AUTOMATE
-const webhookUrl = "https://defaultf10f91e5f90548aa8c4ca68d0ae5f6.ec.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/6d7b92fba9f847a4b08fe4f4a1903e36/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xtJUec4Cq9RCQ6WMRa95XFY9BjqMd97A-NQaGoDyIrM";
+// URL do webhook (atualizada conforme solicitado)
+const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
 
 // --- Funções e Lógica do Formulário ---
 const form = document.getElementById("uploadForm");
 const submitButton = document.getElementById("submit-button");
 const statusMessages = document.getElementById("status-messages");
+// IDs dos campos de arquivo usados para validação global
+const FILE_INPUT_IDS = ['fotos_pintura', 'fotos_reparo', 'fotos_substituicao'];
 
 // Função para converter um arquivo para o formato Base64
 function toBase64(file) {
@@ -152,29 +207,114 @@ async function processFiles(fileInputId) {
     return base64Array;
 }
 
+// Função para formatar bytes em texto legível
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// Validação do tamanho total de todos os arquivos selecionados
+function validateTotalFiles() {
+    const LIMIT = 25 * 1024 * 1024; // 25 MB
+    let total = 0;
+    FILE_INPUT_IDS.forEach(id => {
+        const input = document.getElementById(id);
+        if (input && input.files && input.files.length) {
+            for (const f of input.files) total += f.size;
+        }
+    });
+
+    // Mensagem de aviso persistente na área de status
+    const existing = document.getElementById('file-size-warning');
+    if (total > LIMIT) {
+        if (!existing) {
+            const warn = document.createElement('div');
+            warn.id = 'file-size-warning';
+            warn.style.marginTop = '12px';
+            warn.style.padding = '12px';
+            warn.style.borderRadius = '8px';
+            warn.style.background = '#fff3e0';
+            warn.style.color = '#e65100';
+            warn.style.fontWeight = '600';
+            warn.textContent = `Tamanho total dos arquivos: ${formatBytes(total)} — excede o limite de ${formatBytes(LIMIT)}. Remova alguns arquivos.`;
+            statusMessages.appendChild(warn);
+        } else {
+            existing.textContent = `Tamanho total dos arquivos: ${formatBytes(total)} — excede o limite de ${formatBytes(LIMIT)}. Remova alguns arquivos.`;
+        }
+        submitButton.disabled = true;
+        return false;
+    } else {
+        if (existing) existing.remove();
+        submitButton.disabled = false;
+        return true;
+    }
+}
+
 // Função para configurar o feedback visual para cada input de arquivo
-function setupFileInput(inputId, labelSelector, previewId) {
+function setupFileInput(inputId, previewId) {
     const input = document.getElementById(inputId);
-    const label = input.previousElementSibling;
+    const label = document.querySelector(`label[for="${inputId}"]`) || input.previousElementSibling;
     const previewBox = document.getElementById(previewId);
 
     input.addEventListener("change", () => {
-        if (input.files.length > 0) {
+        const files = Array.from(input.files || []);
+        if (files.length > 0) {
             label.classList.add("has-file");
             previewBox.classList.add("show");
-            previewBox.innerHTML = `<strong>${input.files.length} arquivo(s) selecionado(s)</strong>`;
+            // Build preview content
+            const info = document.createElement('div');
+            info.innerHTML = `<strong>${files.length} arquivo(s) selecionado(s)</strong>`;
+
+            const filesRow = document.createElement('div');
+            filesRow.className = 'files-row';
+
+            // show up to 8 thumbnails to avoid heavy DOM
+            files.slice(0, 8).forEach(file => {
+                const thumbWrap = document.createElement('div');
+                thumbWrap.className = 'thumb';
+                const img = document.createElement('img');
+                const reader = new FileReader();
+                reader.onload = (e) => { img.src = e.target.result; };
+                reader.readAsDataURL(file);
+                thumbWrap.appendChild(img);
+                filesRow.appendChild(thumbWrap);
+            });
+
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'file-info';
+            const totalSize = files.reduce((s, f) => s + f.size, 0);
+            fileInfo.innerHTML = `${files.map(f => `<div>${f.name} — ${formatBytes(f.size)}</div>`).join('')}<div style="margin-top:6px;font-weight:600;">Total: ${formatBytes(totalSize)}</div>`;
+
+            previewBox.innerHTML = '';
+            previewBox.appendChild(info);
+            previewBox.appendChild(filesRow);
+            previewBox.appendChild(fileInfo);
         } else {
             label.classList.remove("has-file");
             previewBox.classList.remove("show");
             previewBox.innerHTML = "";
         }
+
+        // revalida o total de arquivos e habilita/desabilita envio
+        validateTotalFiles();
+    });
+
+    // keyboard support: Enter/Space to open file picker
+    label.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            input.click();
+        }
     });
 }
 
 // Configura os 3 campos de upload de arquivo
-setupFileInput('fotos_pintura', 'label[for="fotos_pintura"]', 'file-preview-pintura');
-setupFileInput('fotos_reparo', 'label[for="fotos_reparo"]', 'file-preview-reparo');
-setupFileInput('fotos_substituicao', 'label[for="fotos_substituicao"]', 'file-preview-substituicao');
+setupFileInput('fotos_pintura', 'file-preview-pintura');
+setupFileInput('fotos_reparo', 'file-preview-reparo');
+setupFileInput('fotos_substituicao', 'file-preview-substituicao');
 
 // Evento que dispara quando o formulário é enviado
 form.addEventListener("submit", async (event) => {
