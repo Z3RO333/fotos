@@ -335,33 +335,44 @@ form.addEventListener("submit", async (event) => {
     statusMessages.innerHTML = `<div class="loading show">Enviando relatório, por favor aguarde...</div>`;
 
     try {
-        // Processa todos os arquivos de todas as seções em paralelo
-        const [fotosPintura, fotosReparo, fotosSubstituicao] = await Promise.all([
-            processFiles('fotos_pintura'),
-            processFiles('fotos_reparo'),
-            processFiles('fotos_substituicao')
-        ]);
+        // Antes de enviar, revalida o tamanho total (pode ter mudado)
+        if (!validateTotalFiles()) throw new Error('Tamanho total dos arquivos excede o limite.');
 
-        // Monta o objeto JSON com todos os dados do formulário
-        const dataToSend = {
-            LOJA: document.getElementById("loja").value,
-            DATA_VISITA: document.getElementById("data_visita").value,
-            TECNICO: document.getElementById("tecnico").value,
-            OBS_PINTURA: document.getElementById("obs_pintura").value,
-            FOTOS_PINTURA: fotosPintura,
-            OBS_REPARO: document.getElementById("obs_reparo").value,
-            FOTOS_REPARO: fotosReparo,
-            OBS_SUBSTITUICAO: document.getElementById("obs_substituicao").value,
-            FOTOS_SUBSTITUICAO: fotosSubstituicao
+        // Monta FormData para enviar arquivos binários sem alterar qualidade
+        const formData = new FormData();
+        formData.append('LOJA', document.getElementById("loja").value);
+        formData.append('DATA_VISITA', document.getElementById("data_visita").value);
+        formData.append('TECNICO', document.getElementById("tecnico").value);
+        formData.append('OBS_PINTURA', document.getElementById("obs_pintura").value);
+        formData.append('OBS_REPARO', document.getElementById("obs_reparo").value);
+        formData.append('OBS_SUBSTITUICAO', document.getElementById("obs_substituicao").value);
+
+        // Anexa os arquivos como arrays (mantendo nomes de campo simples)
+        const appendFiles = (inputId, fieldName) => {
+            const input = document.getElementById(inputId);
+            if (input && input.files) {
+                Array.from(input.files).forEach(file => {
+                    formData.append(fieldName, file, file.name);
+                });
+            }
         };
+
+    // Use field names without brackets to improve compatibility with n8n webhook parsing
+    appendFiles('fotos_pintura', 'fotos_pintura');
+    appendFiles('fotos_reparo', 'fotos_reparo');
+    appendFiles('fotos_substituicao', 'fotos_substituicao');
 
         const response = await fetch(webhookUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dataToSend)
+            body: formData // não definir Content-Type — o browser monta o boundary automaticamente
         });
 
-        if (!response.ok) throw new Error(`Erro do servidor: ${response.status}`);
+        if (!response.ok) {
+            // tenta ler o corpo da resposta para debug (pode conter mensagem do servidor)
+            let text = '';
+            try { text = await response.text(); } catch (e) { text = ''; }
+            throw new Error(`Erro do servidor: ${response.status} ${text ? '\nResposta: ' + text : ''}`);
+        }
 
         statusMessages.innerHTML = `<div class="success-message show">✅ Relatório enviado com sucesso!</div>`;
         form.reset();
