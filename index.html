@@ -324,7 +324,7 @@ setupFileInput('fotos_substituicao', 'file-preview-substituicao');
 // Evento que dispara quando o formulário é enviado
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (webhookUrl === "SUA_URL_DO_POWER_AUTOMATE_VEM_AQUI" || webhookUrl === "") {
+    if (webhookUrl === "https://bemol.app.n8n.cloud/webhook/visita" || webhookUrl === "") {
         alert("🚨 ERRO: A URL do Power Automate não foi configurada no código JavaScript!");
         return;
     }
@@ -395,6 +395,7 @@ form.addEventListener("submit", async (event) => {
 
 </body>
 </html>
+
 
 
 
