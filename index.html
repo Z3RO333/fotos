@@ -24,11 +24,11 @@
 
         /* Reset / Base */
         *{margin:0;padding:0;box-sizing:border-box}
-        html,body{height:100%}
+        html,body{height:100%;overflow:hidden}
         body{
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(135deg,var(--bg-start) 0%,var(--bg-end) 100%);
-            display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:40px 20px;color:var(--text);
+            display:flex;align-items:center;justify-content:center;height:100vh;padding:10px;color:var(--text);
         }
 
         /* Layout principal */
@@ -36,68 +36,109 @@
             width:100%;
             max-width:600px;
             background:var(--card-bg);
-            border-radius:20px;
-            margin:0 auto;
-            max-height:calc(100vh - 48px);
-            overflow:auto;
+            border-radius:16px;
+            height:calc(100vh - 20px);
+            display:flex;
+            flex-direction:column;
             box-shadow:var(--shadow-lg);
         }
 
         /* Header */
-        .header{background:linear-gradient(135deg,var(--primary-1),var(--primary-2));padding:40px 30px;text-align:center}
-        .logo{width:120px;height:120px;border-radius:50%;background:#fff;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,0.2);border:4px solid rgba(255,255,255,0.3);overflow:hidden}
+        .header{
+            background:linear-gradient(135deg,var(--primary-1),var(--primary-2));
+            padding:20px 25px;
+            text-align:center;
+            flex-shrink:0;
+            border-radius:16px 16px 0 0;
+        }
+        .logo{width:80px;height:80px;border-radius:50%;background:#fff;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);border:3px solid rgba(255,255,255,0.3);overflow:hidden}
         .logo img{width:90%;height:90%;object-fit:contain}
-        h1{color:#fff;margin:15px 0 8px;font-size:28px;font-weight:700}
-        .header-subtitle{color:rgba(255,255,255,0.9);font-size:14px}
+        h1{color:#fff;margin:10px 0 5px;font-size:22px;font-weight:700}
+        .header-subtitle{color:rgba(255,255,255,0.9);font-size:13px}
 
         /* Form content */
-        .form-content{padding:40px 35px}
-        .section-title{font-size:18px;font-weight:600;color:var(--primary-1);margin:30px 0 25px;padding-bottom:12px;border-bottom:2px solid #e3f2fd;text-transform:uppercase}
-        .upload-section{margin-bottom:30px}
-        .upload-label{display:flex;align-items:center;font-weight:600;color:var(--text);margin-bottom:12px;font-size:15px}
-        .upload-label .icon{width:32px;height:32px;background:#e3f2fd;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:12px;font-size:18px}
+        .form-content{
+            padding:20px 25px;
+            flex:1;
+            overflow-y:auto;
+            scrollbar-width:thin;
+            scrollbar-color:var(--border) transparent;
+        }
+        .form-content::-webkit-scrollbar{width:6px}
+        .form-content::-webkit-scrollbar-track{background:transparent}
+        .form-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+        .form-content::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+        
+        .section-title{font-size:16px;font-weight:600;color:var(--primary-1);margin:20px 0 15px;padding-bottom:8px;border-bottom:2px solid #e3f2fd;text-transform:uppercase}
+        .upload-section{margin-bottom:20px}
+        .upload-label{display:flex;align-items:center;font-weight:600;color:var(--text);margin-bottom:8px;font-size:14px}
+        .upload-label .icon{width:28px;height:28px;background:#e3f2fd;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-right:10px;font-size:16px}
 
         /* Inputs */
-        .text-input,.textarea-input{width:100%;padding:14px 16px;font-size:15px;border:2px solid var(--border);border-radius:10px;background:var(--input-bg);color:var(--text);outline:none;transition:all .2s ease}
-        .textarea-input{min-height:100px;resize:vertical}
+        .text-input,.textarea-input{width:100%;padding:12px 14px;font-size:14px;border:2px solid var(--border);border-radius:8px;background:var(--input-bg);color:var(--text);outline:none;transition:all .2s ease}
+        .textarea-input{min-height:80px;resize:vertical}
         .text-input:focus,.textarea-input:focus{border-color:var(--accent);background:#fff}
 
         /* File input (visual) */
         .file-input-wrapper{position:relative}
         .file-input-wrapper input[type="file"]{position:absolute;left:-9999px}
-        .file-input-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:25px 20px;background:var(--input-bg);border:2px dashed var(--border);border-radius:12px;cursor:pointer;transition:all .2s ease;text-align:center}
+        .file-input-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 15px;background:var(--input-bg);border:2px dashed var(--border);border-radius:8px;cursor:pointer;transition:all .2s ease;text-align:center}
         .file-input-label:focus{outline:3px solid rgba(21,101,192,0.18);outline-offset:3px}
         .file-input-label:hover{border-color:var(--accent);background:#f0f4ff}
         .file-input-label.has-file{border-color:#43a047;background:#f1f8f4}
-        .file-input-label .upload-icon{font-size:36px;margin-bottom:10px;color:var(--accent)}
-        .file-input-label .upload-text{color:#546e7a;font-size:14px}
-        .file-input-label .upload-hint{color:var(--muted);font-size:12px;margin-top:5px}
+        .file-input-label .upload-icon{font-size:28px;margin-bottom:8px;color:var(--accent)}
+        .file-input-label .upload-text{color:#546e7a;font-size:13px}
+        .file-input-label .upload-hint{color:var(--muted);font-size:11px;margin-top:4px}
 
         /* File preview */
-        .file-preview{margin-top:12px;padding:12px;background:#f5f7fa;border-radius:8px;font-size:13px;color:#2e7d32;display:none;font-weight:500}
-        .file-preview.show{display:flex;flex-direction:column;gap:8px}
-        .file-preview .files-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-        .file-preview .thumb{width:96px;height:72px;border-radius:8px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+        .file-preview{margin-top:8px;padding:10px;background:#f5f7fa;border-radius:6px;font-size:12px;color:#2e7d32;display:none;font-weight:500}
+        .file-preview.show{display:flex;flex-direction:column;gap:6px}
+        .file-preview .files-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+        .file-preview .thumb{width:60px;height:45px;border-radius:6px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
         .file-preview .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-        .file-preview .file-info{font-size:13px;color:#37474f}
+        .file-preview .file-info{font-size:11px;color:#37474f}
 
         /* Buttons / messages / footer */
-        .submit-btn{width:100%;background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff;border:none;padding:18px;border-radius:12px;font-weight:600;cursor:pointer;margin-top:35px;font-size:16px;text-transform:uppercase;transition:all .3s ease;box-shadow:0 6px 20px rgba(13,71,161,0.4)}
-        .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(13,71,161,0.6)}
+        .submit-btn{width:100%;background:linear-gradient(135deg,var(--primary-1),var(--primary-2));color:#fff;border:none;padding:14px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:20px;font-size:15px;text-transform:uppercase;transition:all .3s ease;box-shadow:0 4px 16px rgba(13,71,161,0.4)}
+        .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(13,71,161,0.6)}
         .submit-btn:disabled{background:#b0bec5;cursor:not-allowed;box-shadow:none}
 
-        .loading,.success-message{display:none;text-align:center;margin-top:20px;padding:15px;border-radius:8px;font-weight:600}
+        .loading,.success-message{display:none;text-align:center;margin-top:15px;padding:12px;border-radius:6px;font-weight:600}
         .loading.show,.success-message.show{display:block}
         .loading{background:#e3f2fd;color:var(--primary-1)}
         .success-message{background:var(--success-bg);color:#2e7d32}
 
-        .footer{text-align:center;padding:25px;background:#f5f7fa;color:#78909c;font-size:13px;border-top:1px solid #eceff1}
+        .footer{text-align:center;padding:15px;background:#f5f7fa;color:#78909c;font-size:11px;border-top:1px solid #eceff1;flex-shrink:0;border-radius:0 0 16px 16px}
 
         /* Responsividade */
-        @media (max-width:480px){
-            .form-content{padding:24px}
-            .file-preview .thumb{width:72px;height:54px}
-            h1{font-size:22px}
+        @media (max-width:768px){
+            body{padding:5px}
+            .container{height:calc(100vh - 10px);border-radius:12px;max-width:100%}
+            .header{padding:15px 20px;border-radius:12px 12px 0 0}
+            .logo{width:70px;height:70px}
+            h1{font-size:20px}
+            .header-subtitle{font-size:12px}
+            .form-content{padding:15px 20px}
+            .section-title{font-size:15px;margin:15px 0 12px}
+            .upload-section{margin-bottom:15px}
+            .upload-label{font-size:13px;margin-bottom:6px}
+            .upload-label .icon{width:24px;height:24px;font-size:14px}
+            .text-input,.textarea-input{padding:10px 12px;font-size:13px}
+            .textarea-input{min-height:60px}
+            .file-input-label{padding:15px 12px}
+            .file-input-label .upload-icon{font-size:24px;margin-bottom:6px}
+            .file-input-label .upload-text{font-size:12px}
+            .file-preview .thumb{width:50px;height:38px}
+            .submit-btn{padding:12px;font-size:14px;margin-top:15px}
+            .footer{padding:12px;font-size:10px;border-radius:0 0 12px 12px}
+        }
+
+        @media (min-width:769px) and (max-width:1024px){
+            .container{max-width:500px}
+        }
+
+        @media (min-width:1025px){
+            .container{max-width:550px}
         }
     </style>
 </head>
@@ -109,7 +150,7 @@
             <img src="https://raw.githubusercontent.com/Z3RO333/fotos/refs/heads/main/image_1-removebg-preview.png" alt="Logo">
         </div>
         <h1>Relatório de Visita Técnica</h1>
-        <p class="header-subtitle">Documentação de Serviços Realizados</p>
+        <p class="header-subtitle">Documentação de Serviços para Realizarem</p>
     </div>
 
     <div class="form-content">
@@ -141,7 +182,7 @@
                     <input type="file" id="fotos_pintura" multiple accept="image/*">
                 </div>
                 <div class="file-preview" id="file-preview-pintura"></div>
-                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Pintura</span></div>
+                <div class="upload-label" style="margin-top: 12px;"><span class="icon">📝</span><span>Observações - Pintura</span></div>
                 <textarea id="obs_pintura" class="textarea-input" placeholder="Ex: Área com infiltração..."></textarea>
             </div>
 
@@ -154,7 +195,7 @@
                     <input type="file" id="fotos_reparo" multiple accept="image/*">
                 </div>
                 <div class="file-preview" id="file-preview-reparo"></div>
-                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Reparo</span></div>
+                <div class="upload-label" style="margin-top: 12px;"><span class="icon">📝</span><span>Observações - Reparo</span></div>
                 <textarea id="obs_reparo" class="textarea-input" placeholder="Ex: Porta danificada..."></textarea>
             </div>
 
@@ -167,7 +208,7 @@
                     <input type="file" id="fotos_substituicao" multiple accept="image/*">
                 </div>
                 <div class="file-preview" id="file-preview-substituicao"></div>
-                <div class="upload-label" style="margin-top: 15px;"><span class="icon">📝</span><span>Observações - Substituição</span></div>
+                <div class="upload-label" style="margin-top: 12px;"><span class="icon">📝</span><span>Observações - Substituição</span></div>
                 <textarea id="obs_substituicao" class="textarea-input" placeholder="Ex: Lâmpadas queimadas..."></textarea>
             </div>
 
