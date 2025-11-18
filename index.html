@@ -223,15 +223,20 @@
 </div>
 
 <script>
+// 🔗 URL do Webhook do n8n
+// Produção: /webhook/visita
+// Teste:    /webhook-test/visita
+const webhookUrl = "https://bemol.app.n8n.cloud/webhook/visita";
 
 // --- Funções e Lógica do Formulário ---
 const form = document.getElementById("uploadForm");
 const submitButton = document.getElementById("submit-button");
 const statusMessages = document.getElementById("status-messages");
+
 // IDs dos campos de arquivo usados para validação global
 const FILE_INPUT_IDS = ['fotos_pintura', 'fotos_reparo', 'fotos_substituicao'];
 
-// Função para converter um arquivo para o formato Base64
+// (Opcional) conversão pra base64 – hoje não usamos no envio
 function toBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -241,7 +246,7 @@ function toBase64(file) {
     });
 }
 
-// Função auxiliar para processar um grupo de arquivos
+// (Opcional) processar grupo de arquivos – também não usado no envio atual
 async function processFiles(fileInputId) {
     const fileInput = document.getElementById(fileInputId);
     const files = fileInput.files;
@@ -253,7 +258,7 @@ async function processFiles(fileInputId) {
     return base64Array;
 }
 
-// Função para formatar bytes em texto legível
+// Formata bytes em texto legível
 function formatBytes(bytes) {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -273,7 +278,6 @@ function validateTotalFiles() {
         }
     });
 
-    // Mensagem de aviso persistente na área de status
     const existing = document.getElementById('file-size-warning');
     if (total > LIMIT) {
         if (!existing) {
@@ -299,7 +303,7 @@ function validateTotalFiles() {
     }
 }
 
-// Função para configurar o feedback visual para cada input de arquivo
+// Configura o feedback visual para cada input de arquivo
 function setupFileInput(inputId, previewId) {
     const input = document.getElementById(inputId);
     const label = document.querySelector(`label[for="${inputId}"]`) || input.previousElementSibling;
@@ -310,14 +314,14 @@ function setupFileInput(inputId, previewId) {
         if (files.length > 0) {
             label.classList.add("has-file");
             previewBox.classList.add("show");
-            // Build preview content
+
             const info = document.createElement('div');
             info.innerHTML = `<strong>${files.length} arquivo(s) selecionado(s)</strong>`;
 
             const filesRow = document.createElement('div');
             filesRow.className = 'files-row';
 
-            // show up to 8 thumbnails to avoid heavy DOM
+            // mostra até 8 miniaturas
             files.slice(0, 8).forEach(file => {
                 const thumbWrap = document.createElement('div');
                 thumbWrap.className = 'thumb';
@@ -332,7 +336,9 @@ function setupFileInput(inputId, previewId) {
             const fileInfo = document.createElement('div');
             fileInfo.className = 'file-info';
             const totalSize = files.reduce((s, f) => s + f.size, 0);
-            fileInfo.innerHTML = `${files.map(f => `<div>${f.name} — ${formatBytes(f.size)}</div>`).join('')}<div style="margin-top:6px;font-weight:600;">Total: ${formatBytes(totalSize)}</div>`;
+            fileInfo.innerHTML =
+                `${files.map(f => `<div>${f.name} — ${formatBytes(f.size)}</div>`).join('')}` +
+                `<div style="margin-top:6px;font-weight:600;">Total: ${formatBytes(totalSize)}</div>`;
 
             previewBox.innerHTML = '';
             previewBox.appendChild(info);
@@ -344,11 +350,10 @@ function setupFileInput(inputId, previewId) {
             previewBox.innerHTML = "";
         }
 
-        // revalida o total de arquivos e habilita/desabilita envio
         validateTotalFiles();
     });
 
-    // keyboard support: Enter/Space to open file picker
+    // Acessibilidade: Enter/Espaço abre o seletor de arquivos
     label.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -362,11 +367,13 @@ setupFileInput('fotos_pintura', 'file-preview-pintura');
 setupFileInput('fotos_reparo', 'file-preview-reparo');
 setupFileInput('fotos_substituicao', 'file-preview-substituicao');
 
-// Evento que dispara quando o formulário é enviado
+// Envio do formulário
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (webhookUrl === "https://bemol.app.n8n.cloud/webhook/visita" || webhookUrl === "") {
-        alert("🚨 ERRO: A URL do Power Automate não foi configurada no código JavaScript!");
+
+    // Confere se a URL do webhook do n8n foi configurada
+    if (!webhookUrl || webhookUrl.includes("/webhook-test/")) {
+        alert("🚨 ERRO: A URL do Webhook do n8n não foi configurada corretamente (está vazia ou ainda em modo de teste).");
         return;
     }
 
@@ -374,10 +381,9 @@ form.addEventListener("submit", async (event) => {
     statusMessages.innerHTML = `<div class="loading show">Enviando relatório, por favor aguarde...</div>`;
 
     try {
-        // Antes de enviar, revalida o tamanho total (pode ter mudado)
         if (!validateTotalFiles()) throw new Error('Tamanho total dos arquivos excede o limite.');
 
-        // Monta FormData para enviar arquivos binários sem alterar qualidade
+        // Monta o FormData manualmente (n8n vai receber como multipart/form-data)
         const formData = new FormData();
         formData.append('LOJA', document.getElementById("loja").value);
         formData.append('DATA_VISITA', document.getElementById("data_visita").value);
@@ -386,7 +392,6 @@ form.addEventListener("submit", async (event) => {
         formData.append('OBS_REPARO', document.getElementById("obs_reparo").value);
         formData.append('OBS_SUBSTITUICAO', document.getElementById("obs_substituicao").value);
 
-        // Anexa os arquivos como arrays (mantendo nomes de campo simples)
         const appendFiles = (inputId, fieldName) => {
             const input = document.getElementById(inputId);
             if (input && input.files) {
@@ -396,18 +401,16 @@ form.addEventListener("submit", async (event) => {
             }
         };
 
-    // Use field names without brackets to improve compatibility with n8n webhook parsing
-    appendFiles('fotos_pintura', 'fotos_pintura');
-    appendFiles('fotos_reparo', 'fotos_reparo');
-    appendFiles('fotos_substituicao', 'fotos_substituicao');
+        appendFiles('fotos_pintura', 'fotos_pintura');
+        appendFiles('fotos_reparo', 'fotos_reparo');
+        appendFiles('fotos_substituicao', 'fotos_substituicao');
 
         const response = await fetch(webhookUrl, {
             method: "POST",
-            body: formData // não definir Content-Type — o browser monta o boundary automaticamente
+            body: formData
         });
 
         if (!response.ok) {
-            // tenta ler o corpo da resposta para debug (pode conter mensagem do servidor)
             let text = '';
             try { text = await response.text(); } catch (e) { text = ''; }
             throw new Error(`Erro do servidor: ${response.status} ${text ? '\nResposta: ' + text : ''}`);
@@ -415,14 +418,14 @@ form.addEventListener("submit", async (event) => {
 
         statusMessages.innerHTML = `<div class="success-message show">✅ Relatório enviado com sucesso!</div>`;
         form.reset();
-        // Limpa os previews dos arquivos
+
         document.querySelectorAll('.file-preview').forEach(p => { p.innerHTML = ''; p.classList.remove('show'); });
         document.querySelectorAll('.file-input-label').forEach(l => l.classList.remove('has-file'));
 
     } catch (error) {
         console.error("Erro ao enviar o formulário:", error);
         statusMessages.innerHTML = "";
-        alert(`❌ Ocorreu um erro ao enviar o relatório. Verifique sua conexão.\n\nDetalhes: ${error.message}`);
+        alert(`❌ Ocorreu um erro ao enviar o relatório.\n\nDetalhes: ${error.message}`);
     } finally {
         submitButton.disabled = false;
         setTimeout(() => {
@@ -436,6 +439,7 @@ form.addEventListener("submit", async (event) => {
 
 </body>
 </html>
+
 
 
 
