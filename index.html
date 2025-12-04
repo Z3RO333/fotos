@@ -11,20 +11,415 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(18, 40, 75, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(41, 14, 58, 0.6) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(15, 32, 90, 0.4) 0%, transparent 50%);
+            animation: nebulaPulse 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes nebulaPulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Poeira cósmica */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.05), transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(255, 255, 255, 0.05), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.03), transparent),
+                radial-gradient(1px 1px at 80% 10%, rgba(255, 255, 255, 0.04), transparent),
+                radial-gradient(2px 2px at 90% 60%, rgba(255, 255, 255, 0.05), transparent);
+            background-size: 200% 200%, 180% 180%, 150% 150%, 220% 220%, 190% 190%;
+            background-position: 0% 0%, 100% 0%, 50% 50%, 0% 100%, 100% 100%;
+            animation: cosmicDustFloat 60s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes cosmicDustFloat {
+            0%, 100% {
+                background-position: 0% 0%, 100% 0%, 50% 50%, 0% 100%, 100% 100%;
+            }
+            50% {
+                background-position: 100% 100%, 0% 100%, 25% 75%, 100% 0%, 0% 0%;
+            }
+        }
+
+        /* Fundo animado com partículas */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Campo de estrelas - Camada 1 (estrelas pequenas) */
+        .background-animation::before {
+            content: '';
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: white;
+            box-shadow:
+                100px 200px white, 300px 100px white, 500px 350px white,
+                700px 150px white, 200px 450px white, 850px 250px white,
+                400px 500px white, 150px 300px white, 650px 400px white,
+                800px 50px white, 50px 150px white, 250px 250px white,
+                450px 150px white, 600px 300px white, 350px 400px white,
+                550px 200px white, 750px 450px white, 900px 350px white,
+                50px 500px white, 200px 100px white, 400px 300px white,
+                600px 150px white, 800px 400px white, 100px 350px white,
+                300px 500px white, 500px 100px white, 700px 300px white,
+                900px 200px white, 150px 450px white, 350px 150px white,
+                550px 350px white, 750px 100px white, 250px 400px white,
+                450px 250px white, 650px 500px white, 850px 150px white,
+                950px 450px white, 50px 250px white, 150px 100px white,
+                350px 300px white, 550px 450px white, 750px 200px white,
+                250px 500px white, 450px 350px white, 650px 100px white,
+                850px 300px white, 1050px 250px white, 1150px 400px white,
+                1250px 150px white, 1350px 350px white, 1450px 200px white,
+                125px 275px white, 425px 425px white, 575px 125px white,
+                825px 475px white, 275px 175px white, 975px 275px white,
+                1100px 325px white, 1300px 225px white, 1400px 450px white,
+                75px 375px white, 325px 75px white, 625px 225px white,
+                875px 375px white, 225px 525px white, 525px 275px white;
+            animation: starTwinkle 4s infinite ease-in-out;
+        }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* Galáxia espiral distante */
+        .background-animation::after {
+            content: '';
+            position: absolute;
+            top: 5%;
+            right: 10%;
+            width: 500px;
+            height: 500px;
+            background:
+                radial-gradient(ellipse at center,
+                    rgba(120, 150, 255, 0.4) 0%,
+                    rgba(100, 130, 220, 0.25) 20%,
+                    rgba(80, 110, 200, 0.15) 40%,
+                    transparent 70%);
+            border-radius: 50%;
+            animation: galaxyRotate 80s linear infinite, galaxyPulse 10s ease-in-out infinite;
+            filter: blur(60px);
+        }
+
+        @keyframes galaxyRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes galaxyPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Estrelas maiores brilhantes */
+        .bright-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(150, 200, 255, 0.8),
+                        0 0 10px rgba(255, 255, 255, 0.6);
+            animation: brightTwinkle 6s infinite ease-in-out;
+        }
+
+        @keyframes brightTwinkle {
+            0%, 100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(150, 180, 255, 0.4), rgba(80, 120, 200, 0.2));
+            backdrop-filter: blur(5px);
+            animation: float 15s infinite ease-in-out;
+            box-shadow: 0 0 60px rgba(100, 150, 255, 0.4),
+                        inset -10px -10px 30px rgba(50, 80, 150, 0.3);
+        }
+
+        /* Variações de cores para diferentes partículas (planetas) */
+        .particle:nth-child(1),
+        .particle:nth-child(5),
+        .particle:nth-child(9) {
+            background: radial-gradient(circle at 30% 30%, rgba(100, 150, 255, 0.5), rgba(50, 100, 200, 0.2));
+            box-shadow: 0 0 60px rgba(70, 120, 255, 0.5),
+                        inset -10px -10px 30px rgba(30, 60, 150, 0.4);
+        }
+
+        .particle:nth-child(3),
+        .particle:nth-child(7),
+        .particle:nth-child(11) {
+            background: radial-gradient(circle at 30% 30%, rgba(180, 120, 255, 0.4), rgba(120, 80, 200, 0.2));
+            box-shadow: 0 0 50px rgba(150, 100, 255, 0.4),
+                        inset -10px -10px 30px rgba(80, 50, 150, 0.3);
+        }
+
+        .particle:nth-child(2),
+        .particle:nth-child(6),
+        .particle:nth-child(10) {
+            background: radial-gradient(circle at 30% 30%, rgba(120, 200, 255, 0.4), rgba(80, 150, 220, 0.2));
+            box-shadow: 0 0 70px rgba(90, 170, 255, 0.5),
+                        inset -10px -10px 30px rgba(50, 100, 180, 0.3);
+        }
+
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-duration: 12s;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            left: 80%;
+            top: 10%;
+            animation-duration: 14s;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            top: 60%;
+            animation-duration: 16s;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            left: 20%;
+            top: 80%;
+            animation-duration: 10s;
+            animation-delay: 1s;
+        }
+
+        .particle:nth-child(5) {
+            width: 70px;
+            height: 70px;
+            left: 70%;
+            top: 70%;
+            animation-duration: 13s;
+            animation-delay: 3s;
+        }
+
+        .particle:nth-child(6) {
+            width: 50px;
+            height: 50px;
+            left: 40%;
+            top: 30%;
+            animation-duration: 11s;
+            animation-delay: 5s;
+        }
+
+        .particle:nth-child(7) {
+            width: 90px;
+            height: 90px;
+            left: 85%;
+            top: 50%;
+            animation-duration: 15s;
+            animation-delay: 2.5s;
+        }
+
+        .particle:nth-child(8) {
+            width: 45px;
+            height: 45px;
+            left: 5%;
+            top: 50%;
+            animation-duration: 12.5s;
+            animation-delay: 4.5s;
+        }
+
+        .particle:nth-child(9) {
+            width: 65px;
+            height: 65px;
+            left: 60%;
+            top: 15%;
+            animation-duration: 14.5s;
+            animation-delay: 1.5s;
+        }
+
+        .particle:nth-child(10) {
+            width: 55px;
+            height: 55px;
+            left: 30%;
+            top: 90%;
+            animation-duration: 13.5s;
+            animation-delay: 3.5s;
+        }
+
+        .particle:nth-child(11) {
+            width: 75px;
+            height: 75px;
+            left: 90%;
+            top: 85%;
+            animation-duration: 16.5s;
+            animation-delay: 0.5s;
+        }
+
+        .particle:nth-child(12) {
+            width: 35px;
+            height: 35px;
+            left: 15%;
+            top: 40%;
+            animation-duration: 11.5s;
+            animation-delay: 5.5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            50% {
+                transform: translate(50px, -70px) scale(1.4) rotate(180deg);
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 1;
+            }
+        }
+
+        /* Brilho nas partículas (planetas) */
+        .particle::before {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            top: 10%;
+            left: 10%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: shimmerPlanet 4s infinite ease-in-out;
+        }
+
+        @keyframes shimmerPlanet {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translate(0, 0);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translate(5px, 5px);
+            }
+        }
+
+        /* Estrelas cadentes ocasionais */
+        .particle:nth-child(4)::after,
+        .particle:nth-child(8)::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            top: -20px;
+            right: -20px;
+            animation: shootingStar 5s ease-in infinite;
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-300px) translateY(300px);
+                opacity: 0;
+            }
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5),
+                        0 0 0 1px rgba(150, 180, 255, 0.2),
+                        0 0 40px rgba(100, 150, 255, 0.15);
             overflow: hidden;
+            animation: fadeIn 0.8s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .header {
@@ -32,11 +427,41 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 8s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         .header h1 {
             font-size: 28px;
             margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            position: relative;
+            z-index: 1;
         }
 
         .form-content {
@@ -47,10 +472,22 @@
             margin-bottom: 30px;
             padding-bottom: 30px;
             border-bottom: 2px solid #f0f0f0;
+            animation: fadeInUp 0.6s ease;
         }
 
         .section:last-child {
             border-bottom: none;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .section-title {
@@ -59,6 +496,26 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #667eea;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            animation: expandLine 1.2s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes expandLine {
+            to {
+                width: 100%;
+            }
         }
 
         .form-group {
@@ -93,9 +550,10 @@
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            background: white;
         }
 
         input:focus,
@@ -103,6 +561,14 @@
         textarea:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        input:hover,
+        select:hover,
+        textarea:hover {
+            border-color: #a5b4fc;
         }
 
         textarea {
@@ -120,16 +586,18 @@
         .checkbox-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 2px solid transparent;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .checkbox-item:hover {
             background: #e9ecef;
             border-color: #667eea;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
         }
 
         .checkbox-item input[type="checkbox"] {
@@ -137,6 +605,7 @@
             height: 20px;
             margin-right: 10px;
             cursor: pointer;
+            accent-color: #667eea;
         }
 
         .checkbox-item label {
@@ -149,22 +618,25 @@
         .categoria-item {
             margin-bottom: 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
+            background: white;
         }
 
         .categoria-item:hover {
             border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
         }
 
         .categoria-header {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 16px;
             background: #f8f9fa;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .categoria-header:hover {
@@ -176,6 +648,7 @@
             height: 22px;
             margin-right: 12px;
             cursor: pointer;
+            accent-color: #667eea;
         }
 
         .categoria-header label {
@@ -190,32 +663,61 @@
             padding: 15px;
             background: white;
             border-top: 2px solid #e0e0e0;
+            animation: expandDown 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes expandDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                padding: 0 15px;
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                padding: 15px;
+            }
         }
 
         .categoria-content textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 2px solid #e0e0e0;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 10px;
             font-size: 14px;
             resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .categoria-content textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .categoria-content textarea:hover {
+            border-color: #a5b4fc;
         }
 
         .mini-upload-area {
             border: 2px dashed #667eea;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
             text-align: center;
             background: #f8f9ff;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             margin-bottom: 10px;
         }
 
         .mini-upload-area:hover {
             background: #e9ecff;
             border-color: #764ba2;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
         .upload-label {
@@ -233,8 +735,15 @@
         .foto-preview-mini .foto-item {
             position: relative;
             border: 2px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .foto-preview-mini .foto-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: #667eea;
         }
 
         .foto-preview-mini .foto-item img {
@@ -251,30 +760,39 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 26px;
+            height: 26px;
             cursor: pointer;
             font-size: 16px;
             line-height: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
         }
 
         .foto-preview-mini .remove-btn:hover {
             background: #c82333;
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 3px 10px rgba(220, 53, 69, 0.5);
         }
 
         .file-upload-area {
             border: 3px dashed #667eea;
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 40px;
             text-align: center;
             background: #f8f9ff;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
         }
 
         .file-upload-area:hover {
             background: #e9ecff;
             border-color: #764ba2;
+            transform: scale(1.01);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
 
         .file-upload-area input[type="file"] {
@@ -291,9 +809,16 @@
         .foto-preview-item {
             position: relative;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             background: white;
+            transition: all 0.3s ease;
+        }
+
+        .foto-preview-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border-color: #667eea;
         }
 
         .foto-preview-item img {
@@ -309,10 +834,21 @@
 
         .foto-preview-item .foto-info input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .foto-preview-item .foto-info input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .foto-preview-item .foto-info input:hover {
+            border-color: #a5b4fc;
         }
 
         .foto-preview-item .remove-foto {
@@ -323,17 +859,22 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
             font-size: 18px;
             line-height: 1;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
         }
 
         .foto-preview-item .remove-foto:hover {
             background: #c82333;
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.5);
         }
 
         .status-selector {
@@ -346,11 +887,16 @@
             flex: 1;
             padding: 15px;
             border: 3px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
             background: white;
+        }
+
+        .status-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .status-option input[type="radio"] {
@@ -361,52 +907,96 @@
             border-color: #28a745;
         }
 
+        .status-option.ok:hover {
+            background: #e8f5e9;
+        }
+
         .status-option.atencao {
             border-color: #ffc107;
+        }
+
+        .status-option.atencao:hover {
+            background: #fff8e1;
         }
 
         .status-option.critico {
             border-color: #dc3545;
         }
 
+        .status-option.critico:hover {
+            background: #ffebee;
+        }
+
         .status-option input:checked + label {
             font-weight: bold;
         }
 
-        .status-option.ok input:checked ~ * {
+        .status-option.ok input[type="radio"]:checked ~ label {
+            color: #155724;
+        }
+
+        .status-option.ok input[type="radio"]:checked {
+            & ~ * {
+                transition: all 0.4s ease;
+            }
+        }
+
+        .status-option.ok:has(input[type="radio"]:checked) {
             background: #d4edda;
+            border-width: 4px;
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.3);
         }
 
-        .status-option.atencao input:checked ~ * {
+        .status-option.atencao input[type="radio"]:checked ~ label {
+            color: #856404;
+        }
+
+        .status-option.atencao:has(input[type="radio"]:checked) {
             background: #fff3cd;
+            border-width: 4px;
+            box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
         }
 
-        .status-option.critico input:checked ~ * {
+        .status-option.critico input[type="radio"]:checked ~ label {
+            color: #721c24;
+        }
+
+        .status-option.critico:has(input[type="radio"]:checked) {
             background: #f8d7da;
+            border-width: 4px;
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.3);
         }
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            background: linear-gradient(135deg, #5568d3 0%, #653a91 100%);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-submit:disabled {
             background: #6c757d;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .loading {
@@ -435,30 +1025,104 @@
         }
 
         .alert {
-            padding: 15px;
+            padding: 16px 20px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
             display: none;
+            animation: slideDown 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-weight: 500;
         }
 
         .alert.show {
             display: block;
         }
 
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .alert-success {
             background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border: 2px solid #c3e6cb;
+            border-left: 5px solid #28a745;
         }
 
         .alert-error {
             background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border: 2px solid #f5c6cb;
+            border-left: 5px solid #dc3545;
         }
     </style>
 </head>
 <body>
+    <!-- Fundo animado galáxia -->
+    <div class="background-animation">
+        <!-- Planetas/Esferas flutuantes -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Via Láctea -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden;">
+        <div style="position: absolute; top: 30%; left: -10%; width: 120%; height: 40%; background: linear-gradient(90deg, transparent 0%, rgba(100, 130, 200, 0.1) 20%, rgba(120, 150, 220, 0.15) 50%, rgba(100, 130, 200, 0.1) 80%, transparent 100%); transform: rotate(-15deg); filter: blur(80px); animation: milkyWayDrift 40s ease-in-out infinite;"></div>
+
+        <!-- Estrelas brilhantes maiores -->
+        <div class="bright-star" style="top: 15%; left: 20%; animation-delay: 0s;"></div>
+        <div class="bright-star" style="top: 25%; left: 65%; animation-delay: 1s;"></div>
+        <div class="bright-star" style="top: 40%; left: 85%; animation-delay: 2s;"></div>
+        <div class="bright-star" style="top: 60%; left: 30%; animation-delay: 0.5s;"></div>
+        <div class="bright-star" style="top: 70%; left: 75%; animation-delay: 1.5s;"></div>
+        <div class="bright-star" style="top: 80%; left: 15%; animation-delay: 2.5s;"></div>
+        <div class="bright-star" style="top: 10%; left: 50%; animation-delay: 3s;"></div>
+        <div class="bright-star" style="top: 35%; left: 10%; animation-delay: 3.5s;"></div>
+        <div class="bright-star" style="top: 55%; left: 55%; animation-delay: 4s;"></div>
+        <div class="bright-star" style="top: 85%; left: 90%; animation-delay: 4.5s;"></div>
+
+        <!-- Nebulosas coloridas -->
+        <div style="position: absolute; bottom: 10%; left: 5%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(80, 120, 255, 0.2) 0%, rgba(50, 80, 180, 0.1) 40%, transparent 70%); border-radius: 50%; filter: blur(70px); animation: nebulaDrift1 35s ease-in-out infinite;"></div>
+        <div style="position: absolute; top: 20%; right: 25%; width: 280px; height: 280px; background: radial-gradient(circle, rgba(150, 100, 255, 0.15) 0%, rgba(100, 60, 180, 0.08) 40%, transparent 70%); border-radius: 50%; filter: blur(60px); animation: nebulaDrift2 40s ease-in-out infinite;"></div>
+        <div style="position: absolute; bottom: 30%; right: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(100, 180, 255, 0.18) 0%, rgba(60, 120, 200, 0.09) 40%, transparent 70%); border-radius: 50%; filter: blur(65px); animation: nebulaDrift3 45s ease-in-out infinite;"></div>
+    </div>
+
+    <style>
+        @keyframes milkyWayDrift {
+            0%, 100% { transform: rotate(-15deg) translateX(0); opacity: 0.6; }
+            50% { transform: rotate(-15deg) translateX(50px); opacity: 0.8; }
+        }
+        @keyframes nebulaDrift1 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            50% { transform: translate(30px, -30px) scale(1.1); opacity: 0.8; }
+        }
+        @keyframes nebulaDrift2 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(-40px, 20px) scale(1.15); opacity: 0.7; }
+        }
+        @keyframes nebulaDrift3 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+            50% { transform: translate(20px, 40px) scale(1.08); opacity: 0.75; }
+        }
+    </style>
+
     <div class="container">
         <div class="header">
             <h1>📋 Relatório de Visita Técnica</h1>
