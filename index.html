@@ -31,8 +31,16 @@
             --bg-light: #f8f9fa;
             --bg-white: #ffffff;
             --border-color: #e0e0e0;
-            --text-primary: #333333;
+            --text-primary: #1a1a1a;
             --text-secondary: #6c757d;
+
+            /* Escala tipográfica (Major Third 1.25) */
+            --font-xs: 12px;
+            --font-sm: 14px;
+            --font-base: 16px;
+            --font-lg: 20px;
+            --font-xl: 24px;
+            --font-2xl: 30px;
 
             /* Espaçamentos */
             --spacing-xs: 8px;
@@ -67,7 +75,7 @@
             line-height: 1.6;
         }
 
-        /* Fundo animado simplificado - reduzido de 600 linhas para ~50 */
+        /* Background estático simplificado */
         body::before {
             content: '';
             position: fixed;
@@ -82,15 +90,9 @@
                 radial-gradient(2px 2px at 80% 10%, white, transparent),
                 radial-gradient(1px 1px at 90% 60%, white, transparent);
             background-size: 200% 200%;
-            opacity: 0.4;
-            animation: starfield 60s linear infinite;
+            opacity: 0.2;
             pointer-events: none;
             z-index: 0;
-        }
-
-        @keyframes starfield {
-            from { background-position: 0% 0%; }
-            to { background-position: 100% 100%; }
         }
 
         /* ==================== LAYOUT PRINCIPAL ==================== */
@@ -129,14 +131,47 @@
         }
 
         .header h1 {
-            font-size: clamp(20px, 5vw, 28px);
+            font-size: clamp(20px, 5vw, var(--font-2xl));
             margin-bottom: var(--spacing-sm);
             padding-right: 70px;
         }
 
         .header p {
-            font-size: 14px;
+            font-size: var(--font-sm);
             opacity: 0.9;
+        }
+
+        /* ==================== INDICADOR DE SEÇÕES ==================== */
+        .section-indicator {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            gap: var(--spacing-xs);
+            overflow-x: auto;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: var(--spacing-sm);
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .step.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom-color: var(--primary-color);
+        }
+
+        .step.completed {
+            color: var(--success-color);
         }
 
         /* ==================== INDICADOR DE PROGRESSO ==================== */
@@ -148,7 +183,7 @@
 
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 10px;
             background: var(--border-color);
             border-radius: 10px;
             overflow: hidden;
@@ -163,9 +198,14 @@
 
         .progress-text {
             text-align: center;
-            font-size: 13px;
+            font-size: var(--font-xs);
             color: var(--text-secondary);
             margin-top: var(--spacing-xs);
+            line-height: 1.4;
+        }
+
+        .progress-text strong {
+            color: var(--text-primary);
         }
 
         /* ==================== CONTEÚDO DO FORMULÁRIO ==================== */
@@ -184,7 +224,7 @@
         }
 
         .section-title {
-            font-size: 20px;
+            font-size: var(--font-lg);
             color: var(--primary-color);
             margin-bottom: var(--spacing-lg);
             padding-bottom: var(--spacing-sm);
@@ -194,9 +234,15 @@
             gap: var(--spacing-sm);
         }
 
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+        }
+
         .section-description {
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: var(--font-sm);
             margin-bottom: var(--spacing-md);
         }
 
@@ -208,6 +254,10 @@
             margin-bottom: var(--spacing-lg);
         }
 
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
         .form-group {
             margin-bottom: var(--spacing-lg);
         }
@@ -217,7 +267,7 @@
             margin-bottom: var(--spacing-xs);
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: var(--font-sm);
         }
 
         label.required::after {
@@ -226,7 +276,7 @@
         }
 
         .field-hint {
-            font-size: 12px;
+            font-size: var(--font-xs);
             color: var(--text-secondary);
             margin-top: 4px;
             display: block;
@@ -243,7 +293,7 @@
             padding: var(--spacing-sm);
             border: 2px solid var(--border-color);
             border-radius: var(--border-radius-md);
-            font-size: 14px;
+            font-size: var(--font-base);
             font-family: inherit;
             transition: all var(--transition-normal);
             background: var(--bg-white);
@@ -278,7 +328,7 @@
 
         .error-message {
             color: var(--danger-color);
-            font-size: 12px;
+            font-size: var(--font-xs);
             margin-top: 4px;
             display: none;
         }
@@ -288,14 +338,19 @@
         }
 
         textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
+        }
+
+        #observacoes,
+        #acoesNecessarias {
+            min-height: 150px;
         }
 
         /* ==================== SELETOR DE STATUS ==================== */
         .status-selector {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: var(--spacing-md);
             margin-top: var(--spacing-sm);
         }
@@ -308,6 +363,7 @@
             cursor: pointer;
             transition: all var(--transition-normal);
             background: var(--bg-white);
+            box-shadow: 0 0 0 0px transparent;
         }
 
         .status-option:hover {
@@ -325,20 +381,17 @@
 
         .status-option.ok:has(input:checked) {
             background: var(--success-bg);
-            border-width: 4px;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 0 0 1px var(--success-color), 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
         .status-option.atencao:has(input:checked) {
             background: var(--warning-bg);
-            border-width: 4px;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            box-shadow: 0 0 0 1px var(--warning-color), 0 4px 15px rgba(255, 193, 7, 0.3);
         }
 
         .status-option.critico:has(input:checked) {
             background: var(--danger-bg);
-            border-width: 4px;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+            box-shadow: 0 0 0 1px var(--danger-color), 0 4px 15px rgba(220, 53, 69, 0.3);
         }
 
         .status-icon {
@@ -348,7 +401,7 @@
 
         .status-label {
             font-weight: 600;
-            font-size: 14px;
+            font-size: var(--font-sm);
         }
 
         /* ==================== CATEGORIAS COM UPLOAD ==================== */
@@ -391,7 +444,7 @@
             margin: 0;
             cursor: pointer;
             font-weight: 600;
-            font-size: 15px;
+            font-size: var(--font-sm);
             flex: 1;
         }
 
@@ -425,7 +478,7 @@
 
         .foto-preview-mini {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, 100px);
             gap: var(--spacing-sm);
             margin-top: var(--spacing-sm);
         }
@@ -498,7 +551,7 @@
 
         .foto-preview-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, 180px);
             gap: var(--spacing-md);
             margin-top: var(--spacing-lg);
         }
@@ -535,7 +588,7 @@
             padding: var(--spacing-xs);
             border: 2px solid var(--border-color);
             border-radius: var(--border-radius-sm);
-            font-size: 13px;
+            font-size: var(--font-xs);
             transition: all var(--transition-fast);
         }
 
@@ -572,7 +625,7 @@
             color: white;
             border: none;
             border-radius: var(--border-radius-lg);
-            font-size: 18px;
+            font-size: var(--font-lg);
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition-normal);
@@ -594,15 +647,31 @@
             opacity: 0.6;
         }
 
-        /* ==================== LOADING E ALERTAS ==================== */
-        .loading {
+        /* ==================== LOADING OVERLAY ==================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
             display: none;
-            text-align: center;
-            padding: var(--spacing-lg);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
         }
 
-        .loading.active {
-            display: block;
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            max-width: 400px;
+            margin: var(--spacing-md);
         }
 
         .spinner {
@@ -620,6 +689,92 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* ==================== MODAL DE CONFIRMAÇÃO ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9998;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            font-size: var(--font-xl);
+        }
+
+        .summary {
+            background: var(--bg-light);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .summary p {
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-sm);
+        }
+
+        .summary strong {
+            color: var(--primary-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+        }
+
+        .btn-secondary,
+        .btn-primary {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ==================== ALERTAS ==================== */
         .alert {
             padding: var(--spacing-md) var(--spacing-lg);
             margin-bottom: var(--spacing-lg);
@@ -669,7 +824,7 @@
 
             .header h1 {
                 font-size: 20px;
-                padding-right: 60px;
+                padding-right: 70px;
             }
 
             .header-logo {
@@ -692,28 +847,39 @@
             }
 
             .foto-preview-container {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                grid-template-columns: repeat(auto-fill, 140px);
+            }
+
+            .progress-bar {
+                height: 12px;
+            }
+
+            .section-indicator {
+                padding: var(--spacing-sm);
+            }
+
+            .step {
+                font-size: 11px;
+                padding: var(--spacing-xs);
             }
         }
 
         @media (max-width: 480px) {
             .section-title {
-                font-size: 18px;
+                font-size: var(--font-lg);
             }
 
             .foto-preview-mini {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                grid-template-columns: repeat(auto-fill, 80px);
             }
         }
 
         /* ==================== ACESSIBILIDADE ==================== */
-        /* Focus visível para navegação por teclado */
         *:focus-visible {
             outline: 3px solid var(--primary-color);
             outline-offset: 2px;
         }
 
-        /* Esconder visualmente mas manter acessível para leitores de tela */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -726,7 +892,6 @@
             border-width: 0;
         }
 
-        /* Reduzir animações para usuários que preferem */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -752,16 +917,27 @@
                 <rect fill="#1d56c2" x="80" y="42" width="12" height="10" rx="3"/>
             </svg>
 
-            <h1>📋 Relatório de Visita Técnica</h1>
+            <h1>Relatório de Visita Técnica</h1>
             <p>Preencha todos os campos obrigatórios (*)</p>
         </header>
+
+        <!-- INDICADOR DE SEÇÕES -->
+        <div class="section-indicator" role="navigation" aria-label="Seções do formulário">
+            <div class="step active" id="step-1">1. Unidade</div>
+            <div class="step" id="step-2">2. Visita</div>
+            <div class="step" id="step-3">3. Avaliação</div>
+            <div class="step" id="step-4">4. Ações</div>
+            <div class="step" id="step-5">5. Fotos</div>
+        </div>
 
         <!-- INDICADOR DE PROGRESSO -->
         <div class="progress-container" role="region" aria-label="Indicador de progresso do formulário">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="progress-text" id="progressText">0% preenchido</div>
+            <div class="progress-text" id="progressText">
+                <strong>0% completo</strong> • Preencha os campos obrigatórios para continuar
+            </div>
         </div>
 
         <!-- CONTEÚDO DO FORMULÁRIO -->
@@ -770,9 +946,8 @@
 
             <form id="formVisita" novalidate>
                 <!-- SEÇÃO 1: DADOS DA UNIDADE -->
-                <section class="section" aria-labelledby="section1-title">
+                <section class="section" aria-labelledby="section1-title" data-section="1">
                     <h2 class="section-title" id="section1-title">
-                        <span aria-hidden="true">🏢</span>
                         Informações da Unidade
                     </h2>
 
@@ -840,9 +1015,8 @@
                 </section>
 
                 <!-- SEÇÃO 2: DADOS DA VISITA -->
-                <section class="section" aria-labelledby="section2-title">
+                <section class="section" aria-labelledby="section2-title" data-section="2">
                     <h2 class="section-title" id="section2-title">
-                        <span aria-hidden="true">👤</span>
                         Dados da Visita
                     </h2>
 
@@ -942,9 +1116,8 @@
                 </section>
 
                 <!-- SEÇÃO 3: AVALIAÇÃO -->
-                <section class="section" aria-labelledby="section3-title">
+                <section class="section" aria-labelledby="section3-title" data-section="3">
                     <h2 class="section-title" id="section3-title">
-                        <span aria-hidden="true">📊</span>
                         Avaliação Geral
                     </h2>
 
@@ -986,7 +1159,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto1" tabindex="0">
                                 <input type="checkbox" id="ponto1" name="pontosAvaliados" value="Sistema Elétrico" aria-label="Avaliar Sistema Elétrico">
-                                <label for="ponto1"><span aria-hidden="true">⚡</span> Sistema Elétrico</label>
+                                <label for="ponto1">Sistema Elétrico</label>
                             </div>
                             <div class="categoria-content" id="content-ponto1">
                                 <label for="obs-ponto1" class="sr-only">Observações sobre Sistema Elétrico</label>
@@ -999,7 +1172,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto1" role="button" tabindex="0" aria-label="Adicionar fotos do Sistema Elétrico">
                                     <input type="file" id="foto-ponto1" accept="image/*" multiple aria-label="Selecionar fotos do Sistema Elétrico">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto1" aria-label="Fotos do Sistema Elétrico"></div>
                             </div>
@@ -1009,7 +1182,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto2" tabindex="0">
                                 <input type="checkbox" id="ponto2" name="pontosAvaliados" value="Climatização" aria-label="Avaliar Climatização">
-                                <label for="ponto2"><span aria-hidden="true">❄️</span> Climatização</label>
+                                <label for="ponto2">Climatização</label>
                             </div>
                             <div class="categoria-content" id="content-ponto2">
                                 <label for="obs-ponto2" class="sr-only">Observações sobre Climatização</label>
@@ -1020,7 +1193,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto2" role="button" tabindex="0" aria-label="Adicionar fotos da Climatização">
                                     <input type="file" id="foto-ponto2" accept="image/*" multiple aria-label="Selecionar fotos da Climatização">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto2" aria-label="Fotos da Climatização"></div>
                             </div>
@@ -1030,7 +1203,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto3" tabindex="0">
                                 <input type="checkbox" id="ponto3" name="pontosAvaliados" value="Limpeza Geral" aria-label="Avaliar Limpeza Geral">
-                                <label for="ponto3"><span aria-hidden="true">🧹</span> Limpeza Geral</label>
+                                <label for="ponto3">Limpeza Geral</label>
                             </div>
                             <div class="categoria-content" id="content-ponto3">
                                 <label for="obs-ponto3" class="sr-only">Observações sobre Limpeza</label>
@@ -1041,7 +1214,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto3" role="button" tabindex="0" aria-label="Adicionar fotos de Limpeza">
                                     <input type="file" id="foto-ponto3" accept="image/*" multiple aria-label="Selecionar fotos de Limpeza">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto3" aria-label="Fotos de Limpeza"></div>
                             </div>
@@ -1051,7 +1224,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto4" tabindex="0">
                                 <input type="checkbox" id="ponto4" name="pontosAvaliados" value="Layout e Sinalização" aria-label="Avaliar Layout e Sinalização">
-                                <label for="ponto4"><span aria-hidden="true">🏗️</span> Layout e Sinalização</label>
+                                <label for="ponto4">Layout e Sinalização</label>
                             </div>
                             <div class="categoria-content" id="content-ponto4">
                                 <label for="obs-ponto4" class="sr-only">Observações sobre Layout e Sinalização</label>
@@ -1062,7 +1235,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto4" role="button" tabindex="0" aria-label="Adicionar fotos de Layout e Sinalização">
                                     <input type="file" id="foto-ponto4" accept="image/*" multiple aria-label="Selecionar fotos de Layout e Sinalização">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto4" aria-label="Fotos de Layout e Sinalização"></div>
                             </div>
@@ -1072,7 +1245,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto5" tabindex="0">
                                 <input type="checkbox" id="ponto5" name="pontosAvaliados" value="Equipamentos TI" aria-label="Avaliar Equipamentos TI">
-                                <label for="ponto5"><span aria-hidden="true">💻</span> Equipamentos TI</label>
+                                <label for="ponto5">Equipamentos TI</label>
                             </div>
                             <div class="categoria-content" id="content-ponto5">
                                 <label for="obs-ponto5" class="sr-only">Observações sobre Equipamentos TI</label>
@@ -1083,7 +1256,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto5" role="button" tabindex="0" aria-label="Adicionar fotos de Equipamentos TI">
                                     <input type="file" id="foto-ponto5" accept="image/*" multiple aria-label="Selecionar fotos de Equipamentos TI">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto5" aria-label="Fotos de Equipamentos TI"></div>
                             </div>
@@ -1093,7 +1266,7 @@
                         <div class="categoria-item">
                             <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto6" tabindex="0">
                                 <input type="checkbox" id="ponto6" name="pontosAvaliados" value="Segurança" aria-label="Avaliar Segurança">
-                                <label for="ponto6"><span aria-hidden="true">🛡️</span> Segurança</label>
+                                <label for="ponto6">Segurança</label>
                             </div>
                             <div class="categoria-content" id="content-ponto6">
                                 <label for="obs-ponto6" class="sr-only">Observações sobre Segurança</label>
@@ -1104,7 +1277,7 @@
 
                                 <div class="mini-upload-area" data-categoria="ponto6" role="button" tabindex="0" aria-label="Adicionar fotos de Segurança">
                                     <input type="file" id="foto-ponto6" accept="image/*" multiple aria-label="Selecionar fotos de Segurança">
-                                    <div><span aria-hidden="true">📷</span> Clique para adicionar fotos</div>
+                                    <div>📷 Clique para adicionar fotos</div>
                                 </div>
                                 <div class="foto-preview-mini" id="preview-ponto6" aria-label="Fotos de Segurança"></div>
                             </div>
@@ -1123,9 +1296,8 @@
                 </section>
 
                 <!-- SEÇÃO 4: AÇÕES NECESSÁRIAS -->
-                <section class="section" aria-labelledby="section4-title">
+                <section class="section" aria-labelledby="section4-title" data-section="4">
                     <h2 class="section-title" id="section4-title">
-                        <span aria-hidden="true">⚡</span>
                         Ações Necessárias
                     </h2>
 
@@ -1164,9 +1336,8 @@
                 </section>
 
                 <!-- SEÇÃO 5: FOTOS GERAIS -->
-                <section class="section" aria-labelledby="section5-title">
+                <section class="section" aria-labelledby="section5-title" data-section="5">
                     <h2 class="section-title" id="section5-title">
-                        <span aria-hidden="true">📸</span>
                         Fotos Gerais (Opcional)
                     </h2>
                     <p class="section-description">
@@ -1200,35 +1371,57 @@
                     class="btn-submit"
                     id="btnSubmit"
                     aria-label="Enviar relatório de visita técnica">
-                    <span aria-hidden="true">📤</span> Enviar Relatório
+                    Enviar Relatório
                 </button>
-
-                <div class="loading" id="loadingDiv" aria-live="polite" aria-busy="false">
-                    <div class="spinner" role="status" aria-label="Processando"></div>
-                    <p>Processando seu relatório... Por favor, aguarde.</p>
-                </div>
             </form>
         </main>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay" role="dialog" aria-live="polite" aria-busy="false">
+        <div class="loading-content">
+            <div class="spinner" role="status" aria-label="Processando"></div>
+            <p><strong>Enviando relatório...</strong></p>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 10px;">
+                Isso pode levar alguns instantes. Não feche esta página.
+            </p>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO -->
+    <div class="modal-overlay" id="confirmModal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-content">
+            <h3 id="modal-title">Confirmar envio do relatório?</h3>
+            <div class="summary">
+                <p><strong>Loja:</strong> <span id="summaryLoja"></span></p>
+                <p><strong>Visitante:</strong> <span id="summaryVisitante"></span></p>
+                <p><strong>Status:</strong> <span id="summaryStatus"></span></p>
+                <p><strong>Categorias avaliadas:</strong> <span id="summaryCategorias"></span></p>
+                <p><strong>Fotos anexadas:</strong> <span id="summaryFotos"></span></p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="fecharModal()">Revisar</button>
+                <button type="button" class="btn-primary" onclick="confirmarEnvio()">Enviar Agora</button>
+            </div>
+        </div>
     </div>
 
     <script>
         /**
          * ==================== CONFIGURAÇÃO ====================
-         * Configurações centralizadas do formulário
          */
         const CONFIG = {
-            // Webhook
             webhookUrl: 'https://bemol.app.n8n.cloud/webhook/visita',
-
-            // Limites de upload
             maxFotos: 30,
-            maxTamanhoFoto: 5 * 1024 * 1024, // 5MB em bytes
+            maxTamanhoFoto: 5 * 1024 * 1024,
+            maxLarguraImagem: 1200,
+            qualidadeCompressao: 0.85,
+            autoSaveInterval: 30000,
 
-            // Mensagens de validação
             mensagens: {
                 campoObrigatorio: 'Este campo é obrigatório',
                 emailInvalido: 'Por favor, digite um e-mail válido',
-                dataInvalida: 'Por favor, selecione uma data válida',
+                dataInvalida: 'A data não pode ser no futuro',
                 statusObrigatorio: 'Por favor, selecione o status geral da unidade',
                 fotoTamanho: 'A foto {nome} excede o tamanho máximo de 5MB',
                 fotoTipo: 'O arquivo {nome} não é uma imagem válida',
@@ -1238,55 +1431,35 @@
 
         /**
          * ==================== ESTADO DA APLICAÇÃO ====================
-         * Gerencia o estado global do formulário
          */
         const AppState = {
-            // Arrays de fotos
             fotosGerais: [],
             fotosPorCategoria: {
                 ponto1: [], ponto2: [], ponto3: [],
                 ponto4: [], ponto5: [], ponto6: []
             },
-
-            // Campos preenchidos (para cálculo de progresso)
-            camposPreenchidos: new Set(),
-            totalCampos: 10, // Campos obrigatórios principais
-
-            // Estado do formulário
-            isSubmitting: false
+            isSubmitting: false,
+            autoSaveTimer: null
         };
 
         /**
          * ==================== UTILITÁRIOS ====================
-         * Funções auxiliares reutilizáveis
          */
         const Utils = {
-            /**
-             * Valida formato de e-mail
-             */
             validarEmail(email) {
                 const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return regex.test(email);
             },
 
-            /**
-             * Valida se arquivo é imagem
-             */
             isImagemValida(file) {
                 return file && file.type.startsWith('image/');
             },
 
-            /**
-             * Formata mensagem substituindo placeholders
-             */
             formatarMensagem(template, params) {
                 return template.replace(/{(\w+)}/g, (match, key) => params[key] || match);
             },
 
-            /**
-             * Converte arquivo para base64
-             */
-            fileToBase64(file) {
+            async fileToBase64(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onload = () => resolve(reader.result);
@@ -1295,46 +1468,162 @@
                 });
             },
 
-            /**
-             * Scroll suave para elemento
-             */
             scrollTo(element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            },
+
+            async comprimirImagem(file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > CONFIG.maxLarguraImagem) {
+                                height = (height * CONFIG.maxLarguraImagem) / width;
+                                width = CONFIG.maxLarguraImagem;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob((blob) => {
+                                const reader = new FileReader();
+                                reader.onload = (e) => resolve(e.target.result);
+                                reader.readAsDataURL(blob);
+                            }, 'image/jpeg', CONFIG.qualidadeCompressao);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+        };
+
+        /**
+         * ==================== AUTO-SAVE ====================
+         */
+        const AutoSave = {
+            salvar() {
+                try {
+                    const formData = new FormData(document.getElementById('formVisita'));
+                    const dados = Object.fromEntries(formData);
+
+                    // Adicionar checkboxes de categorias
+                    const categorias = [];
+                    for (let i = 1; i <= 6; i++) {
+                        if (document.getElementById(`ponto${i}`)?.checked) {
+                            categorias.push(i);
+                        }
+                    }
+                    dados.categorias = categorias;
+
+                    localStorage.setItem('rascunho_visita', JSON.stringify(dados));
+                    localStorage.setItem('rascunho_timestamp', new Date().toISOString());
+                } catch (error) {
+                    console.warn('Erro ao salvar rascunho:', error);
+                }
+            },
+
+            restaurar() {
+                try {
+                    const rascunho = localStorage.getItem('rascunho_visita');
+                    const timestamp = localStorage.getItem('rascunho_timestamp');
+
+                    if (!rascunho) return;
+
+                    const dataRascunho = new Date(timestamp);
+                    const horasAtras = (Date.now() - dataRascunho) / (1000 * 60 * 60);
+
+                    if (horasAtras > 24) {
+                        this.limpar();
+                        return;
+                    }
+
+                    const confirmacao = confirm(
+                        `Encontramos um rascunho salvo em ${dataRascunho.toLocaleString()}.\n\nDeseja restaurar?`
+                    );
+
+                    if (confirmacao) {
+                        const dados = JSON.parse(rascunho);
+
+                        Object.keys(dados).forEach(key => {
+                            if (key === 'categorias') return;
+
+                            const campo = document.querySelector(`[name="${key}"]`);
+                            if (campo) {
+                                if (campo.type === 'radio') {
+                                    const radio = document.querySelector(`[name="${key}"][value="${dados[key]}"]`);
+                                    if (radio) radio.checked = true;
+                                } else {
+                                    campo.value = dados[key];
+                                }
+                            }
+                        });
+
+                        // Restaurar categorias
+                        if (dados.categorias) {
+                            dados.categorias.forEach(i => {
+                                const checkbox = document.getElementById(`ponto${i}`);
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                    checkbox.dispatchEvent(new Event('change'));
+                                }
+                            });
+                        }
+
+                        Progresso.atualizar();
+                        Alert.mostrar('Rascunho restaurado com sucesso!', 'success');
+                    } else {
+                        this.limpar();
+                    }
+                } catch (error) {
+                    console.warn('Erro ao restaurar rascunho:', error);
+                    this.limpar();
+                }
+            },
+
+            limpar() {
+                localStorage.removeItem('rascunho_visita');
+                localStorage.removeItem('rascunho_timestamp');
+            },
+
+            iniciar() {
+                this.restaurar();
+
+                AppState.autoSaveTimer = setInterval(() => {
+                    this.salvar();
+                }, CONFIG.autoSaveInterval);
             }
         };
 
         /**
          * ==================== VALIDAÇÃO ====================
-         * Sistema de validação em tempo real
          */
         const Validacao = {
-            /**
-             * Valida um campo individual
-             */
             validarCampo(campo) {
                 const formGroup = campo.closest('.form-group');
                 const errorElement = document.getElementById(`${campo.id}-error`);
                 let erro = '';
 
-                // Campo obrigatório vazio
                 if (campo.hasAttribute('required') && !campo.value.trim()) {
                     erro = CONFIG.mensagens.campoObrigatorio;
-                }
-                // E-mail inválido
-                else if (campo.type === 'email' && campo.value && !Utils.validarEmail(campo.value)) {
+                } else if (campo.type === 'email' && campo.value && !Utils.validarEmail(campo.value)) {
                     erro = CONFIG.mensagens.emailInvalido;
-                }
-                // Data no futuro (opcional, ajuste conforme necessidade)
-                else if (campo.type === 'date' && campo.value) {
+                } else if (campo.type === 'date' && campo.value) {
                     const dataInformada = new Date(campo.value);
                     const hoje = new Date();
                     hoje.setHours(0, 0, 0, 0);
                     if (dataInformada > hoje) {
-                        erro = 'A data não pode ser no futuro';
+                        erro = CONFIG.mensagens.dataInvalida;
                     }
                 }
 
-                // Aplicar estado visual
                 if (erro) {
                     formGroup.classList.add('invalid');
                     formGroup.classList.remove('valid');
@@ -1350,9 +1639,6 @@
                 }
             },
 
-            /**
-             * Valida status geral (radio buttons)
-             */
             validarStatusGeral() {
                 const statusSelecionado = document.querySelector('input[name="statusGeral"]:checked');
                 const errorElement = document.getElementById('statusGeral-error');
@@ -1366,9 +1652,6 @@
                 }
             },
 
-            /**
-             * Valida todos os campos obrigatórios
-             */
             validarFormulario() {
                 const camposObrigatorios = [
                     'codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
@@ -1379,7 +1662,6 @@
                 let todosValidos = true;
                 let primeiroCampoInvalido = null;
 
-                // Validar cada campo
                 for (const campoId of camposObrigatorios) {
                     const campo = document.getElementById(campoId);
                     if (campo && !this.validarCampo(campo)) {
@@ -1390,12 +1672,10 @@
                     }
                 }
 
-                // Validar status geral
                 if (!this.validarStatusGeral()) {
                     todosValidos = false;
                 }
 
-                // Scroll para primeiro campo inválido
                 if (primeiroCampoInvalido) {
                     Utils.scrollTo(primeiroCampoInvalido);
                 }
@@ -1405,59 +1685,98 @@
         };
 
         /**
-         * ==================== PROGRESSO ====================
-         * Calcula e atualiza indicador de progresso
+         * ==================== PROGRESSO PONDERADO ====================
          */
         const Progresso = {
-            /**
-             * Atualiza barra de progresso
-             */
             atualizar() {
-                const camposObrigatorios = [
+                // Campos básicos obrigatórios (peso 40%)
+                const camposBasicos = [
                     'codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
                     'nomeVisitante', 'emailVisitante', 'area', 'tipoVisita',
                     'dataVisita', 'horaVisita'
                 ];
 
-                let preenchidos = 0;
-                camposObrigatorios.forEach(id => {
-                    const campo = document.getElementById(id);
-                    if (campo && campo.value.trim()) {
-                        preenchidos++;
-                    }
-                });
+                let basicosPreenchidos = camposBasicos.filter(id =>
+                    document.getElementById(id)?.value.trim()
+                ).length;
 
-                // Verificar status geral
-                const statusSelecionado = document.querySelector('input[name="statusGeral"]:checked');
-                if (statusSelecionado) preenchidos++;
+                // Status geral (peso 20%)
+                const statusPreenchido = document.querySelector('input[name="statusGeral"]:checked') ? 1 : 0;
 
-                const total = camposObrigatorios.length + 1; // +1 para status geral
-                const percentual = Math.round((preenchidos / total) * 100);
+                // Categorias avaliadas (peso 20%)
+                const categoriasPreenchidas = Array.from(
+                    document.querySelectorAll('[name="pontosAvaliados"]:checked')
+                ).length;
+
+                // Ações necessárias (peso 20%)
+                const acoesPreenchidas = document.getElementById('acoesNecessarias')?.value.trim() ? 1 : 0;
+
+                // Calcular percentual ponderado
+                const percBasicos = (basicosPreenchidos / camposBasicos.length) * 40;
+                const percStatus = statusPreenchido * 20;
+                const percCategorias = Math.min(categoriasPreenchidas / 3, 1) * 20;
+                const percAcoes = acoesPreenchidas * 20;
+
+                const percentual = Math.round(percBasicos + percStatus + percCategorias + percAcoes);
 
                 // Atualizar UI
                 const progressFill = document.getElementById('progressFill');
                 const progressText = document.getElementById('progressText');
+                const progressBar = progressFill?.parentElement;
 
                 if (progressFill) progressFill.style.width = `${percentual}%`;
-                if (progressText) progressText.textContent = `${percentual}% preenchido`;
-
-                // Atualizar aria-valuenow
-                const progressBar = progressFill?.parentElement;
                 if (progressBar) progressBar.setAttribute('aria-valuenow', percentual);
+
+                // Texto dinâmico
+                let textoAdicional = '';
+                if (percentual < 40) {
+                    textoAdicional = 'Preencha os campos obrigatórios para continuar';
+                } else if (percentual < 60) {
+                    textoAdicional = 'Selecione o status geral da unidade';
+                } else if (percentual < 80) {
+                    textoAdicional = 'Avalie pelo menos 3 categorias';
+                } else if (percentual < 100) {
+                    textoAdicional = 'Descreva as ações necessárias';
+                } else {
+                    textoAdicional = 'Formulário completo! Pronto para enviar';
+                }
+
+                if (progressText) {
+                    progressText.innerHTML = `<strong>${percentual}% completo</strong> • ${textoAdicional}`;
+                }
+
+                // Atualizar indicador de seções
+                this.atualizarSteps(percentual);
+            },
+
+            atualizarSteps(percentual) {
+                const steps = document.querySelectorAll('.step');
+
+                steps.forEach((step, index) => {
+                    step.classList.remove('active', 'completed');
+
+                    if (index === 0 && percentual >= 20) step.classList.add('completed');
+                    if (index === 1 && percentual >= 40) step.classList.add('completed');
+                    if (index === 2 && percentual >= 60) step.classList.add('completed');
+                    if (index === 3 && percentual >= 80) step.classList.add('completed');
+                    if (index === 4 && percentual === 100) step.classList.add('completed');
+                });
+
+                // Marcar step atual
+                if (percentual < 20) steps[0]?.classList.add('active');
+                else if (percentual < 40) steps[1]?.classList.add('active');
+                else if (percentual < 60) steps[2]?.classList.add('active');
+                else if (percentual < 80) steps[3]?.classList.add('active');
+                else if (percentual < 100) steps[4]?.classList.add('active');
             }
         };
 
         /**
          * ==================== UPLOAD DE FOTOS ====================
-         * Gerencia upload e preview de imagens
          */
         const Upload = {
-            /**
-             * Processa fotos de uma categoria específica
-             */
             async processarFotosCategoria(files, categoria) {
                 for (const file of files) {
-                    // Validações
                     if (!Utils.isImagemValida(file)) {
                         Alert.mostrar(
                             Utils.formatarMensagem(CONFIG.mensagens.fotoTipo, { nome: file.name }),
@@ -1474,13 +1793,12 @@
                         continue;
                     }
 
-                    // Converter para base64
                     try {
-                        const base64 = await Utils.fileToBase64(file);
+                        const base64Comprimido = await Utils.comprimirImagem(file);
                         const foto = {
                             nome: file.name,
-                            base64: base64.split(',')[1],
-                            preview: base64
+                            base64: base64Comprimido.split(',')[1],
+                            preview: base64Comprimido
                         };
 
                         AppState.fotosPorCategoria[categoria].push(foto);
@@ -1493,9 +1811,6 @@
                 this.renderizarFotosCategoria(categoria);
             },
 
-            /**
-             * Renderiza previews de fotos de uma categoria
-             */
             renderizarFotosCategoria(categoria) {
                 const container = document.getElementById(`preview-${categoria}`);
                 if (!container) return;
@@ -1517,19 +1832,12 @@
                 });
             },
 
-            /**
-             * Remove foto de uma categoria
-             */
             removerFotoCategoria(categoria, index) {
                 AppState.fotosPorCategoria[categoria].splice(index, 1);
                 this.renderizarFotosCategoria(categoria);
             },
 
-            /**
-             * Processa fotos gerais
-             */
             async processarFotosGerais(files) {
-                // Verificar limite total
                 if (AppState.fotosGerais.length + files.length > CONFIG.maxFotos) {
                     Alert.mostrar(
                         Utils.formatarMensagem(CONFIG.mensagens.maxFotos, { max: CONFIG.maxFotos }),
@@ -1539,7 +1847,6 @@
                 }
 
                 for (const file of files) {
-                    // Validações
                     if (!Utils.isImagemValida(file)) {
                         Alert.mostrar(
                             Utils.formatarMensagem(CONFIG.mensagens.fotoTipo, { nome: file.name }),
@@ -1556,14 +1863,13 @@
                         continue;
                     }
 
-                    // Converter para base64
                     try {
-                        const base64 = await Utils.fileToBase64(file);
+                        const base64Comprimido = await Utils.comprimirImagem(file);
                         const foto = {
                             nome: file.name,
-                            base64: base64.split(',')[1],
+                            base64: base64Comprimido.split(',')[1],
                             comentario: '',
-                            preview: base64
+                            preview: base64Comprimido
                         };
 
                         AppState.fotosGerais.push(foto);
@@ -1576,9 +1882,6 @@
                 this.renderizarFotosGerais();
             },
 
-            /**
-             * Renderiza previews de fotos gerais
-             */
             renderizarFotosGerais() {
                 const container = document.getElementById('fotoPreviewContainer');
                 if (!container) return;
@@ -1608,17 +1911,11 @@
                 });
             },
 
-            /**
-             * Remove foto geral
-             */
             removerFotoGeral(index) {
                 AppState.fotosGerais.splice(index, 1);
                 this.renderizarFotosGerais();
             },
 
-            /**
-             * Atualiza comentário de foto geral
-             */
             atualizarComentario(index, valor) {
                 if (AppState.fotosGerais[index]) {
                     AppState.fotosGerais[index].comentario = valor;
@@ -1628,12 +1925,8 @@
 
         /**
          * ==================== ALERTAS ====================
-         * Sistema de notificações
          */
         const Alert = {
-            /**
-             * Mostra alerta na tela
-             */
             mostrar(mensagem, tipo = 'error') {
                 const container = document.getElementById('alertContainer');
                 if (!container) return;
@@ -1646,10 +1939,8 @@
                 container.innerHTML = '';
                 container.appendChild(alertDiv);
 
-                // Scroll para o topo
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                // Remover após 5 segundos
                 setTimeout(() => {
                     alertDiv.classList.remove('show');
                     setTimeout(() => alertDiv.remove(), 300);
@@ -1658,17 +1949,48 @@
         };
 
         /**
+         * ==================== MODAL DE CONFIRMAÇÃO ====================
+         */
+        function mostrarModal() {
+            const formData = new FormData(document.getElementById('formVisita'));
+
+            document.getElementById('summaryLoja').textContent =
+                `${formData.get('codigoLoja')} - ${formData.get('nomeLoja')}`;
+
+            document.getElementById('summaryVisitante').textContent =
+                `${formData.get('nomeVisitante')} (${formData.get('emailVisitante')})`;
+
+            document.getElementById('summaryStatus').textContent =
+                formData.get('statusGeral') || 'Não selecionado';
+
+            const categorias = Array.from(document.querySelectorAll('[name="pontosAvaliados"]:checked'))
+                .map(cb => cb.value);
+            document.getElementById('summaryCategorias').textContent =
+                categorias.length > 0 ? categorias.join(', ') : 'Nenhuma';
+
+            const totalFotos = AppState.fotosGerais.length +
+                Object.values(AppState.fotosPorCategoria).reduce((acc, arr) => acc + arr.length, 0);
+            document.getElementById('summaryFotos').textContent = totalFotos;
+
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function fecharModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        async function confirmarEnvio() {
+            fecharModal();
+            await Form.enviarDados();
+        }
+
+        /**
          * ==================== SUBMISSÃO DO FORMULÁRIO ====================
-         * Prepara e envia dados
          */
         const Form = {
-            /**
-             * Monta objeto JSON com todos os dados
-             */
             montarJSON() {
                 const formData = new FormData(document.getElementById('formVisita'));
 
-                // Processar pontos avaliados
                 const pontosAvaliados = [];
                 const categorias = {
                     ponto1: 'Sistema Elétrico',
@@ -1697,7 +2019,6 @@
                     }
                 }
 
-                // Montar objeto completo
                 return {
                     id_resposta: `FORM-${Date.now()}`,
                     timestamp: new Date().toISOString(),
@@ -1706,7 +2027,7 @@
                         nome: formData.get('nomeLoja'),
                         cidade: formData.get('cidade'),
                         tipo: formData.get('tipoUnidade'),
-                        email: '' // Será buscado pelo backend
+                        email: ''
                     },
                     visita: {
                         responsavel: formData.get('emailVisitante'),
@@ -1738,78 +2059,81 @@
                 };
             },
 
-            /**
-             * Envia formulário
-             */
+            async enviarComRetry(dados, tentativas = 3) {
+                for (let i = 0; i < tentativas; i++) {
+                    try {
+                        const response = await fetch(CONFIG.webhookUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(dados)
+                        });
+
+                        if (response.ok) return response;
+
+                        if (i < tentativas - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1)));
+                        }
+                    } catch (error) {
+                        if (i === tentativas - 1) throw error;
+                        await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1)));
+                    }
+                }
+                throw new Error('Falha após múltiplas tentativas');
+            },
+
+            async enviarDados() {
+                if (AppState.isSubmitting) return;
+
+                AppState.isSubmitting = true;
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.classList.add('active');
+                loadingOverlay.setAttribute('aria-busy', 'true');
+
+                try {
+                    const dados = this.montarJSON();
+                    await this.enviarComRetry(dados);
+
+                    loadingOverlay.classList.remove('active');
+                    loadingOverlay.setAttribute('aria-busy', 'false');
+
+                    Alert.mostrar('✅ Relatório enviado com sucesso! Você receberá um e-mail em breve.', 'success');
+
+                    setTimeout(() => {
+                        if (confirm('Deseja preencher outro relatório?')) {
+                            this.limpar();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }, 3000);
+
+                    AutoSave.limpar();
+
+                } catch (error) {
+                    console.error('Erro ao enviar:', error);
+                    loadingOverlay.classList.remove('active');
+                    loadingOverlay.setAttribute('aria-busy', 'false');
+                    Alert.mostrar('❌ Erro ao enviar relatório. Verifique sua conexão e tente novamente.', 'error');
+                } finally {
+                    AppState.isSubmitting = false;
+                }
+            },
+
             async enviar(e) {
                 e.preventDefault();
 
-                // Prevenir envio duplo
-                if (AppState.isSubmitting) return;
-
-                // Validar
                 if (!Validacao.validarFormulario()) {
                     Alert.mostrar('Por favor, corrija os erros antes de enviar', 'error');
                     return;
                 }
 
-                // Desabilitar botão e mostrar loading
-                AppState.isSubmitting = true;
-                const btnSubmit = document.getElementById('btnSubmit');
-                const loadingDiv = document.getElementById('loadingDiv');
-
-                btnSubmit.disabled = true;
-                loadingDiv.classList.add('active');
-                loadingDiv.setAttribute('aria-busy', 'true');
-
-                try {
-                    // Montar dados
-                    const dados = this.montarJSON();
-
-                    // Enviar para webhook
-                    const response = await fetch(CONFIG.webhookUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(dados)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Erro HTTP: ${response.status}`);
-                    }
-
-                    // Sucesso!
-                    Alert.mostrar('✅ Relatório enviado com sucesso! Você receberá um e-mail em breve.', 'success');
-
-                    // Limpar formulário após 2 segundos
-                    setTimeout(() => {
-                        this.limpar();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }, 2000);
-
-                } catch (error) {
-                    console.error('Erro ao enviar:', error);
-                    Alert.mostrar('❌ Erro ao enviar relatório. Verifique sua conexão e tente novamente.', 'error');
-                } finally {
-                    AppState.isSubmitting = false;
-                    btnSubmit.disabled = false;
-                    loadingDiv.classList.remove('active');
-                    loadingDiv.setAttribute('aria-busy', 'false');
-                }
+                mostrarModal();
             },
 
-            /**
-             * Limpa formulário e estado
-             */
             limpar() {
                 document.getElementById('formVisita').reset();
 
-                // Limpar fotos
                 AppState.fotosGerais = [];
                 Upload.renderizarFotosGerais();
 
-                // Limpar fotos por categoria
                 for (let i = 1; i <= 6; i++) {
                     const categoria = `ponto${i}`;
                     AppState.fotosPorCategoria[categoria] = [];
@@ -1822,22 +2146,22 @@
                     }
                 }
 
-                // Limpar validações
                 document.querySelectorAll('.form-group').forEach(group => {
                     group.classList.remove('valid', 'invalid');
                 });
 
-                // Resetar progresso
                 Progresso.atualizar();
             }
         };
 
         /**
          * ==================== INICIALIZAÇÃO ====================
-         * Configuração de event listeners e estado inicial
          */
         document.addEventListener('DOMContentLoaded', function() {
-            // Definir data e hora atuais como padrão
+            // Iniciar auto-save
+            AutoSave.iniciar();
+
+            // Definir data e hora atuais
             const hoje = new Date();
             const dataInput = document.getElementById('dataVisita');
             const horaInput = document.getElementById('horaVisita');
@@ -1845,8 +2169,7 @@
             if (dataInput) dataInput.valueAsDate = hoje;
             if (horaInput) horaInput.value = hoje.toTimeString().slice(0, 5);
 
-            // === VALIDAÇÃO EM TEMPO REAL ===
-            // Validar campos obrigatórios ao perder foco
+            // Validação em tempo real
             const camposObrigatorios = ['codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
                 'nomeVisitante', 'emailVisitante', 'area', 'tipoVisita', 'dataVisita', 'horaVisita'];
 
@@ -1863,7 +2186,7 @@
                 }
             });
 
-            // === CATEGORIAS (CHECKBOXES) ===
+            // Categorias
             for (let i = 1; i <= 6; i++) {
                 const checkbox = document.getElementById(`ponto${i}`);
                 const header = checkbox?.closest('.categoria-header');
@@ -1871,16 +2194,15 @@
 
                 if (!checkbox || !header || !content) continue;
 
-                // Toggle ao clicar no header
                 const toggleCategoria = () => {
                     const isChecked = checkbox.checked;
                     content.classList.toggle('active', isChecked);
                     header.setAttribute('aria-expanded', isChecked);
+                    Progresso.atualizar();
                 };
 
                 checkbox.addEventListener('change', toggleCategoria);
 
-                // Permitir clicar no header inteiro
                 header.addEventListener('click', (e) => {
                     if (e.target !== checkbox) {
                         checkbox.checked = !checkbox.checked;
@@ -1888,7 +2210,6 @@
                     }
                 });
 
-                // Suporte a teclado para o header
                 header.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1897,14 +2218,13 @@
                     }
                 });
 
-                // === UPLOAD POR CATEGORIA ===
+                // Upload por categoria
                 const uploadArea = document.querySelector(`[data-categoria="ponto${i}"]`);
                 const fileInput = document.getElementById(`foto-ponto${i}`);
 
                 if (uploadArea && fileInput) {
                     uploadArea.addEventListener('click', () => fileInput.click());
 
-                    // Suporte a teclado
                     uploadArea.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
@@ -1920,18 +2240,16 @@
                 }
             }
 
-            // === STATUS GERAL (RADIO BUTTONS) ===
+            // Status geral
             document.querySelectorAll('.status-option').forEach(option => {
                 const radio = option.querySelector('input[type="radio"]');
 
-                // Clicar no container seleciona o radio
                 option.addEventListener('click', () => {
                     if (radio) {
                         radio.checked = true;
                         Validacao.validarStatusGeral();
                         Progresso.atualizar();
 
-                        // Atualizar aria-checked
                         document.querySelectorAll('.status-option').forEach(opt => {
                             opt.setAttribute('aria-checked', 'false');
                         });
@@ -1939,7 +2257,6 @@
                     }
                 });
 
-                // Suporte a teclado
                 option.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1951,7 +2268,6 @@
                     }
                 });
 
-                // Listener no radio também
                 if (radio) {
                     radio.addEventListener('change', () => {
                         Validacao.validarStatusGeral();
@@ -1960,15 +2276,13 @@
                 }
             });
 
-            // === UPLOAD DE FOTOS GERAIS ===
+            // Upload de fotos gerais
             const fileUploadArea = document.getElementById('fileUploadArea');
             const fotosInput = document.getElementById('fotosInput');
 
             if (fileUploadArea && fotosInput) {
-                // Click
                 fileUploadArea.addEventListener('click', () => fotosInput.click());
 
-                // Teclado
                 fileUploadArea.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
@@ -1976,7 +2290,6 @@
                     }
                 });
 
-                // Drag & Drop
                 fileUploadArea.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     fileUploadArea.classList.add('drag-over');
@@ -1994,7 +2307,6 @@
                     }
                 });
 
-                // File input change
                 fotosInput.addEventListener('change', (e) => {
                     if (e.target.files.length > 0) {
                         Upload.processarFotosGerais(e.target.files);
@@ -2002,21 +2314,28 @@
                 });
             }
 
-            // === SUBMISSÃO DO FORMULÁRIO ===
+            // Monitorar ações necessárias para progresso
+            const acoesTextarea = document.getElementById('acoesNecessarias');
+            if (acoesTextarea) {
+                acoesTextarea.addEventListener('input', () => {
+                    Progresso.atualizar();
+                });
+            }
+
+            // Submissão do formulário
             const form = document.getElementById('formVisita');
             if (form) {
                 form.addEventListener('submit', (e) => Form.enviar(e));
             }
 
-            // === PROGRESSO INICIAL ===
+            // Progresso inicial
             Progresso.atualizar();
         });
 
-        // Expor funções globalmente para uso inline (onclick, onchange)
-        // TODO: Migrar para event listeners puros no futuro
+        // Expor funções globalmente
         window.Upload = Upload;
+        window.fecharModal = fecharModal;
+        window.confirmarEnvio = confirmarEnvio;
     </script>
 </body>
 </html>
-
-
