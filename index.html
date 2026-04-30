@@ -1056,10 +1056,30 @@
       </div>
     </section>
 
-    <!-- S5: FOTOS -->
+    <!-- S5: ORDENS DE SERVIÇO -->
     <section class="section">
       <div class="section-header">
         <span class="section-num">05</span>
+        <h2>Ordens de Serviço Concluídas</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:12px">
+        <div class="field">
+          <label for="ordensServico">Números das Ordens</label>
+          <textarea id="ordensServico" name="ordensServico" style="min-height:140px;font-family:var(--mono);font-size:13px;letter-spacing:0.3px" placeholder="Cole os números aqui, um por linha:&#10;5226067&#10;5226101&#10;5226127&#10;..."></textarea>
+          <span class="hint">Cole uma ordem por linha. O total é calculado automaticamente.</span>
+        </div>
+        <div id="osCounter" style="display:none;align-items:center;gap:10px;padding:10px 14px;background:var(--accent-dim);border:1px solid rgba(79,110,247,0.2);border-radius:var(--radius-sm)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4f6ef7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span style="font-size:13px;color:var(--accent);font-family:var(--mono)" id="osCounterText">0 ordens</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- S6: FOTOS -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">06</span>
         <h2>Fotos Gerais</h2>
         <div class="section-divider"></div>
       </div>
@@ -1105,6 +1125,7 @@
       <div class="summary-row"><dt>Visitante</dt><dd id="sVisitante">—</dd></div>
       <div class="summary-row"><dt>Status</dt><dd id="sStatus">—</dd></div>
       <div class="summary-row"><dt>Categorias</dt><dd id="sCats">—</dd></div>
+      <div class="summary-row"><dt>Ordens (OS)</dt><dd id="sOrdens">—</dd></div>
       <div class="summary-row"><dt>Fotos</dt><dd id="sFotos">—</dd></div>
     </dl>
     <div class="modal-actions">
@@ -1389,6 +1410,24 @@ document.querySelectorAll('input[name="statusGeral"]').forEach(r => {
 
 document.getElementById('acoesNecessarias').addEventListener('input', updateProgress);
 
+/* ── OS COUNTER ── */
+function parseOrdens() {
+  const raw = document.getElementById('ordensServico')?.value || '';
+  return raw.split(/[\n,\s]+/).map(o => o.trim()).filter(o => /^\d+$/.test(o));
+}
+
+document.getElementById('ordensServico').addEventListener('input', () => {
+  const lista = parseOrdens();
+  const counter = document.getElementById('osCounter');
+  const text = document.getElementById('osCounterText');
+  if (lista.length > 0) {
+    counter.style.display = 'flex';
+    text.textContent = `${lista.length} ${lista.length === 1 ? 'ordem reconhecida' : 'ordens reconhecidas'}`;
+  } else {
+    counter.style.display = 'none';
+  }
+});
+
 /* ── ALERT ── */
 function showAlert(msg, type) {
   const w = document.getElementById('alertWrap');
@@ -1405,6 +1444,8 @@ function openModal() {
   document.getElementById('sStatus').textContent = fd.get('statusGeral') || '—';
   const cats = [...document.querySelectorAll('[name="pontosAvaliados"]:checked')].map(c => c.value);
   document.getElementById('sCats').textContent = cats.length ? cats.join(', ') : 'Nenhuma';
+  const ordens = parseOrdens();
+  document.getElementById('sOrdens').textContent = ordens.length > 0 ? `${ordens.length} ordens` : 'Nenhuma';
   const total = S.fotosGerais.length + Object.values(S.fotosCat).reduce((a, b) => a + b.length, 0);
   document.getElementById('sFotos').textContent = total;
   document.getElementById('confirmModal').classList.add('active');
@@ -1442,6 +1483,8 @@ function buildPayload() {
     visita: { responsavel: fd.get('emailVisitante'), nome_responsavel: fd.get('nomeVisitante'), area: fd.get('area'), data: fd.get('dataVisita'), hora: fd.get('horaVisita'), tipo_visita: fd.get('tipoVisita') },
     avaliacao: { status_geral: fd.get('statusGeral'), pontos_avaliados: points, observacoes: fd.get('observacoes') || 'Nenhuma.' },
     acoes: { necessarias: fd.get('acoesNecessarias') || 'Nenhuma.', prazo: fd.get('prazo') || 'N/A', prioridade: fd.get('prioridade') },
+    ordens_servico: parseOrdens().join('\n'),
+    total_ordens: parseOrdens().length,
     fotos_gerais: S.fotosGerais.map(f => ({ nome: f.nome, base64: f.base64, comentario: f.comentario })),
     config: { incluir_pdf: true, template: 'padrao_visita' }
   };
