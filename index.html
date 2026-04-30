@@ -1,2341 +1,1521 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Formulário de Relatório de Visita Técnica - Sistema otimizado e acessível">
-    <title>Relatório de Visita Técnica</title>
-    <style>
-        /* ==================== RESET E VARIÁVEIS ==================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            /* Cores principais */
-            --primary-color: #1a2f4d;
-            --primary-dark: #0d1b2a;
-            --primary-light: #2a4365;
-
-            /* Cores de status */
-            --success-color: #28a745;
-            --success-bg: #d4edda;
-            --warning-color: #ffc107;
-            --warning-bg: #fff3cd;
-            --danger-color: #dc3545;
-            --danger-bg: #f8d7da;
-
-            /* Cores neutras */
-            --bg-light: #f8f9fa;
-            --bg-white: #ffffff;
-            --border-color: #e0e0e0;
-            --text-primary: #1a1a1a;
-            --text-secondary: #6c757d;
-
-            /* Escala tipográfica (Major Third 1.25) */
-            --font-xs: 12px;
-            --font-sm: 14px;
-            --font-base: 16px;
-            --font-lg: 20px;
-            --font-xl: 24px;
-            --font-2xl: 30px;
-
-            /* Espaçamentos */
-            --spacing-xs: 8px;
-            --spacing-sm: 12px;
-            --spacing-md: 16px;
-            --spacing-lg: 20px;
-            --spacing-xl: 30px;
-
-            /* Bordas */
-            --border-radius-sm: 6px;
-            --border-radius-md: 8px;
-            --border-radius-lg: 10px;
-
-            /* Transições */
-            --transition-fast: 0.2s ease;
-            --transition-normal: 0.3s ease;
-
-            /* Sombras */
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ==================== BACKGROUND SIMPLIFICADO ==================== */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1B2735 0%, #090A0F 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding: var(--spacing-lg);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-
-        /* Background estático simplificado */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(2px 2px at 20% 30%, white, transparent),
-                radial-gradient(2px 2px at 60% 70%, white, transparent),
-                radial-gradient(1px 1px at 50% 50%, white, transparent),
-                radial-gradient(2px 2px at 80% 10%, white, transparent),
-                radial-gradient(1px 1px at 90% 60%, white, transparent);
-            background-size: 200% 200%;
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ==================== LAYOUT PRINCIPAL ==================== */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--bg-white);
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ==================== HEADER ==================== */
-        .header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: var(--spacing-xl);
-            text-align: center;
-            position: relative;
-        }
-
-        .header-logo {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            opacity: 0.9;
-            transition: transform var(--transition-normal);
-        }
-
-        .header-logo:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .header h1 {
-            font-size: clamp(20px, 5vw, var(--font-2xl));
-            margin-bottom: var(--spacing-sm);
-            padding-right: 70px;
-        }
-
-        .header p {
-            font-size: var(--font-sm);
-            opacity: 0.9;
-        }
-
-        /* ==================== INDICADOR DE SEÇÕES ==================== */
-        .section-indicator {
-            display: flex;
-            justify-content: space-between;
-            padding: var(--spacing-md);
-            background: white;
-            border-bottom: 1px solid var(--border-color);
-            gap: var(--spacing-xs);
-            overflow-x: auto;
-        }
-
-        .step {
-            flex: 1;
-            min-width: 80px;
-            text-align: center;
-            padding: var(--spacing-sm);
-            font-size: var(--font-xs);
-            color: var(--text-secondary);
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .step.active {
-            color: var(--primary-color);
-            font-weight: 600;
-            border-bottom-color: var(--primary-color);
-        }
-
-        .step.completed {
-            color: var(--success-color);
-        }
-
-        /* ==================== INDICADOR DE PROGRESSO ==================== */
-        .progress-container {
-            background: var(--bg-light);
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-            transition: width 0.4s ease;
-            border-radius: 10px;
-        }
-
-        .progress-text {
-            text-align: center;
-            font-size: var(--font-xs);
-            color: var(--text-secondary);
-            margin-top: var(--spacing-xs);
-            line-height: 1.4;
-        }
-
-        .progress-text strong {
-            color: var(--text-primary);
-        }
-
-        /* ==================== CONTEÚDO DO FORMULÁRIO ==================== */
-        .form-content {
-            padding: var(--spacing-xl);
-        }
-
-        .section {
-            margin-bottom: var(--spacing-xl);
-            padding-bottom: var(--spacing-xl);
-            border-bottom: 2px solid var(--bg-light);
-        }
-
-        .section:last-of-type {
-            border-bottom: none;
-        }
-
-        .section-title {
-            font-size: var(--font-lg);
-            color: var(--primary-color);
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-sm);
-            border-bottom: 2px solid var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-
-        .section-icon {
-            width: 24px;
-            height: 24px;
-            fill: var(--primary-color);
-        }
-
-        .section-description {
-            color: var(--text-secondary);
-            font-size: var(--font-sm);
-            margin-bottom: var(--spacing-md);
-        }
-
-        /* ==================== CAMPOS DO FORMULÁRIO ==================== */
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .form-row .form-group {
-            margin-bottom: 0;
-        }
-
-        .form-group {
-            margin-bottom: var(--spacing-lg);
-        }
-
-        label {
-            display: block;
-            margin-bottom: var(--spacing-xs);
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: var(--font-sm);
-        }
-
-        label.required::after {
-            content: " *";
-            color: var(--danger-color);
-        }
-
-        .field-hint {
-            font-size: var(--font-xs);
-            color: var(--text-secondary);
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Inputs comuns */
-        input[type="text"],
-        input[type="email"],
-        input[type="date"],
-        input[type="time"],
-        select,
-        textarea {
-            width: 100%;
-            padding: var(--spacing-sm);
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            font-size: var(--font-base);
-            font-family: inherit;
-            transition: all var(--transition-normal);
-            background: var(--bg-white);
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(26, 47, 77, 0.1);
-        }
-
-        input:hover:not(:focus),
-        select:hover:not(:focus),
-        textarea:hover:not(:focus) {
-            border-color: var(--primary-light);
-        }
-
-        /* Validação visual */
-        .form-group.invalid input,
-        .form-group.invalid select,
-        .form-group.invalid textarea {
-            border-color: var(--danger-color);
-        }
-
-        .form-group.valid input,
-        .form-group.valid select,
-        .form-group.valid textarea {
-            border-color: var(--success-color);
-        }
-
-        .error-message {
-            color: var(--danger-color);
-            font-size: var(--font-xs);
-            margin-top: 4px;
-            display: none;
-        }
-
-        .form-group.invalid .error-message {
-            display: block;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        #observacoes,
-        #acoesNecessarias {
-            min-height: 150px;
-        }
-
-        /* ==================== SELETOR DE STATUS ==================== */
-        .status-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-sm);
-        }
-
-        .status-option {
-            padding: var(--spacing-md);
-            border: 3px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            background: var(--bg-white);
-            box-shadow: 0 0 0 0px transparent;
-        }
-
-        .status-option:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .status-option input[type="radio"] {
-            display: none;
-        }
-
-        .status-option.ok { border-color: var(--success-color); }
-        .status-option.atencao { border-color: var(--warning-color); }
-        .status-option.critico { border-color: var(--danger-color); }
-
-        .status-option.ok:has(input:checked) {
-            background: var(--success-bg);
-            box-shadow: 0 0 0 1px var(--success-color), 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .status-option.atencao:has(input:checked) {
-            background: var(--warning-bg);
-            box-shadow: 0 0 0 1px var(--warning-color), 0 4px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .status-option.critico:has(input:checked) {
-            background: var(--danger-bg);
-            box-shadow: 0 0 0 1px var(--danger-color), 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .status-icon {
-            font-size: 32px;
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .status-label {
-            font-weight: 600;
-            font-size: var(--font-sm);
-        }
-
-        /* ==================== CATEGORIAS COM UPLOAD ==================== */
-        .categoria-item {
-            margin-bottom: var(--spacing-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            transition: all var(--transition-normal);
-            background: var(--bg-white);
-        }
-
-        .categoria-item:hover {
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .categoria-header {
-            display: flex;
-            align-items: center;
-            padding: var(--spacing-md);
-            background: var(--bg-light);
-            cursor: pointer;
-            transition: background var(--transition-fast);
-        }
-
-        .categoria-header:hover {
-            background: #e9ecef;
-        }
-
-        .categoria-header input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: var(--spacing-sm);
-            cursor: pointer;
-            accent-color: var(--primary-color);
-        }
-
-        .categoria-header label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: var(--font-sm);
-            flex: 1;
-        }
-
-        .categoria-content {
-            padding: var(--spacing-md);
-            background: var(--bg-white);
-            border-top: 2px solid var(--border-color);
-            display: none;
-        }
-
-        .categoria-content.active {
-            display: block;
-        }
-
-        /* Upload de fotos por categoria */
-        .mini-upload-area {
-            border: 2px dashed var(--primary-color);
-            border-radius: var(--border-radius-md);
-            padding: var(--spacing-lg);
-            text-align: center;
-            background: var(--bg-light);
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            margin-top: var(--spacing-sm);
-        }
-
-        .mini-upload-area:hover {
-            background: #e2e8f0;
-            transform: scale(1.01);
-        }
-
-        .foto-preview-mini {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 100px);
-            gap: var(--spacing-sm);
-            margin-top: var(--spacing-sm);
-        }
-
-        .foto-item {
-            position: relative;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-            transition: all var(--transition-fast);
-        }
-
-        .foto-item:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-sm);
-            border-color: var(--primary-color);
-        }
-
-        .foto-item img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 1;
-            transition: all var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .remove-btn:hover {
-            background: #c82333;
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        /* Upload de fotos gerais */
-        .file-upload-area {
-            border: 3px dashed var(--primary-color);
-            border-radius: var(--border-radius-lg);
-            padding: var(--spacing-xl);
-            text-align: center;
-            background: var(--bg-light);
-            cursor: pointer;
-            transition: all var(--transition-normal);
-        }
-
-        .file-upload-area:hover {
-            background: #e2e8f0;
-            transform: scale(1.01);
-        }
-
-        .file-upload-area.drag-over {
-            background: #d5d9ff;
-            border-color: var(--primary-dark);
-        }
-
-        .foto-preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 180px);
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-lg);
-        }
-
-        .foto-preview-item {
-            position: relative;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            background: var(--bg-white);
-            transition: all var(--transition-normal);
-        }
-
-        .foto-preview-item:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary-color);
-        }
-
-        .foto-preview-item img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .foto-info {
-            padding: var(--spacing-sm);
-            background: var(--bg-light);
-        }
-
-        .foto-info input {
-            width: 100%;
-            padding: var(--spacing-xs);
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-sm);
-            font-size: var(--font-xs);
-            transition: all var(--transition-fast);
-        }
-
-        .remove-foto {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
-            transition: all var(--transition-fast);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .remove-foto:hover {
-            background: #c82333;
-            transform: scale(1.1) rotate(90deg);
-        }
-
-        /* ==================== BOTÕES ==================== */
-        .btn-submit {
-            width: 100%;
-            padding: var(--spacing-md);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius-lg);
-            font-size: var(--font-lg);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-submit:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-submit:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            background: var(--text-secondary);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        /* ==================== LOADING OVERLAY ==================== */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-content {
-            background: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--border-radius-lg);
-            text-align: center;
-            max-width: 400px;
-            margin: var(--spacing-md);
-        }
-
-        .spinner {
-            border: 4px solid var(--bg-light);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto var(--spacing-sm);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ==================== MODAL DE CONFIRMAÇÃO ==================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9998;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--border-radius-lg);
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-content h3 {
-            color: var(--primary-color);
-            margin-bottom: var(--spacing-lg);
-            font-size: var(--font-xl);
-        }
-
-        .summary {
-            background: var(--bg-light);
-            padding: var(--spacing-md);
-            border-radius: var(--border-radius-md);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .summary p {
-            margin-bottom: var(--spacing-xs);
-            font-size: var(--font-sm);
-        }
-
-        .summary strong {
-            color: var(--primary-color);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: var(--spacing-md);
-            justify-content: flex-end;
-        }
-
-        .btn-secondary,
-        .btn-primary {
-            padding: var(--spacing-sm) var(--spacing-lg);
-            border: none;
-            border-radius: var(--border-radius-md);
-            font-size: var(--font-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .btn-secondary {
-            background: var(--bg-light);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: #e9ecef;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        /* ==================== ALERTAS ==================== */
-        .alert {
-            padding: var(--spacing-md) var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
-            border-radius: var(--border-radius-md);
-            display: none;
-            font-weight: 500;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .alert.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert-success {
-            background: var(--success-bg);
-            color: #155724;
-            border-left: 4px solid var(--success-color);
-        }
-
-        .alert-error {
-            background: var(--danger-bg);
-            color: #721c24;
-            border-left: 4px solid var(--danger-color);
-        }
-
-        /* ==================== RESPONSIVIDADE ==================== */
-        @media (max-width: 768px) {
-            body {
-                padding: var(--spacing-sm);
-            }
-
-            .header {
-                padding: var(--spacing-lg);
-            }
-
-            .header h1 {
-                font-size: 20px;
-                padding-right: 70px;
-            }
-
-            .header-logo {
-                width: 45px;
-                height: 45px;
-                right: 15px;
-                top: 15px;
-            }
-
-            .form-content {
-                padding: var(--spacing-lg);
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .status-selector {
-                grid-template-columns: 1fr;
-            }
-
-            .foto-preview-container {
-                grid-template-columns: repeat(auto-fill, 140px);
-            }
-
-            .progress-bar {
-                height: 12px;
-            }
-
-            .section-indicator {
-                padding: var(--spacing-sm);
-            }
-
-            .step {
-                font-size: 11px;
-                padding: var(--spacing-xs);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .section-title {
-                font-size: var(--font-lg);
-            }
-
-            .foto-preview-mini {
-                grid-template-columns: repeat(auto-fill, 80px);
-            }
-        }
-
-        /* ==================== ACESSIBILIDADE ==================== */
-        *:focus-visible {
-            outline: 3px solid var(--primary-color);
-            outline-offset: 2px;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório de Visita Técnica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #16181f;
+      --surface-2: #1e2028;
+      --surface-3: #252830;
+      --border: rgba(255,255,255,0.07);
+      --border-active: rgba(255,255,255,0.18);
+      --text: #f0f1f5;
+      --text-2: #8b8fa8;
+      --text-3: #555a72;
+      --accent: #4f6ef7;
+      --accent-dim: rgba(79,110,247,0.12);
+      --accent-glow: rgba(79,110,247,0.25);
+      --ok: #22c55e;
+      --ok-dim: rgba(34,197,94,0.1);
+      --warn: #f59e0b;
+      --warn-dim: rgba(245,158,11,0.1);
+      --danger: #ef4444;
+      --danger-dim: rgba(239,68,68,0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 80px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: .5;
+    }
+
+    /* ── GLOW BG ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 500px;
+      background: radial-gradient(ellipse at 50% 30%, rgba(79,110,247,0.08) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .header-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(79,110,247,0.3);
+      border-radius: var(--radius-sm);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+
+    .header-icon svg { width: 22px; height: 22px; }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-3);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    /* ── PROGRESS ── */
+    .progress-bar-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: var(--surface-3);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #7c9bf7);
+      border-radius: 99px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-2);
+      white-space: nowrap;
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(79,110,247,0.2);
+      border-radius: 4px;
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.2px;
+    }
+
+    .section-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color .2s;
+    }
+
+    .card:hover { border-color: var(--border-active); }
+
+    /* ── GRID ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── FORM FIELDS ── */
+    .field { display: flex; flex-direction: column; gap: 7px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    label .req { color: var(--accent); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      outline: none;
+      appearance: none;
+    }
+
+    input[type="date"], input[type="time"] {
+      color-scheme: dark;
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--text-3); }
+
+    input:hover:not(:focus), select:hover:not(:focus), textarea:hover:not(:focus) {
+      border-color: var(--border-active);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(79,110,247,0.6);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: var(--surface-3);
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b8fa8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    select option { background: #1e2028; color: var(--text); }
+
+    textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea {
+      border-color: rgba(239,68,68,0.6);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+
+    .field.valid input,
+    .field.valid select,
+    .field.valid textarea {
+      border-color: rgba(34,197,94,0.4);
+    }
+
+    .error-msg {
+      font-size: 11px;
+      color: var(--danger);
+      display: none;
+    }
+    .field.invalid .error-msg { display: block; }
+
+    .hint {
+      font-size: 11px;
+      color: var(--text-3);
+    }
+
+    /* ── STATUS SELECTOR ── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    @media(max-width:480px){ .status-grid { grid-template-columns: 1fr; } }
+
+    .status-opt {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .status-opt input[type="radio"] {
+      position: absolute;
+      opacity: 0; pointer-events: none;
+    }
+
+    .status-face {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: all .2s;
+      cursor: pointer;
+    }
+
+    .status-face:hover { border-color: var(--border-active); background: var(--surface-3); }
+
+    .status-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 15px;
+      transition: all .2s;
+    }
+
+    .status-opt.ok .status-dot { background: var(--ok-dim); color: var(--ok); }
+    .status-opt.warn .status-dot { background: var(--warn-dim); color: var(--warn); }
+    .status-opt.crit .status-dot { background: var(--danger-dim); color: var(--danger); }
+
+    .status-face span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .status-opt.ok input:checked ~ .status-face {
+      border-color: var(--ok);
+      background: var(--ok-dim);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.2);
+    }
+    .status-opt.ok input:checked ~ .status-face span { color: var(--ok); }
+
+    .status-opt.warn input:checked ~ .status-face {
+      border-color: var(--warn);
+      background: var(--warn-dim);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.2);
+    }
+    .status-opt.warn input:checked ~ .status-face span { color: var(--warn); }
+
+    .status-opt.crit input:checked ~ .status-face {
+      border-color: var(--danger);
+      background: var(--danger-dim);
+      box-shadow: 0 0 0 1px rgba(239,68,68,0.2);
+    }
+    .status-opt.crit input:checked ~ .status-face span { color: var(--danger); }
+
+    /* ── CHECKLIST ITEMS ── */
+    .checklist { display: flex; flex-direction: column; gap: 8px; }
+
+    .check-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: border-color .2s;
+      background: var(--surface-2);
+    }
+
+    .check-item.active { border-color: rgba(79,110,247,0.35); }
+
+    .check-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s;
+    }
+
+    .check-header:hover { background: var(--surface-3); }
+
+    .check-header input[type="checkbox"] {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      /* override generic styles */
+      background: transparent;
+      border: none; padding: 0;
+      box-shadow: none;
+    }
+
+    .check-header span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .check-header .chevron {
+      width: 16px; height: 16px;
+      color: var(--text-3);
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
+
+    .check-item.active .chevron { transform: rotate(180deg); }
+
+    .check-body {
+      display: none;
+      padding: 0 16px 16px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .check-item.active .check-body { display: block; }
+
+    .check-body textarea {
+      margin-top: 12px;
+      min-height: 80px;
+      background: var(--surface-2);
+    }
+
+    /* Mini upload */
+    .mini-upload {
+      margin-top: 10px;
+      border: 1px dashed var(--border-active);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .mini-upload:hover {
+      border-color: rgba(79,110,247,0.5);
+      background: var(--accent-dim);
+    }
+
+    .mini-upload input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+      padding: 0; border: none; background: none; box-shadow: none;
+    }
+
+    .mini-upload p {
+      font-size: 12px;
+      color: var(--text-3);
+      pointer-events: none;
+    }
+
+    .mini-upload p strong { color: var(--accent); }
+
+    .thumb-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .thumb {
+      position: relative;
+      width: 68px; height: 68px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color .15s;
+    }
+
+    .thumb:hover { border-color: var(--accent); }
+
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .thumb-rm {
+      position: absolute;
+      top: 3px; right: 3px;
+      width: 18px; height: 18px;
+      background: rgba(0,0,0,.7);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      display: grid; place-items: center;
+      transition: background .15s;
+      line-height: 1;
+    }
+
+    .thumb-rm:hover { background: var(--danger); }
+
+    /* ── PHOTO UPLOAD AREA ── */
+    .upload-area {
+      border: 1px dashed var(--border-active);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      background: var(--surface);
+    }
+
+    .upload-area:hover, .upload-area.drag-over {
+      border-color: rgba(79,110,247,0.5);
+      background: var(--accent-dim);
+    }
+
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+      padding: 0; border: none; background: none; box-shadow: none;
+    }
+
+    .upload-icon {
+      width: 40px; height: 40px;
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      display: grid; place-items: center;
+      margin: 0 auto 12px;
+    }
+
+    .upload-area h4 {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .upload-area p { font-size: 12px; color: var(--text-3); }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 140px);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .photo-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--surface-2);
+      transition: border-color .2s;
+      position: relative;
+    }
+
+    .photo-card:hover { border-color: var(--border-active); }
+
+    .photo-card img {
+      width: 100%; height: 100px;
+      object-fit: cover; display: block;
+    }
+
+    .photo-card-bottom {
+      padding: 8px;
+    }
+
+    .photo-card-bottom input {
+      font-size: 11px;
+      padding: 5px 8px;
+      background: var(--surface-3);
+    }
+
+    .photo-rm {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 22px; height: 22px;
+      background: rgba(0,0,0,.75);
+      border: none; border-radius: 50%;
+      color: white; font-size: 13px;
+      cursor: pointer;
+      display: grid; place-items: center;
+      transition: background .15s;
+    }
+
+    .photo-rm:hover { background: var(--danger); }
+
+    /* ── SUBMIT ── */
+    .submit-area { margin-top: 40px; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: -0.1px;
+      transition: all .2s;
+      box-shadow: 0 4px 20px rgba(79,110,247,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 100%);
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(79,110,247,0.4);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: none; }
+
+    .btn-submit:disabled {
+      background: var(--surface-3);
+      color: var(--text-3);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* ── ALERT ── */
+    .alert-wrap {
+      margin-bottom: 24px;
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+      animation: fadeDown .25s ease;
+    }
+
+    .alert.show { display: block; }
+
+    .alert-success {
+      background: var(--ok-dim);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #86efac;
+    }
+
+    .alert-error {
+      background: var(--danger-dim);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── LOADING ── */
+    .loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(4px);
+      display: none; place-items: center;
+      z-index: 9999;
+    }
+
+    .loading-overlay.active { display: grid; }
+
+    .loading-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 40px;
+      text-align: center;
+      max-width: 320px;
+    }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    .loading-box p { font-size: 14px; color: var(--text-2); }
+    .loading-box strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 15px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(4px);
+      display: none; place-items: center;
+      z-index: 9998; padding: 16px;
+    }
+
+    .modal-overlay.active { display: grid; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      max-width: 440px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .summary-grid {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .summary-row dt {
+      color: var(--text-3);
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .summary-row dd {
+      color: var(--text);
+      text-align: right;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn-ghost {
+      padding: 9px 18px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-2);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-ghost:hover { background: var(--surface-3); color: var(--text); }
+
+    .btn-primary {
+      padding: 9px 18px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-primary:hover { opacity: .9; }
+
+    /* ── PRIORITY CHIPS ── */
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
+      transition: all .15s;
+    }
+
+    .chip:hover { border-color: var(--border-active); color: var(--text); }
+
+    .chip.selected {
+      background: var(--accent-dim);
+      border-color: rgba(79,110,247,0.4);
+      color: var(--accent);
+    }
+
+    /* ── FOCUS VISIBLE ── */
+    *:focus-visible {
+      outline: 2px solid rgba(79,110,247,0.7);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- CABEÇALHO -->
-        <header class="header" role="banner">
-            <svg class="header-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"
-                 aria-label="Ícone capacete de segurança" role="img">
-                <path fill="#1d56c2" d="M22 55c0-21 17-38 38-38s38 17 38 38v10H22Z"/>
-                <rect fill="#1d56c2" x="18" y="55" width="84" height="10" rx="4"/>
-                <rect fill="#1d56c2" x="52" y="10" width="16" height="22" rx="4"/>
-                <path fill="#1d56c2" fill-rule="evenodd" d="M24 70a36 36 0 0 0 72 0H24Zm12 0a24 24 0 0 0 48 0H36Z"/>
-                <rect fill="#1d56c2" x="28" y="42" width="12" height="10" rx="3"/>
-                <rect fill="#1d56c2" x="80" y="42" width="12" height="10" rx="3"/>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4f6ef7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="2"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Relatório de Visita Técnica</h1>
+        <p>Preencha todos os campos obrigatórios</p>
+      </div>
+    </div>
+    <span class="badge" id="progressBadge">0%</span>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap" role="region" aria-label="Progresso">
+    <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">Início</span>
+  </div>
+
+  <!-- ALERT -->
+  <div class="alert-wrap" aria-live="polite" id="alertWrap"></div>
+
+  <form id="form" novalidate>
+
+    <!-- S1: UNIDADE -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Informações da Unidade</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card">
+        <div class="grid-2" style="gap:16px">
+          <div class="field" id="fg-codigoLoja">
+            <label for="codigoLoja">Código da Loja <span class="req">*</span></label>
+            <input type="text" id="codigoLoja" name="codigoLoja" placeholder="Ex: LJ-089" required>
+            <span class="error-msg" id="codigoLoja-err"></span>
+          </div>
+          <div class="field" id="fg-nomeLoja">
+            <label for="nomeLoja">Nome da Unidade <span class="req">*</span></label>
+            <input type="text" id="nomeLoja" name="nomeLoja" placeholder="Ex: Bemol Manaus Centro" required>
+            <span class="error-msg" id="nomeLoja-err"></span>
+          </div>
+          <div class="field" id="fg-cidade">
+            <label for="cidade">Cidade <span class="req">*</span></label>
+            <input type="text" id="cidade" name="cidade" placeholder="Ex: Manaus" required>
+            <span class="error-msg" id="cidade-err"></span>
+          </div>
+          <div class="field" id="fg-tipoUnidade">
+            <label for="tipoUnidade">Tipo de Unidade <span class="req">*</span></label>
+            <select id="tipoUnidade" name="tipoUnidade" required>
+              <option value="">Selecione...</option>
+              <option>Loja</option>
+              <option>Centro de Distribuição</option>
+              <option>Farmácia</option>
+              <option>Matriz</option>
+            </select>
+            <span class="error-msg" id="tipoUnidade-err"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S2: VISITA -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Dados da Visita</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card">
+        <div class="grid-2" style="gap:16px">
+          <div class="field" id="fg-nomeVisitante">
+            <label for="nomeVisitante">Nome do Visitante <span class="req">*</span></label>
+            <input type="text" id="nomeVisitante" name="nomeVisitante" placeholder="Nome completo" required>
+            <span class="error-msg" id="nomeVisitante-err"></span>
+          </div>
+          <div class="field" id="fg-emailVisitante">
+            <label for="emailVisitante">E-mail <span class="req">*</span></label>
+            <input type="email" id="emailVisitante" name="emailVisitante" placeholder="email@empresa.com" required>
+            <span class="error-msg" id="emailVisitante-err"></span>
+          </div>
+          <div class="field" id="fg-area">
+            <label for="area">Área Responsável <span class="req">*</span></label>
+            <select id="area" name="area" required>
+              <option value="">Selecione...</option>
+              <option>Facilities</option>
+              <option>Manutenção</option>
+              <option>TI</option>
+              <option>Segurança</option>
+              <option>Qualidade</option>
+            </select>
+            <span class="error-msg" id="area-err"></span>
+          </div>
+          <div class="field" id="fg-tipoVisita">
+            <label for="tipoVisita">Tipo de Visita <span class="req">*</span></label>
+            <select id="tipoVisita" name="tipoVisita" required>
+              <option value="">Selecione...</option>
+              <option>Inspeção Mensal</option>
+              <option>Checklist</option>
+              <option>Pós-Obra</option>
+              <option>Auditoria</option>
+              <option>Emergência</option>
+            </select>
+            <span class="error-msg" id="tipoVisita-err"></span>
+          </div>
+          <div class="field" id="fg-dataVisita">
+            <label for="dataVisita">Data <span class="req">*</span></label>
+            <input type="date" id="dataVisita" name="dataVisita" required>
+            <span class="error-msg" id="dataVisita-err"></span>
+          </div>
+          <div class="field" id="fg-horaVisita">
+            <label for="horaVisita">Hora <span class="req">*</span></label>
+            <input type="time" id="horaVisita" name="horaVisita" required>
+            <span class="error-msg" id="horaVisita-err"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S3: AVALIAÇÃO -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>Avaliação Geral</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:24px">
+
+        <!-- Status -->
+        <div>
+          <label style="display:block;margin-bottom:10px">Status da Unidade <span class="req">*</span></label>
+          <div class="status-grid" role="radiogroup">
+            <label class="status-opt ok">
+              <input type="radio" name="statusGeral" value="OK" required>
+              <div class="status-face">
+                <div class="status-dot">✓</div>
+                <span>OK</span>
+              </div>
+            </label>
+            <label class="status-opt warn">
+              <input type="radio" name="statusGeral" value="Atenção">
+              <div class="status-face">
+                <div class="status-dot">⚠</div>
+                <span>Atenção</span>
+              </div>
+            </label>
+            <label class="status-opt crit">
+              <input type="radio" name="statusGeral" value="Crítico">
+              <div class="status-face">
+                <div class="status-dot">✕</div>
+                <span>Crítico</span>
+              </div>
+            </label>
+          </div>
+          <span class="error-msg" id="statusGeral-err" style="margin-top:6px;display:none"></span>
+        </div>
+
+        <!-- Pontos avaliados -->
+        <div>
+          <label style="display:block;margin-bottom:10px">Pontos Avaliados</label>
+          <div class="checklist" id="checklist">
+            <!-- items inseridos por JS -->
+          </div>
+        </div>
+
+        <!-- Observações gerais -->
+        <div class="field">
+          <label for="observacoes">Observações Gerais</label>
+          <textarea id="observacoes" name="observacoes" placeholder="Detalhes adicionais, pontos de atenção gerais..."></textarea>
+          <span class="hint">Use este espaço para informações que não se encaixam nas categorias acima</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- S4: AÇÕES -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Ações Necessárias</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:16px">
+        <div class="field">
+          <label for="acoesNecessarias">Ações Recomendadas</label>
+          <textarea id="acoesNecessarias" name="acoesNecessarias" placeholder="Liste as ações corretivas e preventivas (uma por linha)..."></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="prazo">Prazo Recomendado</label>
+            <input type="text" id="prazo" name="prazo" placeholder="Ex: 15 dias, imediato">
+          </div>
+          <div>
+            <label style="display:block;margin-bottom:10px">Prioridade</label>
+            <div class="chips" id="prioChips" role="group" aria-label="Prioridade">
+              <button type="button" class="chip" data-val="Baixa">Baixa</button>
+              <button type="button" class="chip selected" data-val="Média">Média</button>
+              <button type="button" class="chip" data-val="Alta">Alta</button>
+              <button type="button" class="chip" data-val="Crítica">Crítica</button>
+            </div>
+            <input type="hidden" id="prioridade" name="prioridade" value="Média">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- S5: FOTOS -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Fotos Gerais</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="card">
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="fotosInput" accept="image/*" multiple>
+          <div class="upload-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b8fa8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
             </svg>
-
-            <h1>Relatório de Visita Técnica</h1>
-            <p>Preencha todos os campos obrigatórios (*)</p>
-        </header>
-
-        <!-- INDICADOR DE SEÇÕES -->
-        <div class="section-indicator" role="navigation" aria-label="Seções do formulário">
-            <div class="step active" id="step-1">1. Unidade</div>
-            <div class="step" id="step-2">2. Visita</div>
-            <div class="step" id="step-3">3. Avaliação</div>
-            <div class="step" id="step-4">4. Ações</div>
-            <div class="step" id="step-5">5. Fotos</div>
+          </div>
+          <h4>Clique ou arraste fotos aqui</h4>
+          <p>JPG, PNG · máx 30 fotos</p>
         </div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+    </section>
 
-        <!-- INDICADOR DE PROGRESSO -->
-        <div class="progress-container" role="region" aria-label="Indicador de progresso do formulário">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="progress-text" id="progressText">
-                <strong>0% completo</strong> • Preencha os campos obrigatórios para continuar
-            </div>
-        </div>
-
-        <!-- CONTEÚDO DO FORMULÁRIO -->
-        <main class="form-content">
-            <div id="alertContainer" role="alert" aria-live="polite"></div>
-
-            <form id="formVisita" novalidate>
-                <!-- SEÇÃO 1: DADOS DA UNIDADE -->
-                <section class="section" aria-labelledby="section1-title" data-section="1">
-                    <h2 class="section-title" id="section1-title">
-                        Informações da Unidade
-                    </h2>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="codigoLoja" class="required">Código da Loja</label>
-                            <input
-                                type="text"
-                                id="codigoLoja"
-                                name="codigoLoja"
-                                placeholder="Ex: LJ-089"
-                                aria-required="true"
-                                aria-describedby="codigoLoja-hint codigoLoja-error"
-                                required>
-                            <span class="field-hint" id="codigoLoja-hint">Digite o código único da loja</span>
-                            <span class="error-message" id="codigoLoja-error" role="alert"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="nomeLoja" class="required">Nome da Unidade</label>
-                            <input
-                                type="text"
-                                id="nomeLoja"
-                                name="nomeLoja"
-                                placeholder="Ex: Bemol Manaus Centro"
-                                aria-required="true"
-                                aria-describedby="nomeLoja-hint nomeLoja-error"
-                                required>
-                            <span class="field-hint" id="nomeLoja-hint">Nome completo da unidade visitada</span>
-                            <span class="error-message" id="nomeLoja-error" role="alert"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="cidade" class="required">Cidade</label>
-                            <input
-                                type="text"
-                                id="cidade"
-                                name="cidade"
-                                placeholder="Ex: Manaus"
-                                aria-required="true"
-                                aria-describedby="cidade-error"
-                                required>
-                            <span class="error-message" id="cidade-error" role="alert"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tipoUnidade" class="required">Tipo de Unidade</label>
-                            <select
-                                id="tipoUnidade"
-                                name="tipoUnidade"
-                                aria-required="true"
-                                aria-describedby="tipoUnidade-error"
-                                required>
-                                <option value="">Selecione o tipo...</option>
-                                <option value="Loja">Loja</option>
-                                <option value="CD">Centro de Distribuição</option>
-                                <option value="Farmacia">Farmácia</option>
-                                <option value="Matriz">Matriz</option>
-                            </select>
-                            <span class="error-message" id="tipoUnidade-error" role="alert"></span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SEÇÃO 2: DADOS DA VISITA -->
-                <section class="section" aria-labelledby="section2-title" data-section="2">
-                    <h2 class="section-title" id="section2-title">
-                        Dados da Visita
-                    </h2>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nomeVisitante" class="required">Nome do Visitante</label>
-                            <input
-                                type="text"
-                                id="nomeVisitante"
-                                name="nomeVisitante"
-                                placeholder="Seu nome completo"
-                                aria-required="true"
-                                aria-describedby="nomeVisitante-hint nomeVisitante-error"
-                                required>
-                            <span class="field-hint" id="nomeVisitante-hint">Pessoa responsável pela visita técnica</span>
-                            <span class="error-message" id="nomeVisitante-error" role="alert"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="emailVisitante" class="required">E-mail</label>
-                            <input
-                                type="email"
-                                id="emailVisitante"
-                                name="emailVisitante"
-                                placeholder="seu.email@empresa.com"
-                                aria-required="true"
-                                aria-describedby="emailVisitante-hint emailVisitante-error"
-                                required>
-                            <span class="field-hint" id="emailVisitante-hint">E-mail para receber cópia do relatório</span>
-                            <span class="error-message" id="emailVisitante-error" role="alert"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="area" class="required">Área Responsável</label>
-                            <select
-                                id="area"
-                                name="area"
-                                aria-required="true"
-                                aria-describedby="area-error"
-                                required>
-                                <option value="">Selecione a área...</option>
-                                <option value="Facilities">Facilities</option>
-                                <option value="Manutenção">Manutenção</option>
-                                <option value="TI">TI</option>
-                                <option value="Segurança">Segurança</option>
-                                <option value="Qualidade">Qualidade</option>
-                            </select>
-                            <span class="error-message" id="area-error" role="alert"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tipoVisita" class="required">Tipo de Visita</label>
-                            <select
-                                id="tipoVisita"
-                                name="tipoVisita"
-                                aria-required="true"
-                                aria-describedby="tipoVisita-error"
-                                required>
-                                <option value="">Selecione o tipo...</option>
-                                <option value="Inspeção Mensal">Inspeção Mensal</option>
-                                <option value="Checklist">Checklist</option>
-                                <option value="Pós-Obra">Pós-Obra</option>
-                                <option value="Auditoria">Auditoria</option>
-                                <option value="Emergência">Emergência</option>
-                            </select>
-                            <span class="error-message" id="tipoVisita-error" role="alert"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="dataVisita" class="required">Data da Visita</label>
-                            <input
-                                type="date"
-                                id="dataVisita"
-                                name="dataVisita"
-                                aria-required="true"
-                                aria-describedby="dataVisita-error"
-                                required>
-                            <span class="error-message" id="dataVisita-error" role="alert"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="horaVisita" class="required">Hora da Visita</label>
-                            <input
-                                type="time"
-                                id="horaVisita"
-                                name="horaVisita"
-                                aria-required="true"
-                                aria-describedby="horaVisita-error"
-                                required>
-                            <span class="error-message" id="horaVisita-error" role="alert"></span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SEÇÃO 3: AVALIAÇÃO -->
-                <section class="section" aria-labelledby="section3-title" data-section="3">
-                    <h2 class="section-title" id="section3-title">
-                        Avaliação Geral
-                    </h2>
-
-                    <div class="form-group">
-                        <label class="required">Status Geral da Unidade</label>
-                        <div class="status-selector" role="radiogroup" aria-required="true" aria-describedby="statusGeral-error">
-                            <div class="status-option ok" tabindex="0" role="radio" aria-checked="false">
-                                <input type="radio" id="statusOk" name="statusGeral" value="OK" required>
-                                <label for="statusOk">
-                                    <div class="status-icon" aria-hidden="true">✓</div>
-                                    <div class="status-label">OK</div>
-                                </label>
-                            </div>
-
-                            <div class="status-option atencao" tabindex="0" role="radio" aria-checked="false">
-                                <input type="radio" id="statusAtencao" name="statusGeral" value="Atenção">
-                                <label for="statusAtencao">
-                                    <div class="status-icon" aria-hidden="true">⚠</div>
-                                    <div class="status-label">Atenção</div>
-                                </label>
-                            </div>
-
-                            <div class="status-option critico" tabindex="0" role="radio" aria-checked="false">
-                                <input type="radio" id="statusCritico" name="statusGeral" value="Crítico">
-                                <label for="statusCritico">
-                                    <div class="status-icon" aria-hidden="true">✕</div>
-                                    <div class="status-label">Crítico</div>
-                                </label>
-                            </div>
-                        </div>
-                        <span class="error-message" id="statusGeral-error" role="alert"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pontos Avaliados</label>
-                        <span class="section-description">Selecione os itens avaliados, adicione observações e fotos</span>
-
-                        <!-- Sistema Elétrico -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto1" tabindex="0">
-                                <input type="checkbox" id="ponto1" name="pontosAvaliados" value="Sistema Elétrico" aria-label="Avaliar Sistema Elétrico">
-                                <label for="ponto1">Sistema Elétrico</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto1">
-                                <label for="obs-ponto1" class="sr-only">Observações sobre Sistema Elétrico</label>
-                                <textarea
-                                    placeholder="Observações sobre Sistema Elétrico (ex: estado dos quadros, fiação exposta, problemas identificados)..."
-                                    id="obs-ponto1"
-                                    rows="2"
-                                    aria-describedby="obs-ponto1-hint"></textarea>
-                                <span class="field-hint" id="obs-ponto1-hint">Descreva o estado geral e problemas encontrados</span>
-
-                                <div class="mini-upload-area" data-categoria="ponto1" role="button" tabindex="0" aria-label="Adicionar fotos do Sistema Elétrico">
-                                    <input type="file" id="foto-ponto1" accept="image/*" multiple aria-label="Selecionar fotos do Sistema Elétrico">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto1" aria-label="Fotos do Sistema Elétrico"></div>
-                            </div>
-                        </div>
-
-                        <!-- Climatização -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto2" tabindex="0">
-                                <input type="checkbox" id="ponto2" name="pontosAvaliados" value="Climatização" aria-label="Avaliar Climatização">
-                                <label for="ponto2">Climatização</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto2">
-                                <label for="obs-ponto2" class="sr-only">Observações sobre Climatização</label>
-                                <textarea
-                                    placeholder="Observações sobre Climatização (ex: temperatura ambiente, estado dos equipamentos, vazamentos)..."
-                                    id="obs-ponto2"
-                                    rows="2"></textarea>
-
-                                <div class="mini-upload-area" data-categoria="ponto2" role="button" tabindex="0" aria-label="Adicionar fotos da Climatização">
-                                    <input type="file" id="foto-ponto2" accept="image/*" multiple aria-label="Selecionar fotos da Climatização">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto2" aria-label="Fotos da Climatização"></div>
-                            </div>
-                        </div>
-
-                        <!-- Limpeza Geral -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto3" tabindex="0">
-                                <input type="checkbox" id="ponto3" name="pontosAvaliados" value="Limpeza Geral" aria-label="Avaliar Limpeza Geral">
-                                <label for="ponto3">Limpeza Geral</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto3">
-                                <label for="obs-ponto3" class="sr-only">Observações sobre Limpeza</label>
-                                <textarea
-                                    placeholder="Observações sobre Limpeza (ex: estado de conservação, áreas sujas, necessidade de limpeza profunda)..."
-                                    id="obs-ponto3"
-                                    rows="2"></textarea>
-
-                                <div class="mini-upload-area" data-categoria="ponto3" role="button" tabindex="0" aria-label="Adicionar fotos de Limpeza">
-                                    <input type="file" id="foto-ponto3" accept="image/*" multiple aria-label="Selecionar fotos de Limpeza">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto3" aria-label="Fotos de Limpeza"></div>
-                            </div>
-                        </div>
-
-                        <!-- Layout e Sinalização -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto4" tabindex="0">
-                                <input type="checkbox" id="ponto4" name="pontosAvaliados" value="Layout e Sinalização" aria-label="Avaliar Layout e Sinalização">
-                                <label for="ponto4">Layout e Sinalização</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto4">
-                                <label for="obs-ponto4" class="sr-only">Observações sobre Layout e Sinalização</label>
-                                <textarea
-                                    placeholder="Observações sobre Layout e Sinalização (ex: placas danificadas, vias obstruídas, melhorias necessárias)..."
-                                    id="obs-ponto4"
-                                    rows="2"></textarea>
-
-                                <div class="mini-upload-area" data-categoria="ponto4" role="button" tabindex="0" aria-label="Adicionar fotos de Layout e Sinalização">
-                                    <input type="file" id="foto-ponto4" accept="image/*" multiple aria-label="Selecionar fotos de Layout e Sinalização">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto4" aria-label="Fotos de Layout e Sinalização"></div>
-                            </div>
-                        </div>
-
-                        <!-- Equipamentos TI -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto5" tabindex="0">
-                                <input type="checkbox" id="ponto5" name="pontosAvaliados" value="Equipamentos TI" aria-label="Avaliar Equipamentos TI">
-                                <label for="ponto5">Equipamentos TI</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto5">
-                                <label for="obs-ponto5" class="sr-only">Observações sobre Equipamentos TI</label>
-                                <textarea
-                                    placeholder="Observações sobre Equipamentos TI (ex: computadores, servidores, rede, cabeamento)..."
-                                    id="obs-ponto5"
-                                    rows="2"></textarea>
-
-                                <div class="mini-upload-area" data-categoria="ponto5" role="button" tabindex="0" aria-label="Adicionar fotos de Equipamentos TI">
-                                    <input type="file" id="foto-ponto5" accept="image/*" multiple aria-label="Selecionar fotos de Equipamentos TI">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto5" aria-label="Fotos de Equipamentos TI"></div>
-                            </div>
-                        </div>
-
-                        <!-- Segurança -->
-                        <div class="categoria-item">
-                            <div class="categoria-header" role="button" aria-expanded="false" aria-controls="content-ponto6" tabindex="0">
-                                <input type="checkbox" id="ponto6" name="pontosAvaliados" value="Segurança" aria-label="Avaliar Segurança">
-                                <label for="ponto6">Segurança</label>
-                            </div>
-                            <div class="categoria-content" id="content-ponto6">
-                                <label for="obs-ponto6" class="sr-only">Observações sobre Segurança</label>
-                                <textarea
-                                    placeholder="Observações sobre Segurança (ex: câmeras, controle de acesso, extintores, saídas de emergência)..."
-                                    id="obs-ponto6"
-                                    rows="2"></textarea>
-
-                                <div class="mini-upload-area" data-categoria="ponto6" role="button" tabindex="0" aria-label="Adicionar fotos de Segurança">
-                                    <input type="file" id="foto-ponto6" accept="image/*" multiple aria-label="Selecionar fotos de Segurança">
-                                    <div>📷 Clique para adicionar fotos</div>
-                                </div>
-                                <div class="foto-preview-mini" id="preview-ponto6" aria-label="Fotos de Segurança"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="observacoes">Observações Gerais</label>
-                        <textarea
-                            id="observacoes"
-                            name="observacoes"
-                            placeholder="Descreva detalhes adicionais da visita, pontos de atenção gerais, contexto importante..."
-                            aria-describedby="observacoes-hint"></textarea>
-                        <span class="field-hint" id="observacoes-hint">Use este espaço para informações que não se encaixam nas categorias acima</span>
-                    </div>
-                </section>
-
-                <!-- SEÇÃO 4: AÇÕES NECESSÁRIAS -->
-                <section class="section" aria-labelledby="section4-title" data-section="4">
-                    <h2 class="section-title" id="section4-title">
-                        Ações Necessárias
-                    </h2>
-
-                    <div class="form-group">
-                        <label for="acoesNecessarias">Descreva as Ações Recomendadas</label>
-                        <textarea
-                            id="acoesNecessarias"
-                            name="acoesNecessarias"
-                            placeholder="Liste as ações corretivas e preventivas que devem ser tomadas (uma por linha)..."
-                            aria-describedby="acoesNecessarias-hint"></textarea>
-                        <span class="field-hint" id="acoesNecessarias-hint">Seja específico sobre o que precisa ser feito</span>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="prazo">Prazo Recomendado</label>
-                            <input
-                                type="text"
-                                id="prazo"
-                                name="prazo"
-                                placeholder="Ex: 15 dias, 1 semana, imediato"
-                                aria-describedby="prazo-hint">
-                            <span class="field-hint" id="prazo-hint">Prazo sugerido para conclusão das ações</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="prioridade">Prioridade</label>
-                            <select id="prioridade" name="prioridade">
-                                <option value="Baixa">Baixa</option>
-                                <option value="Média" selected>Média</option>
-                                <option value="Alta">Alta</option>
-                                <option value="Crítica">Crítica</option>
-                            </select>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SEÇÃO 5: FOTOS GERAIS -->
-                <section class="section" aria-labelledby="section5-title" data-section="5">
-                    <h2 class="section-title" id="section5-title">
-                        Fotos Gerais (Opcional)
-                    </h2>
-                    <p class="section-description">
-                        Use esta seção para fotos adicionais que não se encaixam nas categorias específicas acima
-                    </p>
-
-                    <div
-                        class="file-upload-area"
-                        id="fileUploadArea"
-                        role="button"
-                        tabindex="0"
-                        aria-label="Área de upload de fotos gerais. Clique ou arraste fotos aqui">
-                        <input
-                            type="file"
-                            id="fotosInput"
-                            accept="image/*"
-                            multiple
-                            aria-label="Selecionar fotos gerais"
-                            style="display: none;">
-                        <div style="font-size: 50px; margin-bottom: 15px;" aria-hidden="true">📷</div>
-                        <h3>Clique ou arraste fotos aqui</h3>
-                        <p style="color: var(--text-secondary); margin-top: 10px;">Aceita JPG, PNG (máx 30 fotos)</p>
-                    </div>
-
-                    <div class="foto-preview-container" id="fotoPreviewContainer" aria-label="Pré-visualização de fotos gerais"></div>
-                </section>
-
-                <!-- BOTÃO ENVIAR -->
-                <button
-                    type="submit"
-                    class="btn-submit"
-                    id="btnSubmit"
-                    aria-label="Enviar relatório de visita técnica">
-                    Enviar Relatório
-                </button>
-            </form>
-        </main>
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <button type="submit" class="btn-submit" id="btnSubmit">Enviar Relatório</button>
     </div>
 
-    <!-- LOADING OVERLAY -->
-    <div class="loading-overlay" id="loadingOverlay" role="dialog" aria-live="polite" aria-busy="false">
-        <div class="loading-content">
-            <div class="spinner" role="status" aria-label="Processando"></div>
-            <p><strong>Enviando relatório...</strong></p>
-            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 10px;">
-                Isso pode levar alguns instantes. Não feche esta página.
-            </p>
-        </div>
+  </form>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay" role="dialog" aria-live="polite">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <strong>Enviando relatório...</strong>
+    <p>Não feche esta página.</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 id="modalTitle">Confirmar envio?</h3>
+    <dl class="summary-grid">
+      <div class="summary-row"><dt>Loja</dt><dd id="sLoja">—</dd></div>
+      <div class="summary-row"><dt>Visitante</dt><dd id="sVisitante">—</dd></div>
+      <div class="summary-row"><dt>Status</dt><dd id="sStatus">—</dd></div>
+      <div class="summary-row"><dt>Categorias</dt><dd id="sCats">—</dd></div>
+      <div class="summary-row"><dt>Fotos</dt><dd id="sFotos">—</dd></div>
+    </dl>
+    <div class="modal-actions">
+      <button type="button" class="btn-ghost" id="btnRevisar">Revisar</button>
+      <button type="button" class="btn-primary" id="btnConfirmar">Enviar agora</button>
     </div>
+  </div>
+</div>
 
-    <!-- MODAL DE CONFIRMAÇÃO -->
-    <div class="modal-overlay" id="confirmModal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
-        <div class="modal-content">
-            <h3 id="modal-title">Confirmar envio do relatório?</h3>
-            <div class="summary">
-                <p><strong>Loja:</strong> <span id="summaryLoja"></span></p>
-                <p><strong>Visitante:</strong> <span id="summaryVisitante"></span></p>
-                <p><strong>Status:</strong> <span id="summaryStatus"></span></p>
-                <p><strong>Categorias avaliadas:</strong> <span id="summaryCategorias"></span></p>
-                <p><strong>Fotos anexadas:</strong> <span id="summaryFotos"></span></p>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="fecharModal()">Revisar</button>
-                <button type="button" class="btn-primary" onclick="confirmarEnvio()">Enviar Agora</button>
-            </div>
+<script>
+/* ── CONFIG ── */
+const CFG = {
+  webhook: 'https://bemol.app.n8n.cloud/webhook/visita',
+  maxFotos: 30,
+  maxSize: 5 * 1024 * 1024,
+  maxW: 1200,
+  quality: 0.85,
+};
+
+const CATS = [
+  { id: 'ponto1', label: 'Sistema Elétrico', hint: 'quadros, fiação, problemas...' },
+  { id: 'ponto2', label: 'Climatização', hint: 'temperatura, equipamentos, vazamentos...' },
+  { id: 'ponto3', label: 'Limpeza Geral', hint: 'conservação, áreas sujas, limpeza profunda...' },
+  { id: 'ponto4', label: 'Layout e Sinalização', hint: 'placas danificadas, vias obstruídas...' },
+  { id: 'ponto5', label: 'Equipamentos TI', hint: 'computadores, rede, cabeamento...' },
+  { id: 'ponto6', label: 'Segurança', hint: 'câmeras, extintores, saídas de emergência...' },
+];
+
+/* ── STATE ── */
+const S = {
+  fotosGerais: [],
+  fotosCat: { ponto1:[], ponto2:[], ponto3:[], ponto4:[], ponto5:[], ponto6:[] },
+  submitting: false,
+};
+
+/* ── BUILD CHECKLIST ── */
+const cl = document.getElementById('checklist');
+CATS.forEach(cat => {
+  cl.insertAdjacentHTML('beforeend', `
+    <div class="check-item" id="ci-${cat.id}">
+      <div class="check-header" id="ch-${cat.id}" role="button" tabindex="0" aria-expanded="false" aria-controls="cb-${cat.id}">
+        <input type="checkbox" id="${cat.id}" name="pontosAvaliados" value="${cat.label}">
+        <span>${cat.label}</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="check-body" id="cb-${cat.id}">
+        <textarea id="obs-${cat.id}" placeholder="${cat.hint}" rows="2"></textarea>
+        <div class="mini-upload" role="button" tabindex="0" aria-label="Adicionar fotos de ${cat.label}">
+          <input type="file" id="foto-${cat.id}" accept="image/*" multiple>
+          <p><strong>+ Fotos</strong> · clique ou arraste</p>
         </div>
+        <div class="thumb-row" id="thumbs-${cat.id}"></div>
+      </div>
     </div>
-
-    <script>
-        /**
-         * ==================== CONFIGURAÇÃO ====================
-         */
-        const CONFIG = {
-            webhookUrl: 'https://bemol.app.n8n.cloud/webhook/visita',
-            maxFotos: 30,
-            maxTamanhoFoto: 5 * 1024 * 1024,
-            maxLarguraImagem: 1200,
-            qualidadeCompressao: 0.85,
-            autoSaveInterval: 30000,
-
-            mensagens: {
-                campoObrigatorio: 'Este campo é obrigatório',
-                emailInvalido: 'Por favor, digite um e-mail válido',
-                dataInvalida: 'A data não pode ser no futuro',
-                statusObrigatorio: 'Por favor, selecione o status geral da unidade',
-                fotoTamanho: 'A foto {nome} excede o tamanho máximo de 5MB',
-                fotoTipo: 'O arquivo {nome} não é uma imagem válida',
-                maxFotos: 'Máximo de {max} fotos permitidas'
-            }
-        };
-
-        /**
-         * ==================== ESTADO DA APLICAÇÃO ====================
-         */
-        const AppState = {
-            fotosGerais: [],
-            fotosPorCategoria: {
-                ponto1: [], ponto2: [], ponto3: [],
-                ponto4: [], ponto5: [], ponto6: []
-            },
-            isSubmitting: false,
-            autoSaveTimer: null
-        };
-
-        /**
-         * ==================== UTILITÁRIOS ====================
-         */
-        const Utils = {
-            validarEmail(email) {
-                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return regex.test(email);
-            },
-
-            isImagemValida(file) {
-                return file && file.type.startsWith('image/');
-            },
-
-            formatarMensagem(template, params) {
-                return template.replace(/{(\w+)}/g, (match, key) => params[key] || match);
-            },
-
-            async fileToBase64(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-            },
-
-            scrollTo(element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            },
-
-            async comprimirImagem(file) {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > CONFIG.maxLarguraImagem) {
-                                height = (height * CONFIG.maxLarguraImagem) / width;
-                                width = CONFIG.maxLarguraImagem;
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            canvas.toBlob((blob) => {
-                                const reader = new FileReader();
-                                reader.onload = (e) => resolve(e.target.result);
-                                reader.readAsDataURL(blob);
-                            }, 'image/jpeg', CONFIG.qualidadeCompressao);
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-        };
-
-        /**
-         * ==================== AUTO-SAVE ====================
-         */
-        const AutoSave = {
-            salvar() {
-                try {
-                    const formData = new FormData(document.getElementById('formVisita'));
-                    const dados = Object.fromEntries(formData);
-
-                    // Adicionar checkboxes de categorias
-                    const categorias = [];
-                    for (let i = 1; i <= 6; i++) {
-                        if (document.getElementById(`ponto${i}`)?.checked) {
-                            categorias.push(i);
-                        }
-                    }
-                    dados.categorias = categorias;
-
-                    localStorage.setItem('rascunho_visita', JSON.stringify(dados));
-                    localStorage.setItem('rascunho_timestamp', new Date().toISOString());
-                } catch (error) {
-                    console.warn('Erro ao salvar rascunho:', error);
-                }
-            },
-
-            restaurar() {
-                try {
-                    const rascunho = localStorage.getItem('rascunho_visita');
-                    const timestamp = localStorage.getItem('rascunho_timestamp');
-
-                    if (!rascunho) return;
-
-                    const dataRascunho = new Date(timestamp);
-                    const horasAtras = (Date.now() - dataRascunho) / (1000 * 60 * 60);
-
-                    if (horasAtras > 24) {
-                        this.limpar();
-                        return;
-                    }
-
-                    const confirmacao = confirm(
-                        `Encontramos um rascunho salvo em ${dataRascunho.toLocaleString()}.\n\nDeseja restaurar?`
-                    );
-
-                    if (confirmacao) {
-                        const dados = JSON.parse(rascunho);
-
-                        Object.keys(dados).forEach(key => {
-                            if (key === 'categorias') return;
-
-                            const campo = document.querySelector(`[name="${key}"]`);
-                            if (campo) {
-                                if (campo.type === 'radio') {
-                                    const radio = document.querySelector(`[name="${key}"][value="${dados[key]}"]`);
-                                    if (radio) radio.checked = true;
-                                } else {
-                                    campo.value = dados[key];
-                                }
-                            }
-                        });
-
-                        // Restaurar categorias
-                        if (dados.categorias) {
-                            dados.categorias.forEach(i => {
-                                const checkbox = document.getElementById(`ponto${i}`);
-                                if (checkbox) {
-                                    checkbox.checked = true;
-                                    checkbox.dispatchEvent(new Event('change'));
-                                }
-                            });
-                        }
-
-                        Progresso.atualizar();
-                        Alert.mostrar('Rascunho restaurado com sucesso!', 'success');
-                    } else {
-                        this.limpar();
-                    }
-                } catch (error) {
-                    console.warn('Erro ao restaurar rascunho:', error);
-                    this.limpar();
-                }
-            },
-
-            limpar() {
-                localStorage.removeItem('rascunho_visita');
-                localStorage.removeItem('rascunho_timestamp');
-            },
-
-            iniciar() {
-                this.restaurar();
-
-                AppState.autoSaveTimer = setInterval(() => {
-                    this.salvar();
-                }, CONFIG.autoSaveInterval);
-            }
-        };
-
-        /**
-         * ==================== VALIDAÇÃO ====================
-         */
-        const Validacao = {
-            validarCampo(campo) {
-                const formGroup = campo.closest('.form-group');
-                const errorElement = document.getElementById(`${campo.id}-error`);
-                let erro = '';
-
-                if (campo.hasAttribute('required') && !campo.value.trim()) {
-                    erro = CONFIG.mensagens.campoObrigatorio;
-                } else if (campo.type === 'email' && campo.value && !Utils.validarEmail(campo.value)) {
-                    erro = CONFIG.mensagens.emailInvalido;
-                } else if (campo.type === 'date' && campo.value) {
-                    const dataInformada = new Date(campo.value);
-                    const hoje = new Date();
-                    hoje.setHours(0, 0, 0, 0);
-                    if (dataInformada > hoje) {
-                        erro = CONFIG.mensagens.dataInvalida;
-                    }
-                }
-
-                if (erro) {
-                    formGroup.classList.add('invalid');
-                    formGroup.classList.remove('valid');
-                    if (errorElement) errorElement.textContent = erro;
-                    return false;
-                } else {
-                    formGroup.classList.remove('invalid');
-                    if (campo.value.trim()) {
-                        formGroup.classList.add('valid');
-                    }
-                    if (errorElement) errorElement.textContent = '';
-                    return true;
-                }
-            },
-
-            validarStatusGeral() {
-                const statusSelecionado = document.querySelector('input[name="statusGeral"]:checked');
-                const errorElement = document.getElementById('statusGeral-error');
-
-                if (!statusSelecionado) {
-                    if (errorElement) errorElement.textContent = CONFIG.mensagens.statusObrigatorio;
-                    return false;
-                } else {
-                    if (errorElement) errorElement.textContent = '';
-                    return true;
-                }
-            },
-
-            validarFormulario() {
-                const camposObrigatorios = [
-                    'codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
-                    'nomeVisitante', 'emailVisitante', 'area', 'tipoVisita',
-                    'dataVisita', 'horaVisita'
-                ];
-
-                let todosValidos = true;
-                let primeiroCampoInvalido = null;
-
-                for (const campoId of camposObrigatorios) {
-                    const campo = document.getElementById(campoId);
-                    if (campo && !this.validarCampo(campo)) {
-                        todosValidos = false;
-                        if (!primeiroCampoInvalido) {
-                            primeiroCampoInvalido = campo;
-                        }
-                    }
-                }
-
-                if (!this.validarStatusGeral()) {
-                    todosValidos = false;
-                }
-
-                if (primeiroCampoInvalido) {
-                    Utils.scrollTo(primeiroCampoInvalido);
-                }
-
-                return todosValidos;
-            }
-        };
-
-        /**
-         * ==================== PROGRESSO PONDERADO ====================
-         */
-        const Progresso = {
-            atualizar() {
-                // Campos básicos obrigatórios (peso 40%)
-                const camposBasicos = [
-                    'codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
-                    'nomeVisitante', 'emailVisitante', 'area', 'tipoVisita',
-                    'dataVisita', 'horaVisita'
-                ];
-
-                let basicosPreenchidos = camposBasicos.filter(id =>
-                    document.getElementById(id)?.value.trim()
-                ).length;
-
-                // Status geral (peso 20%)
-                const statusPreenchido = document.querySelector('input[name="statusGeral"]:checked') ? 1 : 0;
-
-                // Categorias avaliadas (peso 20%)
-                const categoriasPreenchidas = Array.from(
-                    document.querySelectorAll('[name="pontosAvaliados"]:checked')
-                ).length;
-
-                // Ações necessárias (peso 20%)
-                const acoesPreenchidas = document.getElementById('acoesNecessarias')?.value.trim() ? 1 : 0;
-
-                // Calcular percentual ponderado
-                const percBasicos = (basicosPreenchidos / camposBasicos.length) * 40;
-                const percStatus = statusPreenchido * 20;
-                const percCategorias = Math.min(categoriasPreenchidas / 3, 1) * 20;
-                const percAcoes = acoesPreenchidas * 20;
-
-                const percentual = Math.round(percBasicos + percStatus + percCategorias + percAcoes);
-
-                // Atualizar UI
-                const progressFill = document.getElementById('progressFill');
-                const progressText = document.getElementById('progressText');
-                const progressBar = progressFill?.parentElement;
-
-                if (progressFill) progressFill.style.width = `${percentual}%`;
-                if (progressBar) progressBar.setAttribute('aria-valuenow', percentual);
-
-                // Texto dinâmico
-                let textoAdicional = '';
-                if (percentual < 40) {
-                    textoAdicional = 'Preencha os campos obrigatórios para continuar';
-                } else if (percentual < 60) {
-                    textoAdicional = 'Selecione o status geral da unidade';
-                } else if (percentual < 80) {
-                    textoAdicional = 'Avalie pelo menos 3 categorias';
-                } else if (percentual < 100) {
-                    textoAdicional = 'Descreva as ações necessárias';
-                } else {
-                    textoAdicional = 'Formulário completo! Pronto para enviar';
-                }
-
-                if (progressText) {
-                    progressText.innerHTML = `<strong>${percentual}% completo</strong> • ${textoAdicional}`;
-                }
-
-                // Atualizar indicador de seções
-                this.atualizarSteps(percentual);
-            },
-
-            atualizarSteps(percentual) {
-                const steps = document.querySelectorAll('.step');
-
-                steps.forEach((step, index) => {
-                    step.classList.remove('active', 'completed');
-
-                    if (index === 0 && percentual >= 20) step.classList.add('completed');
-                    if (index === 1 && percentual >= 40) step.classList.add('completed');
-                    if (index === 2 && percentual >= 60) step.classList.add('completed');
-                    if (index === 3 && percentual >= 80) step.classList.add('completed');
-                    if (index === 4 && percentual === 100) step.classList.add('completed');
-                });
-
-                // Marcar step atual
-                if (percentual < 20) steps[0]?.classList.add('active');
-                else if (percentual < 40) steps[1]?.classList.add('active');
-                else if (percentual < 60) steps[2]?.classList.add('active');
-                else if (percentual < 80) steps[3]?.classList.add('active');
-                else if (percentual < 100) steps[4]?.classList.add('active');
-            }
-        };
-
-        /**
-         * ==================== UPLOAD DE FOTOS ====================
-         */
-        const Upload = {
-            async processarFotosCategoria(files, categoria) {
-                for (const file of files) {
-                    if (!Utils.isImagemValida(file)) {
-                        Alert.mostrar(
-                            Utils.formatarMensagem(CONFIG.mensagens.fotoTipo, { nome: file.name }),
-                            'error'
-                        );
-                        continue;
-                    }
-
-                    if (file.size > CONFIG.maxTamanhoFoto) {
-                        Alert.mostrar(
-                            Utils.formatarMensagem(CONFIG.mensagens.fotoTamanho, { nome: file.name }),
-                            'error'
-                        );
-                        continue;
-                    }
-
-                    try {
-                        const base64Comprimido = await Utils.comprimirImagem(file);
-                        const foto = {
-                            nome: file.name,
-                            base64: base64Comprimido.split(',')[1],
-                            preview: base64Comprimido
-                        };
-
-                        AppState.fotosPorCategoria[categoria].push(foto);
-                    } catch (error) {
-                        console.error('Erro ao processar foto:', error);
-                        Alert.mostrar(`Erro ao processar ${file.name}`, 'error');
-                    }
-                }
-
-                this.renderizarFotosCategoria(categoria);
-            },
-
-            renderizarFotosCategoria(categoria) {
-                const container = document.getElementById(`preview-${categoria}`);
-                if (!container) return;
-
-                container.innerHTML = '';
-
-                AppState.fotosPorCategoria[categoria].forEach((foto, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'foto-item';
-                    div.innerHTML = `
-                        <button
-                            type="button"
-                            class="remove-btn"
-                            onclick="Upload.removerFotoCategoria('${categoria}', ${index})"
-                            aria-label="Remover foto ${foto.nome}">&times;</button>
-                        <img src="${foto.preview}" alt="${foto.nome}">
-                    `;
-                    container.appendChild(div);
-                });
-            },
-
-            removerFotoCategoria(categoria, index) {
-                AppState.fotosPorCategoria[categoria].splice(index, 1);
-                this.renderizarFotosCategoria(categoria);
-            },
-
-            async processarFotosGerais(files) {
-                if (AppState.fotosGerais.length + files.length > CONFIG.maxFotos) {
-                    Alert.mostrar(
-                        Utils.formatarMensagem(CONFIG.mensagens.maxFotos, { max: CONFIG.maxFotos }),
-                        'error'
-                    );
-                    return;
-                }
-
-                for (const file of files) {
-                    if (!Utils.isImagemValida(file)) {
-                        Alert.mostrar(
-                            Utils.formatarMensagem(CONFIG.mensagens.fotoTipo, { nome: file.name }),
-                            'error'
-                        );
-                        continue;
-                    }
-
-                    if (file.size > CONFIG.maxTamanhoFoto) {
-                        Alert.mostrar(
-                            Utils.formatarMensagem(CONFIG.mensagens.fotoTamanho, { nome: file.name }),
-                            'error'
-                        );
-                        continue;
-                    }
-
-                    try {
-                        const base64Comprimido = await Utils.comprimirImagem(file);
-                        const foto = {
-                            nome: file.name,
-                            base64: base64Comprimido.split(',')[1],
-                            comentario: '',
-                            preview: base64Comprimido
-                        };
-
-                        AppState.fotosGerais.push(foto);
-                    } catch (error) {
-                        console.error('Erro ao processar foto:', error);
-                        Alert.mostrar(`Erro ao processar ${file.name}`, 'error');
-                    }
-                }
-
-                this.renderizarFotosGerais();
-            },
-
-            renderizarFotosGerais() {
-                const container = document.getElementById('fotoPreviewContainer');
-                if (!container) return;
-
-                container.innerHTML = '';
-
-                AppState.fotosGerais.forEach((foto, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'foto-preview-item';
-                    div.innerHTML = `
-                        <button
-                            type="button"
-                            class="remove-foto"
-                            onclick="Upload.removerFotoGeral(${index})"
-                            aria-label="Remover foto ${foto.nome}">&times;</button>
-                        <img src="${foto.preview}" alt="${foto.nome}">
-                        <div class="foto-info">
-                            <input
-                                type="text"
-                                placeholder="Comentário da foto (opcional)"
-                                value="${foto.comentario}"
-                                onchange="Upload.atualizarComentario(${index}, this.value)"
-                                aria-label="Comentário para a foto ${foto.nome}">
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-            },
-
-            removerFotoGeral(index) {
-                AppState.fotosGerais.splice(index, 1);
-                this.renderizarFotosGerais();
-            },
-
-            atualizarComentario(index, valor) {
-                if (AppState.fotosGerais[index]) {
-                    AppState.fotosGerais[index].comentario = valor;
-                }
-            }
-        };
-
-        /**
-         * ==================== ALERTAS ====================
-         */
-        const Alert = {
-            mostrar(mensagem, tipo = 'error') {
-                const container = document.getElementById('alertContainer');
-                if (!container) return;
-
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${tipo} show`;
-                alertDiv.textContent = mensagem;
-                alertDiv.setAttribute('role', 'alert');
-
-                container.innerHTML = '';
-                container.appendChild(alertDiv);
-
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                setTimeout(() => {
-                    alertDiv.classList.remove('show');
-                    setTimeout(() => alertDiv.remove(), 300);
-                }, 5000);
-            }
-        };
-
-        /**
-         * ==================== MODAL DE CONFIRMAÇÃO ====================
-         */
-        function mostrarModal() {
-            const formData = new FormData(document.getElementById('formVisita'));
-
-            document.getElementById('summaryLoja').textContent =
-                `${formData.get('codigoLoja')} - ${formData.get('nomeLoja')}`;
-
-            document.getElementById('summaryVisitante').textContent =
-                `${formData.get('nomeVisitante')} (${formData.get('emailVisitante')})`;
-
-            document.getElementById('summaryStatus').textContent =
-                formData.get('statusGeral') || 'Não selecionado';
-
-            const categorias = Array.from(document.querySelectorAll('[name="pontosAvaliados"]:checked'))
-                .map(cb => cb.value);
-            document.getElementById('summaryCategorias').textContent =
-                categorias.length > 0 ? categorias.join(', ') : 'Nenhuma';
-
-            const totalFotos = AppState.fotosGerais.length +
-                Object.values(AppState.fotosPorCategoria).reduce((acc, arr) => acc + arr.length, 0);
-            document.getElementById('summaryFotos').textContent = totalFotos;
-
-            document.getElementById('confirmModal').classList.add('active');
-        }
-
-        function fecharModal() {
-            document.getElementById('confirmModal').classList.remove('active');
-        }
-
-        async function confirmarEnvio() {
-            fecharModal();
-            await Form.enviarDados();
-        }
-
-        /**
-         * ==================== SUBMISSÃO DO FORMULÁRIO ====================
-         */
-        const Form = {
-            montarJSON() {
-                const formData = new FormData(document.getElementById('formVisita'));
-
-                const pontosAvaliados = [];
-                const categorias = {
-                    ponto1: 'Sistema Elétrico',
-                    ponto2: 'Climatização',
-                    ponto3: 'Limpeza Geral',
-                    ponto4: 'Layout e Sinalização',
-                    ponto5: 'Equipamentos TI',
-                    ponto6: 'Segurança'
-                };
-
-                for (let i = 1; i <= 6; i++) {
-                    const checkbox = document.getElementById(`ponto${i}`);
-                    if (checkbox?.checked) {
-                        const categoria = `ponto${i}`;
-                        const observacao = document.getElementById(`obs-${categoria}`)?.value || '';
-                        const fotos = AppState.fotosPorCategoria[categoria].map(f => ({
-                            nome: f.nome,
-                            base64: f.base64
-                        }));
-
-                        pontosAvaliados.push({
-                            item: categorias[categoria],
-                            observacao: observacao || 'Sem observações.',
-                            fotos: fotos
-                        });
-                    }
-                }
-
-                return {
-                    id_resposta: `FORM-${Date.now()}`,
-                    timestamp: new Date().toISOString(),
-                    loja: {
-                        codigo: formData.get('codigoLoja'),
-                        nome: formData.get('nomeLoja'),
-                        cidade: formData.get('cidade'),
-                        tipo: formData.get('tipoUnidade'),
-                        email: ''
-                    },
-                    visita: {
-                        responsavel: formData.get('emailVisitante'),
-                        nome_responsavel: formData.get('nomeVisitante'),
-                        area: formData.get('area'),
-                        data: formData.get('dataVisita'),
-                        hora: formData.get('horaVisita'),
-                        tipo_visita: formData.get('tipoVisita')
-                    },
-                    avaliacao: {
-                        status_geral: formData.get('statusGeral'),
-                        pontos_avaliados: pontosAvaliados,
-                        observacoes: formData.get('observacoes') || 'Nenhuma observação adicional.'
-                    },
-                    acoes: {
-                        necessarias: formData.get('acoesNecessarias') || 'Nenhuma ação necessária no momento.',
-                        prazo: formData.get('prazo') || 'N/A',
-                        prioridade: formData.get('prioridade')
-                    },
-                    fotos_gerais: AppState.fotosGerais.map(f => ({
-                        nome: f.nome,
-                        base64: f.base64,
-                        comentario: f.comentario
-                    })),
-                    config: {
-                        incluir_pdf: true,
-                        template: 'padrao_visita'
-                    }
-                };
-            },
-
-            async enviarComRetry(dados, tentativas = 3) {
-                for (let i = 0; i < tentativas; i++) {
-                    try {
-                        const response = await fetch(CONFIG.webhookUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(dados)
-                        });
-
-                        if (response.ok) return response;
-
-                        if (i < tentativas - 1) {
-                            await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1)));
-                        }
-                    } catch (error) {
-                        if (i === tentativas - 1) throw error;
-                        await new Promise(resolve => setTimeout(resolve, 2000 * (i + 1)));
-                    }
-                }
-                throw new Error('Falha após múltiplas tentativas');
-            },
-
-            async enviarDados() {
-                if (AppState.isSubmitting) return;
-
-                AppState.isSubmitting = true;
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                loadingOverlay.classList.add('active');
-                loadingOverlay.setAttribute('aria-busy', 'true');
-
-                try {
-                    const dados = this.montarJSON();
-                    await this.enviarComRetry(dados);
-
-                    loadingOverlay.classList.remove('active');
-                    loadingOverlay.setAttribute('aria-busy', 'false');
-
-                    Alert.mostrar('✅ Relatório enviado com sucesso! Você receberá um e-mail em breve.', 'success');
-
-                    setTimeout(() => {
-                        if (confirm('Deseja preencher outro relatório?')) {
-                            this.limpar();
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                    }, 3000);
-
-                    AutoSave.limpar();
-
-                } catch (error) {
-                    console.error('Erro ao enviar:', error);
-                    loadingOverlay.classList.remove('active');
-                    loadingOverlay.setAttribute('aria-busy', 'false');
-                    Alert.mostrar('❌ Erro ao enviar relatório. Verifique sua conexão e tente novamente.', 'error');
-                } finally {
-                    AppState.isSubmitting = false;
-                }
-            },
-
-            async enviar(e) {
-                e.preventDefault();
-
-                if (!Validacao.validarFormulario()) {
-                    Alert.mostrar('Por favor, corrija os erros antes de enviar', 'error');
-                    return;
-                }
-
-                mostrarModal();
-            },
-
-            limpar() {
-                document.getElementById('formVisita').reset();
-
-                AppState.fotosGerais = [];
-                Upload.renderizarFotosGerais();
-
-                for (let i = 1; i <= 6; i++) {
-                    const categoria = `ponto${i}`;
-                    AppState.fotosPorCategoria[categoria] = [];
-                    Upload.renderizarFotosCategoria(categoria);
-
-                    const content = document.getElementById(`content-${categoria}`);
-                    if (content) {
-                        content.classList.remove('active');
-                        content.parentElement.querySelector('.categoria-header').setAttribute('aria-expanded', 'false');
-                    }
-                }
-
-                document.querySelectorAll('.form-group').forEach(group => {
-                    group.classList.remove('valid', 'invalid');
-                });
-
-                Progresso.atualizar();
-            }
-        };
-
-        /**
-         * ==================== INICIALIZAÇÃO ====================
-         */
-        document.addEventListener('DOMContentLoaded', function() {
-            // Iniciar auto-save
-            AutoSave.iniciar();
-
-            // Definir data e hora atuais
-            const hoje = new Date();
-            const dataInput = document.getElementById('dataVisita');
-            const horaInput = document.getElementById('horaVisita');
-
-            if (dataInput) dataInput.valueAsDate = hoje;
-            if (horaInput) horaInput.value = hoje.toTimeString().slice(0, 5);
-
-            // Validação em tempo real
-            const camposObrigatorios = ['codigoLoja', 'nomeLoja', 'cidade', 'tipoUnidade',
-                'nomeVisitante', 'emailVisitante', 'area', 'tipoVisita', 'dataVisita', 'horaVisita'];
-
-            camposObrigatorios.forEach(id => {
-                const campo = document.getElementById(id);
-                if (campo) {
-                    campo.addEventListener('blur', () => Validacao.validarCampo(campo));
-                    campo.addEventListener('input', () => {
-                        if (campo.classList.contains('invalid')) {
-                            Validacao.validarCampo(campo);
-                        }
-                        Progresso.atualizar();
-                    });
-                }
-            });
-
-            // Categorias
-            for (let i = 1; i <= 6; i++) {
-                const checkbox = document.getElementById(`ponto${i}`);
-                const header = checkbox?.closest('.categoria-header');
-                const content = document.getElementById(`content-ponto${i}`);
-
-                if (!checkbox || !header || !content) continue;
-
-                const toggleCategoria = () => {
-                    const isChecked = checkbox.checked;
-                    content.classList.toggle('active', isChecked);
-                    header.setAttribute('aria-expanded', isChecked);
-                    Progresso.atualizar();
-                };
-
-                checkbox.addEventListener('change', toggleCategoria);
-
-                header.addEventListener('click', (e) => {
-                    if (e.target !== checkbox) {
-                        checkbox.checked = !checkbox.checked;
-                        toggleCategoria();
-                    }
-                });
-
-                header.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        checkbox.checked = !checkbox.checked;
-                        toggleCategoria();
-                    }
-                });
-
-                // Upload por categoria
-                const uploadArea = document.querySelector(`[data-categoria="ponto${i}"]`);
-                const fileInput = document.getElementById(`foto-ponto${i}`);
-
-                if (uploadArea && fileInput) {
-                    uploadArea.addEventListener('click', () => fileInput.click());
-
-                    uploadArea.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            fileInput.click();
-                        }
-                    });
-
-                    fileInput.addEventListener('change', (e) => {
-                        if (e.target.files.length > 0) {
-                            Upload.processarFotosCategoria(e.target.files, `ponto${i}`);
-                        }
-                    });
-                }
-            }
-
-            // Status geral
-            document.querySelectorAll('.status-option').forEach(option => {
-                const radio = option.querySelector('input[type="radio"]');
-
-                option.addEventListener('click', () => {
-                    if (radio) {
-                        radio.checked = true;
-                        Validacao.validarStatusGeral();
-                        Progresso.atualizar();
-
-                        document.querySelectorAll('.status-option').forEach(opt => {
-                            opt.setAttribute('aria-checked', 'false');
-                        });
-                        option.setAttribute('aria-checked', 'true');
-                    }
-                });
-
-                option.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        if (radio) {
-                            radio.checked = true;
-                            Validacao.validarStatusGeral();
-                            Progresso.atualizar();
-                        }
-                    }
-                });
-
-                if (radio) {
-                    radio.addEventListener('change', () => {
-                        Validacao.validarStatusGeral();
-                        Progresso.atualizar();
-                    });
-                }
-            });
-
-            // Upload de fotos gerais
-            const fileUploadArea = document.getElementById('fileUploadArea');
-            const fotosInput = document.getElementById('fotosInput');
-
-            if (fileUploadArea && fotosInput) {
-                fileUploadArea.addEventListener('click', () => fotosInput.click());
-
-                fileUploadArea.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        fotosInput.click();
-                    }
-                });
-
-                fileUploadArea.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    fileUploadArea.classList.add('drag-over');
-                });
-
-                fileUploadArea.addEventListener('dragleave', () => {
-                    fileUploadArea.classList.remove('drag-over');
-                });
-
-                fileUploadArea.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    fileUploadArea.classList.remove('drag-over');
-                    if (e.dataTransfer.files.length > 0) {
-                        Upload.processarFotosGerais(e.dataTransfer.files);
-                    }
-                });
-
-                fotosInput.addEventListener('change', (e) => {
-                    if (e.target.files.length > 0) {
-                        Upload.processarFotosGerais(e.target.files);
-                    }
-                });
-            }
-
-            // Monitorar ações necessárias para progresso
-            const acoesTextarea = document.getElementById('acoesNecessarias');
-            if (acoesTextarea) {
-                acoesTextarea.addEventListener('input', () => {
-                    Progresso.atualizar();
-                });
-            }
-
-            // Submissão do formulário
-            const form = document.getElementById('formVisita');
-            if (form) {
-                form.addEventListener('submit', (e) => Form.enviar(e));
-            }
-
-            // Progresso inicial
-            Progresso.atualizar();
+  `);
+});
+
+/* ── CATEGORY TOGGLE ── */
+CATS.forEach(cat => {
+  const cb  = document.getElementById(cat.id);
+  const hdr = document.getElementById(`ch-${cat.id}`);
+  const ci  = document.getElementById(`ci-${cat.id}`);
+
+  const toggle = () => {
+    const on = cb.checked;
+    ci.classList.toggle('active', on);
+    hdr.setAttribute('aria-expanded', on);
+    updateProgress();
+  };
+
+  cb.addEventListener('change', toggle);
+
+  hdr.addEventListener('click', e => {
+    if (e.target !== cb) { cb.checked = !cb.checked; toggle(); }
+  });
+
+  hdr.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); cb.checked = !cb.checked; toggle();
+    }
+  });
+
+  // Category photos
+  const fu = document.getElementById(`foto-${cat.id}`);
+  fu.addEventListener('change', e => {
+    if (e.target.files.length) processCatPhotos(e.target.files, cat.id);
+  });
+});
+
+/* ── PRIORITY CHIPS ── */
+document.getElementById('prioChips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  document.querySelectorAll('#prioChips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  document.getElementById('prioridade').value = chip.dataset.val;
+});
+
+/* ── COMPRESS ── */
+async function compress(file) {
+  return new Promise(resolve => {
+    const r = new FileReader();
+    r.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > CFG.maxW) { h = h * CFG.maxW / w; w = CFG.maxW; }
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        c.toBlob(blob => {
+          const r2 = new FileReader();
+          r2.onload = e2 => resolve(e2.target.result);
+          r2.readAsDataURL(blob);
+        }, 'image/jpeg', CFG.quality);
+      };
+      img.src = e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+/* ── CATEGORY PHOTOS ── */
+async function processCatPhotos(files, catId) {
+  for (const f of files) {
+    if (!f.type.startsWith('image/')) { showAlert(`${f.name} não é imagem válida.`, 'error'); continue; }
+    if (f.size > CFG.maxSize) { showAlert(`${f.name} excede 5MB.`, 'error'); continue; }
+    const b64 = await compress(f);
+    S.fotosCat[catId].push({ nome: f.name, base64: b64.split(',')[1], preview: b64 });
+  }
+  renderCatThumbs(catId);
+}
+
+function renderCatThumbs(catId) {
+  const row = document.getElementById(`thumbs-${catId}`);
+  row.innerHTML = '';
+  S.fotosCat[catId].forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'thumb';
+    d.innerHTML = `<img src="${f.preview}" alt="${f.nome}">
+      <button type="button" class="thumb-rm" aria-label="Remover">&times;</button>`;
+    d.querySelector('.thumb-rm').addEventListener('click', () => {
+      S.fotosCat[catId].splice(i, 1); renderCatThumbs(catId);
+    });
+    row.appendChild(d);
+  });
+}
+
+/* ── GENERAL PHOTOS ── */
+async function processGeneralPhotos(files) {
+  if (S.fotosGerais.length + files.length > CFG.maxFotos) {
+    showAlert(`Máximo de ${CFG.maxFotos} fotos.`, 'error'); return;
+  }
+  for (const f of files) {
+    if (!f.type.startsWith('image/')) { showAlert(`${f.name} não é imagem válida.`, 'error'); continue; }
+    if (f.size > CFG.maxSize) { showAlert(`${f.name} excede 5MB.`, 'error'); continue; }
+    const b64 = await compress(f);
+    S.fotosGerais.push({ nome: f.name, base64: b64.split(',')[1], comentario: '', preview: b64 });
+  }
+  renderGenPhotos();
+}
+
+function renderGenPhotos() {
+  const grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+  S.fotosGerais.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'photo-card';
+    d.innerHTML = `
+      <img src="${f.preview}" alt="${f.nome}">
+      <button type="button" class="photo-rm" aria-label="Remover">&times;</button>
+      <div class="photo-card-bottom">
+        <input type="text" placeholder="Comentário (opcional)" value="${f.comentario}">
+      </div>`;
+    d.querySelector('.photo-rm').addEventListener('click', () => {
+      S.fotosGerais.splice(i, 1); renderGenPhotos();
+    });
+    d.querySelector('input').addEventListener('input', e => {
+      S.fotosGerais[i].comentario = e.target.value;
+    });
+    grid.appendChild(d);
+  });
+}
+
+/* Upload area */
+const ua = document.getElementById('uploadArea');
+const fi = document.getElementById('fotosInput');
+
+fi.addEventListener('change', e => { if (e.target.files.length) processGeneralPhotos(e.target.files); });
+ua.addEventListener('dragover', e => { e.preventDefault(); ua.classList.add('drag-over'); });
+ua.addEventListener('dragleave', () => ua.classList.remove('drag-over'));
+ua.addEventListener('drop', e => {
+  e.preventDefault(); ua.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) processGeneralPhotos(e.dataTransfer.files);
+});
+
+/* ── PROGRESS ── */
+function updateProgress() {
+  const basic = ['codigoLoja','nomeLoja','cidade','tipoUnidade','nomeVisitante','emailVisitante','area','tipoVisita','dataVisita','horaVisita'];
+  const filled = basic.filter(id => document.getElementById(id)?.value.trim()).length;
+  const hasStatus = !!document.querySelector('input[name="statusGeral"]:checked');
+  const cats = document.querySelectorAll('[name="pontosAvaliados"]:checked').length;
+  const hasAcoes = !!document.getElementById('acoesNecessarias')?.value.trim();
+
+  const pct = Math.round(
+    (filled / basic.length) * 40 +
+    (hasStatus ? 20 : 0) +
+    Math.min(cats / 3, 1) * 20 +
+    (hasAcoes ? 20 : 0)
+  );
+
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressFill').parentElement.setAttribute('aria-valuenow', pct);
+  document.getElementById('progressBadge').textContent = pct + '%';
+
+  const labels = ['Preencha os campos básicos','Selecione o status','Avalie as categorias','Descreva as ações','Pronto para enviar'];
+  const idx = pct < 40 ? 0 : pct < 60 ? 1 : pct < 80 ? 2 : pct < 100 ? 3 : 4;
+  document.getElementById('progressLabel').textContent = labels[idx];
+}
+
+/* ── VALIDATION ── */
+function validateField(id) {
+  const el = document.getElementById(id);
+  const fg = document.getElementById(`fg-${id}`);
+  const em = document.getElementById(`${id}-err`);
+  if (!el || !fg) return true;
+
+  let err = '';
+  if (el.hasAttribute('required') && !el.value.trim()) {
+    err = 'Campo obrigatório';
+  } else if (el.type === 'email' && el.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value)) {
+    err = 'E-mail inválido';
+  }
+
+  fg.classList.toggle('invalid', !!err);
+  fg.classList.toggle('valid', !err && !!el.value.trim());
+  if (em) em.textContent = err;
+  return !err;
+}
+
+function validateAll() {
+  const fields = ['codigoLoja','nomeLoja','cidade','tipoUnidade','nomeVisitante','emailVisitante','area','tipoVisita','dataVisita','horaVisita'];
+  let ok = true;
+  let firstBad = null;
+
+  fields.forEach(id => {
+    if (!validateField(id)) {
+      ok = false;
+      if (!firstBad) firstBad = document.getElementById(id);
+    }
+  });
+
+  const statusOk = !!document.querySelector('input[name="statusGeral"]:checked');
+  if (!statusOk) {
+    const em = document.getElementById('statusGeral-err');
+    if (em) { em.textContent = 'Selecione o status'; em.style.display = 'block'; }
+    ok = false;
+  } else {
+    const em = document.getElementById('statusGeral-err');
+    if (em) em.style.display = 'none';
+  }
+
+  if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+
+/* ── LIVE VALIDATION ── */
+['codigoLoja','nomeLoja','cidade','tipoUnidade','nomeVisitante','emailVisitante','area','tipoVisita','dataVisita','horaVisita'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('blur', () => validateField(id));
+  el.addEventListener('input', () => { updateProgress(); if (el.classList.contains('invalid')) validateField(id); });
+});
+
+document.querySelectorAll('input[name="statusGeral"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const em = document.getElementById('statusGeral-err');
+    if (em) em.style.display = 'none';
+    updateProgress();
+  });
+});
+
+document.getElementById('acoesNecessarias').addEventListener('input', updateProgress);
+
+/* ── ALERT ── */
+function showAlert(msg, type) {
+  const w = document.getElementById('alertWrap');
+  w.innerHTML = `<div class="alert alert-${type} show">${msg}</div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => { const a = w.querySelector('.alert'); if (a) { a.classList.remove('show'); setTimeout(() => a.remove(), 300); } }, 5000);
+}
+
+/* ── MODAL ── */
+function openModal() {
+  const fd = new FormData(document.getElementById('form'));
+  document.getElementById('sLoja').textContent = `${fd.get('codigoLoja')} — ${fd.get('nomeLoja')}`;
+  document.getElementById('sVisitante').textContent = `${fd.get('nomeVisitante')}`;
+  document.getElementById('sStatus').textContent = fd.get('statusGeral') || '—';
+  const cats = [...document.querySelectorAll('[name="pontosAvaliados"]:checked')].map(c => c.value);
+  document.getElementById('sCats').textContent = cats.length ? cats.join(', ') : 'Nenhuma';
+  const total = S.fotosGerais.length + Object.values(S.fotosCat).reduce((a, b) => a + b.length, 0);
+  document.getElementById('sFotos').textContent = total;
+  document.getElementById('confirmModal').classList.add('active');
+}
+
+document.getElementById('btnRevisar').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('active');
+});
+
+document.getElementById('btnConfirmar').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('active');
+  sendForm();
+});
+
+/* ── BUILD JSON ── */
+function buildPayload() {
+  const fd = new FormData(document.getElementById('form'));
+  const points = [];
+
+  CATS.forEach((cat, i) => {
+    const cb = document.getElementById(cat.id);
+    if (!cb?.checked) return;
+    const obs = document.getElementById(`obs-${cat.id}`)?.value || '';
+    points.push({
+      item: cat.label,
+      observacao: obs || 'Sem observações.',
+      fotos: S.fotosCat[cat.id].map(f => ({ nome: f.nome, base64: f.base64 }))
+    });
+  });
+
+  return {
+    id_resposta: `FORM-${Date.now()}`,
+    timestamp: new Date().toISOString(),
+    loja: { codigo: fd.get('codigoLoja'), nome: fd.get('nomeLoja'), cidade: fd.get('cidade'), tipo: fd.get('tipoUnidade'), email: '' },
+    visita: { responsavel: fd.get('emailVisitante'), nome_responsavel: fd.get('nomeVisitante'), area: fd.get('area'), data: fd.get('dataVisita'), hora: fd.get('horaVisita'), tipo_visita: fd.get('tipoVisita') },
+    avaliacao: { status_geral: fd.get('statusGeral'), pontos_avaliados: points, observacoes: fd.get('observacoes') || 'Nenhuma.' },
+    acoes: { necessarias: fd.get('acoesNecessarias') || 'Nenhuma.', prazo: fd.get('prazo') || 'N/A', prioridade: fd.get('prioridade') },
+    fotos_gerais: S.fotosGerais.map(f => ({ nome: f.nome, base64: f.base64, comentario: f.comentario })),
+    config: { incluir_pdf: true, template: 'padrao_visita' }
+  };
+}
+
+/* ── SEND ── */
+async function sendForm() {
+  if (S.submitting) return;
+  S.submitting = true;
+  const lo = document.getElementById('loadingOverlay');
+  lo.classList.add('active');
+
+  try {
+    const data = buildPayload();
+    let res;
+    for (let i = 0; i < 3; i++) {
+      try {
+        res = await fetch(CFG.webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
+        if (res.ok) break;
+      } catch(e) {
+        if (i === 2) throw e;
+        await new Promise(r => setTimeout(r, 2000 * (i + 1)));
+      }
+    }
 
-        // Expor funções globalmente
-        window.Upload = Upload;
-        window.fecharModal = fecharModal;
-        window.confirmarEnvio = confirmarEnvio;
-    </script>
+    lo.classList.remove('active');
+    showAlert('✓ Relatório enviado! Você receberá um e-mail em breve.', 'success');
+
+    setTimeout(() => {
+      if (confirm('Deseja preencher outro relatório?')) resetForm();
+    }, 3000);
+
+  } catch(e) {
+    lo.classList.remove('active');
+    showAlert('Erro ao enviar. Verifique sua conexão e tente novamente.', 'error');
+  } finally {
+    S.submitting = false;
+  }
+}
+
+/* ── RESET ── */
+function resetForm() {
+  document.getElementById('form').reset();
+  S.fotosGerais = [];
+  CATS.forEach(c => { S.fotosCat[c.id] = []; renderCatThumbs(c.id); });
+  document.getElementById('photoGrid').innerHTML = '';
+  document.querySelectorAll('.check-item').forEach(ci => ci.classList.remove('active'));
+  document.querySelectorAll('.check-header').forEach(ch => ch.setAttribute('aria-expanded','false'));
+  document.querySelectorAll('.field').forEach(f => f.classList.remove('valid','invalid'));
+  document.querySelectorAll('#prioChips .chip').forEach(c => c.classList.remove('selected'));
+  document.querySelector('#prioChips [data-val="Média"]').classList.add('selected');
+  document.getElementById('prioridade').value = 'Média';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── FORM SUBMIT ── */
+document.getElementById('form').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!validateAll()) { showAlert('Corrija os erros antes de enviar.', 'error'); return; }
+  openModal();
+});
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('dataVisita').valueAsDate = now;
+  document.getElementById('horaVisita').value = now.toTimeString().slice(0,5);
+  updateProgress();
+});
+</script>
 </body>
 </html>
